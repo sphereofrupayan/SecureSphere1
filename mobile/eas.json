@@ -22,7 +22,9 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "preview"
+        "EXPO_PUBLIC_APP_ENV": "preview",
+        "EXPO_PUBLIC_API_URL": "https://securesphere-mvaf.onrender.com",
+        "EXPO_PUBLIC_API_TIMEOUT_MS": "45000"
       }
     },
     "production": {
@@ -33,7 +35,9 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "production"
+        "EXPO_PUBLIC_APP_ENV": "production",
+        "EXPO_PUBLIC_API_URL": "https://securesphere-mvaf.onrender.com",
+        "EXPO_PUBLIC_API_TIMEOUT_MS": "45000"
       }
     }
   },
