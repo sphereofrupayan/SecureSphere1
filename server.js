@@ -341,7 +341,7 @@ app.get("/privacy", (_req, res) => {
 
 const DEFAULT_ANDROID_APK_URL =
   process.env.ANDROID_APK_URL ||
-  "https://expo.dev/accounts/rupayan18/projects/securesphere/builds/4eef37b2-e991-4882-aa34-f9d908313898";
+  "https://expo.dev/artifacts/eas/wv4IPZFYGH5Em3_0jjz9GxWdSY5H0--XfojRru7Fjoo.apk";
 
 app.get("/download", (_req, res) => {
   const apkUrl = String(process.env.ANDROID_APK_URL || DEFAULT_ANDROID_APK_URL).trim();
