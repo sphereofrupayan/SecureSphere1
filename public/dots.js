@@ -69,11 +69,11 @@
   /* ── Sample the text into a local point cloud ────────────── */
   function sampleText() {
     const rect = wrap.getBoundingClientRect();
-    const boxW = Math.max(rect.width, 1);
-    const boxH = Math.max(rect.height, 1);
+    const boxW = Math.max(Math.round(rect.width), 1);
+    const boxH = Math.max(Math.round(rect.height), 1);
 
-    let fontSize = Math.min(boxW * 0.14, 76);
-    if (boxW < 420) fontSize = boxW * 0.16;
+    let fontSize = Math.min(boxW * 0.14, 72);
+    if (boxW < 420) fontSize = Math.min(boxW * 0.125, 44);
 
     const off = document.createElement('canvas');
     off.width = boxW;
@@ -83,14 +83,20 @@
     oc.textAlign = 'center';
     oc.textBaseline = 'middle';
     oc.font = `${FONT_WEIGHT} ${fontSize}px Inter, -apple-system, sans-serif`;
+    const measured = oc.measureText(TEXT).width;
+    if (measured > boxW * 0.94) {
+      fontSize = Math.max(18, Math.floor(fontSize * ((boxW * 0.94) / measured)));
+      oc.font = `${FONT_WEIGHT} ${fontSize}px Inter, -apple-system, sans-serif`;
+    }
     oc.fillText(TEXT, boxW / 2, boxH / 2);
 
     const img = oc.getImageData(0, 0, boxW, boxH);
+    const stride = img.width;
     const points = [];
     let minX = boxW, maxX = 0;
     for (let y = 0; y < boxH; y += PARTICLE_GAP) {
       for (let x = 0; x < boxW; x += PARTICLE_GAP) {
-        const i = (Math.floor(y) * boxW + Math.floor(x)) * 4;
+        const i = (Math.floor(y) * stride + Math.floor(x)) * 4;
         if (img.data[i + 3] > 128) {
           points.push({ x, y });
           if (x < minX) minX = x;

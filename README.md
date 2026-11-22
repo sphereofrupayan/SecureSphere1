@@ -8,14 +8,14 @@ SecureSphere includes the **Friends Room**, a real-time networking space built a
 
 - **Synchronized playback** — play, pause, seek, and track changes are shared across connected listeners.
 - **Collaborative queue** — add tracks to a room-wide queue and let the server advance playback.
+- **Team Discussion & Prompt Suggestions** — real-time room discussion with threaded replies, emoji reactions, prompt suggestion tagging, and one-click `Copy Prompt` for admins.
+- **Official Shared AI Sessions (ChatGPT, Claude, Gemini)** — enabling an AI platform automatically creates a room-scoped shared AI session with independent per-platform histories. Workspace owners manually run prompts in their own authenticated browser session and publish official prompts & Markdown/code responses (`Admin Prompt` / `Admin-Published AI Response`) to the room; regular members have strictly read-only access.
+- **Authenticated Image & Video Sharing** — upload PNG, JPG, WEBP, GIF images and MP4, WEBM, MOV videos via picker, drag-and-drop, or clipboard paste with magic-byte validation, room-scoped authorization, upload progress, lightbox inspection, and on-demand video streaming.
+- **Real-Time Multiplayer Whiteboard** — room-scoped interactive vector whiteboard with pen, highlighter, eraser, shapes, arrows, lines, text, sticky notes, image insertion, undo/redo, pan/zoom, live multiplayer cursors, SQLite persistence, and PNG/SVG export.
 - **Live room chat** — exchange messages in real time; chat history is stored in SQLite and sent to connecting listeners.
 - **Presence and reconnection** — see how many listeners are online and request the latest room state after reconnecting.
 - **Private accounts** — authenticate with username and password; an administrator can manage friend accounts.
-- **Responsive interface** — polished dark and light themes, with a handwritten accent for a more personal feel.
-- **Sidebar navigation** — jump between the listening room, networking overview, workflow, player, shared queue, and chat.
-- **Personal room dashboard** — see your signed-in name, a live local clock and date, and the time elapsed since the first non-admin listener joined. The session timer resets when the last non-admin listener disconnects; admin connections do not keep it open.
-- **Audio focus layout** — switch the YouTube player to a compact square view while keeping the official video player visible. YouTube's IFrame Player API does not offer true audio-only playback.
-- **Networking and workflow visuals** — original in-page illustrations explain how listeners connect and how a room session flows.
+- **Responsive interface** — dark-first SaaS design with daylight theme option, collapsible sidebar, and mobile slide-out drawer.
 - **Admin database exports** — administrators can download account metadata and chat history from SQLite as CSV or PDF.
 
 ## Administrator exports
@@ -81,6 +81,15 @@ Open `http://localhost:10000`. Sign in with the administrator credentials from `
 | `ADMIN_USERNAME` | Username for the initial administrator |
 | `ADMIN_PASSWORD` | Password for the initial administrator |
 | `ROOM_NAME` | Name displayed for the listening room |
+| `MAX_IMAGE_UPLOAD_MB` | Maximum allowed image upload size in MB (defaults to `15`) |
+| `MAX_VIDEO_UPLOAD_MB` | Maximum allowed video upload size in MB (defaults to `50`) |
+| `TLDRAW_LICENSE_KEY` | Optional license key placeholder for custom commercial tldraw deployments |
+
+## Persistent storage & media uploads
+
+- SQLite database (`data/synctune.db`) stores user accounts, rooms, room memberships, discussion messages, reactions, media metadata, shared AI sessions & official AI messages, plugin states, and whiteboard documents.
+- Uploaded room images and videos are stored on disk under `data/uploads/<roomId>/` and served exclusively via authenticated, room-authorized endpoints (`GET /api/media/:mediaId`).
+- When deploying to Render or another cloud host, attach a persistent disk mounted at `data/` so databases and uploaded media survive redeploys.
 
 ## Deploy
 

@@ -6,12 +6,15 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "dev:mobile": "npm --prefix mobile start",
+    "dev:all": "node -e \"const {spawn}=require('child_process');const a=spawn(process.execPath,['server.js'],{stdio:'inherit'});const b=spawn(process.platform==='win32'?'npm.cmd':'npm',['--prefix','mobile','start'],{stdio:'inherit'});const end=()=>{try{a.kill()}catch{}try{b.kill()}catch{}process.exit(0)};process.on('SIGINT',end);process.on('SIGTERM',end);a.on('exit',code=>{if(code)process.exit(code)});b.on('exit',code=>{if(code)process.exit(code)});\""
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@google/genai": "^3.6.1",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^12.4.1",
     "cookie-parser": "^1.4.7",
