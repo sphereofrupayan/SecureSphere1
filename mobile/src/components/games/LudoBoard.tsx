@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import * as Haptics from "expo-haptics";
-import Svg, { Circle, G, Polygon, Rect, Text as SvgText } from "react-native-svg";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, {
+  Circle,
+  Defs,
+  G,
+  LinearGradient as SvgLinearGradient,
+  Polygon,
+  Rect,
+  Stop,
+  Text as SvgText,
+} from "react-native-svg";
 import { Card } from "@/components";
+import { gameSounds } from "@/services/gameSounds";
 import { colors, radii, spacing, typography } from "@/theme";
 import type { LudoColor, LudoState } from "@/types";
 
@@ -56,6 +73,89 @@ const COLOR_HEX: Record<LudoColor, string> = {
   blue: "#1E88E5",
 };
 
+// Standard 3x3 normalized pip coordinates inside a 64x64 die face
+const DICE_PIPS: Record<number, Array<[number, number]>> = {
+  1: [[32, 32]],
+  2: [[19, 19], [45, 45]],
+  3: [[19, 19], [32, 32], [45, 45]],
+  4: [[19, 19], [45, 19], [19, 45], [45, 45]],
+  5: [[19, 19], [45, 19], [32, 32], [19, 45], [45, 45]],
+  6: [[19, 17], [45, 17], [19, 32], [45, 32], [19, 47], [45, 47]],
+};
+
+function DiceFaceSvg({
+  value,
+  size = 64,
+  accentColor,
+  isSix,
+}: {
+  value: number;
+  size?: number;
+  accentColor: string;
+  isSix: boolean;
+}) {
+  const face = Math.min(6, Math.max(1, Math.round(value || 1)));
+  const pips = DICE_PIPS[face] ?? DICE_PIPS[1] ?? [[32, 32]];
+
+  return (
+    <Svg width={size} height={size} viewBox="0 0 64 64">
+      <Defs>
+        <SvgLinearGradient id="diceBodyGrad" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0%" stopColor="#FFFFFF" />
+          <Stop offset="65%" stopColor="#F1F5F9" />
+          <Stop offset="100%" stopColor="#CBD5E1" />
+        </SvgLinearGradient>
+        <SvgLinearGradient id="diceGlossGrad" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+          <Stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </SvgLinearGradient>
+      </Defs>
+
+      {/* Outer die bevel */}
+      <Rect
+        x={2}
+        y={2}
+        width={60}
+        height={60}
+        rx={14}
+        fill="url(#diceBodyGrad)"
+        stroke={isSix ? "#FBBF24" : accentColor}
+        strokeWidth={isSix ? 3 : 2.2}
+      />
+
+      {/* Inner recessed face highlight */}
+      <Rect
+        x={6}
+        y={5}
+        width={52}
+        height={24}
+        rx={10}
+        fill="url(#diceGlossGrad)"
+      />
+
+      {/* Crisp die pips */}
+      {pips.map(([cx, cy], idx) => (
+        <G key={`pip-${face}-${idx}`}>
+          {/* Subtle inner rim */}
+          <Circle
+            cx={cx}
+            cy={cy + 0.9}
+            r={face === 1 ? 7.8 : 5.4}
+            fill="#FFFFFF"
+            fillOpacity={0.7}
+          />
+          <Circle
+            cx={cx}
+            cy={cy}
+            r={face === 1 ? 7.4 : 5.2}
+            fill={face === 1 ? "#DC2626" : face === 6 ? "#1E3A8A" : "#0F172A"}
+          />
+        </G>
+      ))}
+    </Svg>
+  );
+}
+
 function getTokenGridCoord(color: LudoColor, tokenIdx: number, step: number): [number, number] {
   if (step === -1) {
     return LUDO_YARD_SLOTS[color][tokenIdx] ?? [1.5, 1.5];
@@ -88,17 +188,144 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
   const canRollNow = isMyTurn && state.canRoll;
   const mustMoveNow = isMyTurn && state.mustMove && state.validTokenIndices.length > 0;
 
+  const actualDice = state.diceValue ?? state.lastDiceValue ?? 6;
+  const [displayFace, setDisplayFace] = useState<number>(actualDice);
+  const [isRollingAnim, setIsRollingAnim] = useState(false);
+
+  const prevRollIdRef = useRef<number>(state.rollId || 0);
+  const prevMoveSeqRef = useRef<number>(state.moveSeq || 0);
+  const prevStatusRef = useRef<string>(state.status);
+  const rollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const rollStopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestActualDiceRef = useRef<number>(actualDice);
+  latestActualDiceRef.current = actualDice;
+
+  // Reanimated shared values for 3D-feel tumble & bounce
+  const rotDeg = useSharedValue(0);
+  const bounceY = useSharedValue(0);
+  const diceScale = useSharedValue(1);
+
+  const diceAnimStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: bounceY.value },
+      { rotate: `${rotDeg.value}deg` },
+      { scale: diceScale.value },
+    ],
+  }));
+
+  useEffect(() => {
+    gameSounds.preloadAll();
+    return () => {
+      if (rollIntervalRef.current) clearInterval(rollIntervalRef.current);
+      if (rollStopTimerRef.current) clearTimeout(rollStopTimerRef.current);
+    };
+  }, []);
+
+  const triggerDiceRollFeedback = useCallback(
+    (finalFace?: number | null) => {
+      if (rollIntervalRef.current) clearInterval(rollIntervalRef.current);
+      if (rollStopTimerRef.current) clearTimeout(rollStopTimerRef.current);
+
+      setIsRollingAnim(true);
+      void gameSounds.play("ludoRoll", 180);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
+
+      // Juicy multi-bounce tumble animation
+      rotDeg.value = withSequence(
+        withTiming(-28, { duration: 75 }),
+        withTiming(24, { duration: 80 }),
+        withTiming(-18, { duration: 80 }),
+        withTiming(14, { duration: 85 }),
+        withTiming(-8, { duration: 75 }),
+        withSpring(0, { damping: 12, stiffness: 220 })
+      );
+      bounceY.value = withSequence(
+        withTiming(-14, { duration: 110 }),
+        withTiming(3, { duration: 95 }),
+        withTiming(-8, { duration: 95 }),
+        withTiming(2, { duration: 85 }),
+        withSpring(0, { damping: 14, stiffness: 240 })
+      );
+      diceScale.value = withSequence(
+        withTiming(1.18, { duration: 110 }),
+        withTiming(0.92, { duration: 100 }),
+        withTiming(1.1, { duration: 100 }),
+        withSpring(1, { damping: 12, stiffness: 220 })
+      );
+
+      let tick = 0;
+      rollIntervalRef.current = setInterval(() => {
+        tick++;
+        const nextRandom = ((tick * 2 + Math.floor(Math.random() * 5)) % 6) + 1;
+        setDisplayFace(nextRandom);
+      }, 65);
+
+      rollStopTimerRef.current = setTimeout(() => {
+        if (rollIntervalRef.current) {
+          clearInterval(rollIntervalRef.current);
+          rollIntervalRef.current = null;
+        }
+        const resolved = finalFace ?? latestActualDiceRef.current ?? 1;
+        setDisplayFace(resolved);
+        setIsRollingAnim(false);
+        if (resolved === 6) {
+          void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
+            () => undefined
+          );
+        }
+      }, 480);
+    },
+    [bounceY, diceScale, rotDeg]
+  );
+
+  // Sync visual dice & sound whenever ANY player rolls (server rollId increments)
+  useEffect(() => {
+    const nextRollId = state.rollId || 0;
+    if (nextRollId > prevRollIdRef.current) {
+      prevRollIdRef.current = nextRollId;
+      triggerDiceRollFeedback(state.diceValue ?? state.lastDiceValue ?? 1);
+    } else if (!isRollingAnim && (state.diceValue || state.lastDiceValue)) {
+      setDisplayFace(state.diceValue ?? state.lastDiceValue ?? 1);
+    }
+  }, [state.rollId, state.diceValue, state.lastDiceValue, isRollingAnim, triggerDiceRollFeedback]);
+
+  // Trigger move / capture / win sound effects when board state advances
+  useEffect(() => {
+    const nextMoveSeq = state.moveSeq || 0;
+    if (nextMoveSeq > prevMoveSeqRef.current) {
+      prevMoveSeqRef.current = nextMoveSeq;
+      const actionLower = (state.lastAction || "").toLowerCase();
+      if (actionLower.includes("captur") || actionLower.includes("sent back") || actionLower.includes("knock")) {
+        void gameSounds.play("ludoCapture", 100);
+      } else {
+        void gameSounds.play("ludoStep", 90);
+      }
+    }
+
+    if (prevStatusRef.current !== "completed" && state.status === "completed") {
+      void gameSounds.play("ludoWin", 200);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
+        () => undefined
+      );
+    }
+    prevStatusRef.current = state.status;
+  }, [state.moveSeq, state.lastAction, state.status]);
+
+  const handleTapRoll = () => {
+    if (!canRollNow || isRollingAnim) return;
+    triggerDiceRollFeedback(null);
+    onRoll();
+  };
+
+  const activeTurnHex = COLOR_HEX[state.turnColor] || colors.primaryBright;
+  const shownDiceValue = isRollingAnim ? displayFace : (state.diceValue ?? state.lastDiceValue ?? displayFace);
+
   return (
     <View style={styles.wrap}>
       {/* Turn & Action Banner */}
       <Card variant="elevated" style={styles.turnCard}>
         <View style={styles.turnRow}>
-          <View
-            style={[
-              styles.turnDot,
-              { backgroundColor: COLOR_HEX[state.turnColor] || colors.primary },
-            ]}
-          />
+          <View style={[styles.turnDot, { backgroundColor: activeTurnHex }]} />
           <View style={styles.flexOne}>
             <Text style={styles.turnTitle}>
               {state.status === "completed"
@@ -119,7 +346,7 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
       {/* 15x15 SVG Ludo Board */}
       <View style={[styles.boardWrap, { width: boardPx, height: boardPx }]}>
         <Svg width={boardPx} height={boardPx}>
-          {/* Base white/slate board */}
+          {/* Base board */}
           <Rect x={0} y={0} width={boardPx} height={boardPx} fill="#1E293B" />
 
           {/* Track squares */}
@@ -206,13 +433,23 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
                 state.validTokenIndices.includes(tIdx);
 
               return (
-                <G key={`${col}-${tIdx}`}>
+                <G
+                  key={`${col}-${tIdx}`}
+                  onPress={
+                    isMovable
+                      ? () => {
+                          void Haptics.selectionAsync().catch(() => undefined);
+                          onMoveToken(tIdx);
+                        }
+                      : undefined
+                  }
+                >
                   {isMovable ? (
                     <Circle
                       cx={cx}
                       cy={cy}
-                      r={cell * 0.52}
-                      fill="none"
+                      r={cell * 0.56}
+                      fill="rgba(255,255,255,0.22)"
                       stroke="#FFFFFF"
                       strokeWidth={2.5}
                     />
@@ -220,7 +457,7 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
                   <Circle
                     cx={cx}
                     cy={cy}
-                    r={cell * 0.36}
+                    r={cell * 0.37}
                     fill={COLOR_HEX[col]}
                     stroke="#0F172A"
                     strokeWidth={1.6}
@@ -229,7 +466,7 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
                     x={cx}
                     y={cy + 3.5}
                     fill="#FFFFFF"
-                    fontSize={9}
+                    fontSize={9.5}
                     fontWeight="800"
                     textAnchor="middle"
                   >
@@ -242,30 +479,45 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
         </Svg>
       </View>
 
-      {/* Dice & Move Controls */}
+      {/* Visual Animated 3D Dice & Move Controls */}
       <Card variant="elevated" style={styles.diceCard}>
         <Pressable
-          disabled={!canRollNow}
-          onPress={() => {
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
-            onRoll();
-          }}
-          style={[styles.diceBtn, canRollNow && styles.diceBtnReady]}
+          disabled={!canRollNow || isRollingAnim}
+          onPress={handleTapRoll}
+          style={({ pressed }) => [
+            styles.diceTray,
+            canRollNow && styles.diceTrayReady,
+            pressed && canRollNow && { opacity: 0.92 },
+          ]}
+          accessibilityLabel="Roll Ludo dice"
         >
-          <Text style={styles.diceNum}>{state.diceValue ?? state.lastDiceValue ?? "🎲"}</Text>
-          <Text style={styles.diceSub}>{canRollNow ? "TAP TO ROLL" : "DICE"}</Text>
+          <Animated.View style={diceAnimStyle}>
+            <DiceFaceSvg
+              value={shownDiceValue}
+              size={62}
+              accentColor={canRollNow ? activeTurnHex : "#64748B"}
+              isSix={!isRollingAnim && shownDiceValue === 6}
+            />
+          </Animated.View>
+          <Text style={[styles.diceSub, canRollNow && styles.diceSubReady]}>
+            {isRollingAnim ? "ROLLING…" : canRollNow ? "TAP TO ROLL" : `ROLLED ${shownDiceValue}`}
+          </Text>
         </Pressable>
 
         <View style={styles.flexOne}>
           <Text style={styles.diceHeading}>
-            {canRollNow
-              ? "Roll the dice!"
-              : mustMoveNow
-                ? `Rolled ${state.diceValue} — Choose a token:`
-                : "Wait for next roll"}
+            {isRollingAnim
+              ? "Rolling the die…"
+              : canRollNow
+                ? "Tap the die to roll!"
+                : mustMoveNow
+                  ? `Rolled ${state.diceValue} — Choose a token:`
+                  : state.diceValue
+                    ? `Last roll: ${state.diceValue}`
+                    : "Wait for next roll"}
           </Text>
 
-          {mustMoveNow ? (
+          {mustMoveNow && !isRollingAnim ? (
             <View style={styles.tokenBtnsRow}>
               {state.validTokenIndices.map(tIdx => (
                 <Pressable
@@ -276,7 +528,7 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
                   }}
                   style={[
                     styles.tokenBtn,
-                    { backgroundColor: COLOR_HEX[state.turnColor] || colors.primary },
+                    { backgroundColor: activeTurnHex },
                   ]}
                 >
                   <Text style={styles.tokenBtnText}>Token #{tIdx + 1}</Text>
@@ -284,7 +536,13 @@ export function LudoBoard({ state, currentUsername, onRoll, onMoveToken }: LudoB
               ))}
             </View>
           ) : (
-            <Text style={styles.muted}>Roll a 6 to bring a token out of your yard.</Text>
+            <Text style={styles.muted}>
+              {canRollNow
+                ? "Roll a 6 to bring a token out of your yard."
+                : mustMoveNow
+                  ? "Tap a glowing token on the board or below."
+                  : "Roll a 6 to get a bonus turn."}
+            </Text>
           )}
         </View>
       </Card>
@@ -351,35 +609,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.md,
   },
-  diceBtn: {
-    width: 78,
-    height: 78,
+  diceTray: {
+    width: 92,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     borderRadius: radii.lg,
     backgroundColor: colors.surfaceInset,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
     alignItems: "center",
     justifyContent: "center",
+    gap: 6,
   },
-  diceBtnReady: {
-    backgroundColor: colors.primarySoft,
-    borderColor: colors.primaryBright,
-  },
-  diceNum: {
-    fontSize: 28,
-    fontWeight: "800",
-    color: colors.text,
+  diceTrayReady: {
+    backgroundColor: "rgba(59, 130, 246, 0.16)",
+    borderColor: colors.cyan,
   },
   diceSub: {
-    fontSize: 9,
-    fontWeight: "700",
-    color: colors.primaryBright,
-    marginTop: 2,
+    fontSize: 9.5,
+    fontWeight: "800",
+    color: colors.textSecondary,
+    letterSpacing: 0.4,
+  },
+  diceSubReady: {
+    color: colors.cyan,
   },
   diceHeading: {
     ...typography.bodyMedium,
     color: colors.text,
-    fontWeight: "600",
+    fontWeight: "700",
     marginBottom: 6,
   },
   tokenBtnsRow: {
@@ -388,8 +646,8 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tokenBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: 11,
+    paddingVertical: 7,
     borderRadius: radii.pill,
   },
   tokenBtnText: {

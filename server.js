@@ -423,7 +423,7 @@ app.get("/download", (_req, res) => {
           <img class="app-icon" src="/securesphere-icon.png" alt="SecureSphere Icon" />
           <div>
             <h1>SecureSphere for Android</h1>
-            <div class="meta">Version 1.0.0 &middot; Package <code>com.rupayan.securesphere</code> &middot; Free Direct Install</div>
+            <div class="meta">Version 1.0.1 &middot; Package <code>com.rupayan.securesphere</code> &middot; Free Direct Install</div>
           </div>
         </div>
         <div class="pills">

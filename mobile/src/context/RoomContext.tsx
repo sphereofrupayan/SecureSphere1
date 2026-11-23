@@ -5,6 +5,10 @@ import { STORAGE_KEYS } from "@/constants/storage";
 import { useAuth } from "@/hooks/useAuth";
 import { getSecureItem, setSecureItem } from "@/services/secureStorage";
 import { connectSocket, disconnectSocket, getActiveSocket } from "@/services/socket";
+import {
+  voiceWebRTCEngine,
+  type PeerAudioState,
+} from "@/services/voiceWebRTC";
 import type {
   ChatMessage,
   GameMatch,
@@ -49,6 +53,8 @@ export interface RoomContextValue {
   activeVoiceChannelId: string | null;
   voiceMuted: boolean;
   voiceDeafened: boolean;
+  voiceAudioSupported: boolean;
+  voicePeerStates: Record<string, PeerAudioState>;
   notifications: UserNotification[];
   unreadNotificationsCount: number;
   connectionStatus: SocketConnectionStatus;
@@ -173,6 +179,10 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   const [activeVoiceChannelId, setActiveVoiceChannelId] = useState<string | null>(null);
   const [voiceMuted, setVoiceMuted] = useState(false);
   const [voiceDeafened, setVoiceDeafened] = useState(false);
+  const [voiceAudioSupported, setVoiceAudioSupported] = useState<boolean>(() =>
+    voiceWebRTCEngine.isSupported()
+  );
+  const [voicePeerStates, setVoicePeerStates] = useState<Record<string, PeerAudioState>>({});
   const [notifications, setNotifications] = useState<UserNotification[]>([]);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<SocketConnectionStatus>("disconnected");
@@ -396,13 +406,68 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       });
     });
 
-    // Voice Channels live sync
-    socket.on("voice:channelsUpdated", (payload: VoiceChannelsPayload) => {
-      setVoiceChannels(Array.isArray(payload?.channels) ? payload.channels : []);
+    // Voice Channels live sync & WebRTC signaling binding
+    voiceWebRTCEngine.bindSocket(socket);
+    const unsubVoiceEngine = voiceWebRTCEngine.subscribe(snap => {
+      setVoiceAudioSupported(snap.supported);
+      setVoicePeerStates(snap.peerStates);
     });
 
+    socket.on("voice:channelsUpdated", (payload: VoiceChannelsPayload) => {
+      const nextChannels = Array.isArray(payload?.channels) ? payload.channels : [];
+      setVoiceChannels(nextChannels);
+      setActiveVoiceChannelId(prev => {
+        if (!prev) return prev;
+        const ch = nextChannels.find(c => c.id === prev);
+        const stillIn = ch?.participants?.some(p => p.socketId === socket.id);
+        if (!ch || !stillIn) {
+          voiceWebRTCEngine.stopLocalSession();
+          return null;
+        }
+        return prev;
+      });
+    });
+
+    socket.on(
+      "voice:participantStateUpdated",
+      (info: {
+        channelId?: string;
+        socketId?: string;
+        muted?: boolean;
+        deafened?: boolean;
+        speaking?: boolean;
+      }) => {
+        if (!info?.channelId || !info?.socketId) return;
+        setVoiceChannels(prev =>
+          prev.map(ch =>
+            ch.id !== info.channelId
+              ? ch
+              : {
+                  ...ch,
+                  participants: ch.participants.map(p =>
+                    p.socketId !== info.socketId
+                      ? p
+                      : {
+                          ...p,
+                          muted: typeof info.muted === "boolean" ? info.muted : p.muted,
+                          deafened: typeof info.deafened === "boolean" ? info.deafened : p.deafened,
+                          speaking: typeof info.speaking === "boolean" ? info.speaking : p.speaking,
+                        }
+                  ),
+                }
+          )
+        );
+      }
+    );
+
     socket.on("voice:channelClosed", (payload: { channelId?: string }) => {
-      setActiveVoiceChannelId(prev => (prev === payload?.channelId ? null : prev));
+      setActiveVoiceChannelId(prev => {
+        if (prev === payload?.channelId) {
+          voiceWebRTCEngine.stopLocalSession();
+          return null;
+        }
+        return prev;
+      });
     });
 
     // Notifications live sync
@@ -426,6 +491,9 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
     void refreshRoom();
 
     return () => {
+      unsubVoiceEngine();
+      voiceWebRTCEngine.stopLocalSession();
+      voiceWebRTCEngine.bindSocket(null);
       disconnectSocket();
     };
   }, [isAuthenticated, token, handleSessionExpired, refreshRoom, updateUserRole]);
@@ -466,10 +534,12 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
           const joined = await roomsApi.joinRoom({ roomId: code });
           await setActiveRoomId(joined.roomId);
           await refreshRoom();
+          voiceWebRTCEngine.stopLocalSession();
           setActiveVoiceChannelId(null);
           return { ok: true };
         }
         await setActiveRoomId(ack.roomId || code);
+        voiceWebRTCEngine.stopLocalSession();
         setActiveVoiceChannelId(null);
         return { ok: true };
       } catch (error) {
@@ -746,20 +816,38 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   );
 
   const joinVoiceChannel = useCallback(async (channelId: string) => {
-    const res = await emitWithAck<{ ok: boolean; error?: string }>("voice:join", {
+    const prep = await voiceWebRTCEngine.prepareForJoin();
+    if (!prep.ok) {
+      return { ok: false, error: prep.error || "Unable to access microphone for voice chat." };
+    }
+
+    const res = await emitWithAck<{
+      ok: boolean;
+      error?: string;
+      channelId?: string;
+      channelName?: string;
+      peers?: Array<{ socketId: string; username: string }>;
+    }>("voice:join", {
       channelId,
       muted: false,
       deafened: false,
     });
+
     if (res.ok) {
-      setActiveVoiceChannelId(channelId);
+      const joinedId = res.channelId || channelId;
+      voiceWebRTCEngine.setLocalVoiceFlags(false, false);
+      voiceWebRTCEngine.startChannelMesh(joinedId, Array.isArray(res.peers) ? res.peers : []);
+      setActiveVoiceChannelId(joinedId);
       setVoiceMuted(false);
       setVoiceDeafened(false);
+    } else {
+      voiceWebRTCEngine.stopLocalSession();
     }
     return res;
   }, []);
 
   const leaveVoiceChannel = useCallback(async () => {
+    voiceWebRTCEngine.stopLocalSession();
     const res = await emitWithAck<{ ok: boolean; error?: string }>("voice:leave", {});
     setActiveVoiceChannelId(null);
     setVoiceMuted(false);
@@ -769,16 +857,20 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
 
   const setVoiceState = useCallback(
     async (next: { muted?: boolean; deafened?: boolean }) => {
-      const nextMuted = next.muted ?? voiceMuted;
       const nextDeafened = next.deafened ?? voiceDeafened;
+      const requestedMuted = next.muted ?? voiceMuted;
+      // Unmuting while deafened automatically undeafens, matching public/voice.js
+      const finalDeafened = next.muted === false && next.deafened === undefined ? false : nextDeafened;
+      const finalMuted = finalDeafened ? true : requestedMuted;
+
+      voiceWebRTCEngine.setLocalVoiceFlags(finalMuted, finalDeafened);
+      setVoiceMuted(finalMuted);
+      setVoiceDeafened(finalDeafened);
+
       const res = await emitWithAck<{ ok: boolean; error?: string }>("voice:state", {
-        muted: nextDeafened ? true : nextMuted,
-        deafened: nextDeafened,
+        muted: finalMuted,
+        deafened: finalDeafened,
       });
-      if (res.ok) {
-        setVoiceMuted(nextDeafened ? true : nextMuted);
-        setVoiceDeafened(nextDeafened);
-      }
       return res;
     },
     [voiceDeafened, voiceMuted]
@@ -811,6 +903,8 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       activeVoiceChannelId,
       voiceMuted,
       voiceDeafened,
+      voiceAudioSupported,
+      voicePeerStates,
       notifications,
       unreadNotificationsCount,
       connectionStatus,
@@ -881,6 +975,8 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       activeVoiceChannelId,
       voiceMuted,
       voiceDeafened,
+      voiceAudioSupported,
+      voicePeerStates,
       notifications,
       unreadNotificationsCount,
       connectionStatus,

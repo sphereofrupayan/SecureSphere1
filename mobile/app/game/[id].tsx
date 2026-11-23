@@ -8,6 +8,7 @@ import { LudoBoard } from "@/components/games/LudoBoard";
 import { TicTacToeBoard } from "@/components/games/TicTacToeBoard";
 import { useAuth } from "@/hooks/useAuth";
 import { useRoom } from "@/hooks/useRoom";
+import { gameSounds } from "@/services/gameSounds";
 import { colors, radii, spacing, typography } from "@/theme";
 import type { ChessState, LudoState, TicTacToeState } from "@/types";
 
@@ -30,6 +31,13 @@ export default function GameArenaScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [infoMsg, setInfoMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(() => gameSounds.isMuted());
+
+  const toggleSound = () => {
+    const next = !soundMuted;
+    gameSounds.setMuted(next);
+    setSoundMuted(next);
+  };
 
   const match = useMemo(
     () => (gamesLobby?.matches || []).find(m => m.id === id) || null,
@@ -118,6 +126,18 @@ export default function GameArenaScreen() {
             {match.players.join(" vs ")} · {match.spectators.length} watching
           </Text>
         </View>
+        <Pressable
+          onPress={toggleSound}
+          style={styles.backBtn}
+          hitSlop={8}
+          accessibilityLabel={soundMuted ? "Unmute game sounds" : "Mute game sounds"}
+        >
+          <Ionicons
+            name={soundMuted ? "volume-mute-outline" : "volume-high-outline"}
+            size={18}
+            color={soundMuted ? colors.textMuted : colors.cyan}
+          />
+        </Pressable>
         <Pressable onPress={() => void handleLeave()} style={styles.leavePill}>
           <Text style={styles.leaveText}>Leave</Text>
         </Pressable>

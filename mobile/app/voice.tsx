@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { voiceApi } from "@/api";
-import { Button, Card, FeedbackBanner, ScreenContainer, StatusBadge } from "@/components";
+import { Button, Card, FeedbackBanner, PulseBeacon, ScreenContainer, StatusBadge } from "@/components";
 import { useAuth } from "@/hooks/useAuth";
 import { useRoom } from "@/hooks/useRoom";
 import { colors, radii, spacing, typography } from "@/theme";
+import { confirmAction } from "@/utils/confirm";
 
 export default function VoiceChannelsScreen() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export default function VoiceChannelsScreen() {
     activeVoiceChannelId,
     voiceMuted,
     voiceDeafened,
+    voiceAudioSupported,
+    voicePeerStates,
     isRoomAdminOrOwner,
     createVoiceChannel,
     deleteVoiceChannel,
@@ -27,6 +31,7 @@ export default function VoiceChannelsScreen() {
 
   const [newChannelName, setNewChannelName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [joiningChannelId, setJoiningChannelId] = useState<string | null>(null);
   const [iceInfo, setIceInfo] = useState<{ count: number; hasTurn: boolean } | null>(null);
   const [feedback, setFeedback] = useState<{ tone: "error" | "success" | "info"; text: string } | null>(
     null
@@ -68,32 +73,46 @@ export default function VoiceChannelsScreen() {
   };
 
   const handleDeleteChannel = (channelId: string, name: string) => {
-    Alert.alert("Delete Channel", `Remove voice channel "${name}"?`, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          const res = await deleteVoiceChannel(channelId);
-          if (!res.ok) {
-            setFeedback({ tone: "error", text: res.error || "Unable to delete channel." });
-          }
-        },
+    confirmAction({
+      title: "Delete Channel",
+      message: `Remove voice channel "${name}"?`,
+      confirmLabel: "Delete",
+      destructive: true,
+      onConfirm: async () => {
+        const res = await deleteVoiceChannel(channelId);
+        if (!res.ok) {
+          setFeedback({ tone: "error", text: res.error || "Unable to delete channel." });
+        }
       },
-    ]);
+    });
   };
 
   const handleJoin = async (channelId: string) => {
     setBusy(true);
+    setJoiningChannelId(channelId);
     setFeedback(null);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     const res = await joinVoiceChannel(channelId);
     setBusy(false);
+    setJoiningChannelId(null);
     if (!res.ok) {
       setFeedback({ tone: "error", text: res.error || "Unable to join voice channel." });
+    } else {
+      setFeedback({
+        tone: "success",
+        text: "Two-way live WebRTC audio connected! You can talk with teammates on mobile & web.",
+      });
     }
   };
 
+  const handleLeave = async () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    await leaveVoiceChannel();
+    setFeedback(null);
+  };
+
   const activeChannel = voiceChannels.find(c => c.id === activeVoiceChannelId) || null;
+  const connectedPeersCount = Object.values(voicePeerStates).filter(s => s === "connected").length;
 
   return (
     <ScreenContainer scroll keyboardAware edges={["top", "bottom", "left", "right"]}>
@@ -103,7 +122,9 @@ export default function VoiceChannelsScreen() {
         </Pressable>
         <View style={styles.flexOne}>
           <Text style={styles.title}>Voice Channels</Text>
-          <Text style={styles.subtitle}>Room {roomState?.roomId || activeRoomId}</Text>
+          <Text style={styles.subtitle}>
+            Room {roomState?.roomId || activeRoomId} · Two-Way WebRTC Audio
+          </Text>
         </View>
         {iceInfo ? (
           <StatusBadge
@@ -113,12 +134,14 @@ export default function VoiceChannelsScreen() {
         ) : null}
       </View>
 
-      <View style={styles.gap}>
-        <FeedbackBanner
-          tone="info"
-          message="Channel presence, mute/deafen states, and room signaling sync live with the backend. Full two-way native WebRTC audio requires linking react-native-webrtc in a custom EAS dev/prod build."
-        />
-      </View>
+      {!voiceAudioSupported ? (
+        <View style={styles.gap}>
+          <FeedbackBanner
+            tone="warning"
+            message="Native WebRTC audio is unavailable in Expo Go. Install the SecureSphere Android APK build for live two-way voice chat."
+          />
+        </View>
+      ) : null}
 
       {feedback ? (
         <View style={styles.gap}>
@@ -134,12 +157,20 @@ export default function VoiceChannelsScreen() {
       {activeChannel ? (
         <Card variant="accent" style={styles.cardGap}>
           <View style={styles.rowBetween}>
-            <View>
-              <Text style={styles.eyebrow}>CONNECTED CHANNEL</Text>
+            <View style={styles.flexOne}>
+              <View style={styles.liveRow}>
+                <PulseBeacon color={colors.success} size={8} />
+                <Text style={styles.eyebrow}>VOICE LIVE · WEBRTC AUDIO</Text>
+              </View>
               <Text style={styles.channelTitle}>{activeChannel.name}</Text>
+              <Text style={styles.muted}>
+                {activeChannel.participants.length <= 1
+                  ? "Waiting for teammates to join this channel…"
+                  : `${connectedPeersCount} of ${activeChannel.participants.length - 1} peer audio link${activeChannel.participants.length - 1 === 1 ? "" : "s"} live`}
+              </Text>
             </View>
             <StatusBadge
-              label={`${activeChannel.participants.length} Connected`}
+              label={`${activeChannel.participants.length} In Voice`}
               tone="success"
               showDot
             />
@@ -147,19 +178,25 @@ export default function VoiceChannelsScreen() {
 
           <View style={styles.controlsRow}>
             <Pressable
-              onPress={() => void setVoiceState({ muted: !voiceMuted })}
-              style={[styles.ctrlBtn, voiceMuted && styles.ctrlBtnActive]}
+              onPress={() => {
+                void Haptics.selectionAsync().catch(() => {});
+                void setVoiceState({ muted: !voiceMuted });
+              }}
+              style={[styles.ctrlBtn, voiceMuted && styles.ctrlBtnMuted]}
             >
               <Ionicons
                 name={voiceMuted ? "mic-off" : "mic"}
                 size={20}
-                color={voiceMuted ? colors.danger : colors.text}
+                color={voiceMuted ? colors.danger : colors.success}
               />
-              <Text style={styles.ctrlLabel}>{voiceMuted ? "Unmute" : "Mute"}</Text>
+              <Text style={styles.ctrlLabel}>{voiceMuted ? "Unmute" : "Mic Live"}</Text>
             </Pressable>
 
             <Pressable
-              onPress={() => void setVoiceState({ deafened: !voiceDeafened })}
+              onPress={() => {
+                void Haptics.selectionAsync().catch(() => {});
+                void setVoiceState({ deafened: !voiceDeafened });
+              }}
               style={[styles.ctrlBtn, voiceDeafened && styles.ctrlBtnActive]}
             >
               <Ionicons
@@ -171,7 +208,7 @@ export default function VoiceChannelsScreen() {
             </Pressable>
 
             <Pressable
-              onPress={() => void leaveVoiceChannel()}
+              onPress={() => void handleLeave()}
               style={[styles.ctrlBtn, styles.leaveBtn]}
             >
               <Ionicons name="call-outline" size={20} color={colors.danger} />
@@ -185,6 +222,7 @@ export default function VoiceChannelsScreen() {
       <View style={styles.stack}>
         {voiceChannels.map(ch => {
           const isJoined = ch.id === activeVoiceChannelId;
+          const isJoiningThis = joiningChannelId === ch.id;
           const canDelete =
             !ch.isDefault &&
             (isRoomAdminOrOwner ||
@@ -194,12 +232,14 @@ export default function VoiceChannelsScreen() {
             <Card key={ch.id} variant={isJoined ? "elevated" : "default"} style={styles.channelCard}>
               <View style={styles.rowBetween}>
                 <View style={styles.channelIdentity}>
-                  <Ionicons
-                    name="volume-high-outline"
-                    size={19}
-                    color={isJoined ? colors.success : colors.primaryBright}
-                  />
-                  <View>
+                  <View style={[styles.chIconCircle, isJoined && styles.chIconCircleLive]}>
+                    <Ionicons
+                      name={isJoined ? "mic" : "volume-high-outline"}
+                      size={18}
+                      color={isJoined ? colors.success : colors.primaryBright}
+                    />
+                  </View>
+                  <View style={styles.flexOne}>
                     <Text style={styles.channelName}>{ch.name}</Text>
                     <Text style={styles.muted}>
                       {ch.participants.length} participant{ch.participants.length === 1 ? "" : "s"}
@@ -210,7 +250,7 @@ export default function VoiceChannelsScreen() {
                 <View style={styles.channelActions}>
                   {canDelete ? (
                     <Pressable
-                      onPress={() => handleDeleteChannel(ch.id, ch.name)}
+                      onPress={() => void handleDeleteChannel(ch.id, ch.name)}
                       hitSlop={8}
                       style={styles.trashBtn}
                     >
@@ -220,13 +260,11 @@ export default function VoiceChannelsScreen() {
 
                   <Pressable
                     disabled={busy}
-                    onPress={() =>
-                      isJoined ? void leaveVoiceChannel() : void handleJoin(ch.id)
-                    }
+                    onPress={() => (isJoined ? void handleLeave() : void handleJoin(ch.id))}
                     style={[styles.joinPill, isJoined && styles.leavePill]}
                   >
                     <Text style={[styles.joinPillText, isJoined && { color: colors.danger }]}>
-                      {isJoined ? "Leave" : "Join"}
+                      {isJoiningThis ? "Connecting…" : isJoined ? "Leave" : "Join"}
                     </Text>
                   </Pressable>
                 </View>
@@ -234,17 +272,43 @@ export default function VoiceChannelsScreen() {
 
               {ch.participants.length > 0 ? (
                 <View style={styles.participantsWrap}>
-                  {ch.participants.map(p => (
-                    <View key={p.socketId} style={styles.participantChip}>
-                      <Text style={styles.participantName}>{p.username}</Text>
-                      {p.muted ? (
-                        <Ionicons name="mic-off" size={12} color={colors.danger} />
-                      ) : null}
-                      {p.deafened ? (
-                        <Ionicons name="volume-mute" size={12} color={colors.warning} />
-                      ) : null}
-                    </View>
-                  ))}
+                  {ch.participants.map(p => {
+                    const isMe = p.username.toLowerCase() === (user?.username || "").toLowerCase();
+                    const peerState = !isMe && isJoined ? voicePeerStates[p.socketId] : undefined;
+                    return (
+                      <View
+                        key={p.socketId}
+                        style={[
+                          styles.participantChip,
+                          p.speaking && !p.muted && !p.deafened && styles.participantChipSpeaking,
+                        ]}
+                      >
+                        <View
+                          style={[
+                            styles.peerDot,
+                            {
+                              backgroundColor:
+                                isMe || peerState === "connected"
+                                  ? colors.success
+                                  : peerState === "reconnecting"
+                                    ? colors.warning
+                                    : colors.primaryBright,
+                            },
+                          ]}
+                        />
+                        <Text style={styles.participantName}>
+                          {p.username}
+                          {isMe ? " (You)" : ""}
+                        </Text>
+                        {p.muted ? (
+                          <Ionicons name="mic-off" size={12} color={colors.danger} />
+                        ) : null}
+                        {p.deafened ? (
+                          <Ionicons name="volume-mute" size={12} color={colors.warning} />
+                        ) : null}
+                      </View>
+                    );
+                  })}
                 </View>
               ) : null}
             </Card>
@@ -267,7 +331,7 @@ export default function VoiceChannelsScreen() {
           <View style={styles.createBtnWrap}>
             <Button
               label="Add"
-              loading={busy}
+              loading={busy && !joiningChannelId}
               onPress={() => void handleCreateChannel()}
             />
           </View>
@@ -320,6 +384,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: spacing.sm,
   },
+  liveRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 2,
+  },
   eyebrow: {
     ...typography.label,
     fontSize: 10,
@@ -343,6 +413,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 4,
+  },
+  ctrlBtnMuted: {
+    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSoft,
   },
   ctrlBtnActive: {
     borderColor: colors.warningBorder,
@@ -369,6 +443,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.sm + 2,
     flex: 1,
+  },
+  chIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chIconCircleLive: {
+    backgroundColor: colors.successSoft,
+    borderColor: colors.successBorder,
   },
   channelName: {
     ...typography.bodyMedium,
@@ -415,13 +503,22 @@ const styles = StyleSheet.create({
   participantChip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: 6,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: radii.pill,
     backgroundColor: colors.surfaceInset,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  participantChipSpeaking: {
+    borderColor: colors.success,
+    backgroundColor: colors.successSoft,
+  },
+  peerDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
   },
   participantName: {
     ...typography.caption,
