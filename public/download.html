@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecureSphere — Real-Time Private Collaboration for Android &amp; Web</title>
+  <meta name="description" content="Download SecureSphere for Android or launch instantly on the web. Private rooms for encrypted team chat, live whiteboard, two-way WebRTC voice channels, multiplayer 3D Ludo &amp; Chess, and Gemini AI." />
+  <link rel="icon" type="image/png" href="/securesphere-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/download.css" />
+</head>
+<body>
+  <!-- Smooth Mouse-Tracking Cursor Elements -->
+  <div class="ss-cursor-halo" id="ssCursorHalo" aria-hidden="true"></div>
+  <div class="ss-cursor-dot" id="ssCursorDot" aria-hidden="true"></div>
+  <div class="ss-cursor-pill" id="ssCursorPill" aria-hidden="true"></div>
+
+  <!-- Minimal Sticky Navigation -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand-lockup" href="#top" data-cursor="SecureSphere">
+        <img src="/securesphere-icon.png" alt="SecureSphere Logo" />
+        <span>SecureSphere</span>
+        <span class="brand-tag">v{{APP_VERSION}}</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#showcase">Showcase Film</a>
+        <a href="#features">Platform</a>
+        <a href="#screens">App &amp; Web</a>
+        <a href="#making">How It Was Built</a>
+        <a href="#install">Install</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="pill pill-soft" href="/" data-cursor="Open Web App ↗">Open web app ↗</a>
+        <a class="pill pill-dark" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download APK">Download APK</a>
+      </div>
+    </div>
+
+    <div class="announcement-bar" id="announcementBar">
+      <span class="badge-new">+ NEW</span>
+      <span>SecureSphere v{{APP_VERSION}} — Native two-way WebRTC voice audio, animated 3D Ludo dice &amp; real sound effects.</span>
+      <a class="announcement-link" href="#making">See what's inside &rarr;</a>
+      <button class="announcement-close" id="announcementClose" type="button" aria-label="Dismiss announcement">&times;</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section with Prismatic Mouse-Reactive Particle Canvas -->
+    <section class="hero-section">
+      <canvas class="hero-canvas" id="heroParticles" aria-hidden="true"></canvas>
+
+      <div class="hero-content">
+        <div class="hero-brand-pill">
+          <img src="/securesphere-icon.png" alt="" />
+          <span class="live-dot"></span>
+          <span>SecureSphere · Android &amp; Web Live</span>
+        </div>
+
+        <h1 class="hero-title">Experience liftoff in private real-time rooms<span class="rainbow-caret" aria-hidden="true"></span></h1>
+
+        <p class="hero-sub">
+          Encrypted private rooms uniting team chat, infinite live whiteboard, two-way WebRTC voice channels, multiplayer 3D Ludo &amp; Chess, YouTube sync, and streaming Gemini AI — 100% free with zero ads.
+        </p>
+
+        <div class="hero-cta-row">
+          <a class="pill pill-dark pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download v{{APP_VERSION}}">
+            &#11015; Download for Android (.APK)
+          </a>
+          <a class="pill pill-soft pill-lg" href="/" data-cursor="Launch Web App ↗">
+            Open Web App ↗
+          </a>
+          <a class="pill pill-soft pill-lg" href="#showcase" data-cursor="▶ Watch 2m Film">
+            &#9654; Watch Showcase Film
+          </a>
+        </div>
+
+        <div class="hero-meta-row">
+          <span>v{{APP_VERSION}}</span>
+          <span>&middot;</span>
+          <span>com.rupayan.securesphere</span>
+          <span>&middot;</span>
+          <span>Android 8+ &amp; Modern Web</span>
+          <span>&middot;</span>
+          <span>$0 Free Forever</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-Width 16:9 2m15s Looping Showcase Cinema -->
+    <section class="cinema-section" id="showcase">
+      <div class="cinema-stage" id="cinemaStage" data-cursor="▶ Play / Pause">
+        <video
+          id="showcaseVideo"
+          class="cinema-video"
+          src="/media/securesphere-showcase.mp4"
+          poster="/media/3d-hero.jpg"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
+
+        <div class="cinema-hud">
+          <div class="cinema-progress-wrap" id="cinemaProgressWrap" title="Seek showcase video">
+            <div class="cinema-progress-fill" id="cinemaProgressFill"></div>
+          </div>
+
+          <div class="cinema-controls-row">
+            <div class="cinema-left">
+              <button class="cinema-btn" id="btnPlayPause" type="button" aria-label="Play or pause showcase video">
+                <span id="playPauseIcon">&#10074;&#10074;</span>
+                <span id="playPauseLabel">Pause</span>
+              </button>
+              <button class="cinema-btn" id="btnMuteToggle" type="button" aria-label="Toggle ambient audio">
+                <span id="muteIcon">&#128263;</span>
+                <span id="muteLabel">Sound Off</span>
+              </button>
+              <span class="cinema-chapter-label" id="cinemaChapterLabel">01 · Experience Liftoff</span>
+            </div>
+
+            <div class="cinema-right">
+              <span class="cinema-time" id="cinemaTime">0:00 / 2:15</span>
+              <button class="cinema-btn" id="btnFullscreen" type="button" aria-label="Fullscreen video">
+                &#x26F6; Fullscreen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Chapter Jumper Pills -->
+      <div class="chapter-pills" id="chapterPills" aria-label="Video chapters">
+        <button class="chapter-pill is-active" data-seek="0" type="button">01 Hero</button>
+        <button class="chapter-pill" data-seek="15" type="button">02 Web + App Sync</button>
+        <button class="chapter-pill" data-seek="30" type="button">03 Encrypted Chat</button>
+        <button class="chapter-pill" data-seek="45" type="button">04 Live Whiteboard</button>
+        <button class="chapter-pill" data-seek="60" type="button">05 WebRTC Voice</button>
+        <button class="chapter-pill" data-seek="75" type="button">06 3D Ludo &amp; Chess</button>
+        <button class="chapter-pill" data-seek="90" type="button">07 Gemini AI</button>
+        <button class="chapter-pill" data-seek="105" type="button">08 Making Of</button>
+        <button class="chapter-pill" data-seek="120" type="button">09 Download</button>
+      </div>
+    </section>
+
+    <!-- Floating Icon Strip & Platform Statement -->
+    <section class="statement-section reveal">
+      <div class="bouncer-strip" aria-hidden="true">
+        <span class="bouncer-icon" style="--i:0" title="Private Rooms">&#128737;</span>
+        <span class="bouncer-icon" style="--i:1" title="Real-Time Chat">&#128172;</span>
+        <span class="bouncer-icon" style="--i:2" title="WebRTC Voice">&#127897;</span>
+        <span class="bouncer-icon" style="--i:3" title="Live Whiteboard">&#9998;</span>
+        <span class="bouncer-icon" style="--i:4" title="3D Ludo Dice">&#127922;</span>
+        <span class="bouncer-icon" style="--i:5" title="Live Chess">&#9822;</span>
+        <span class="bouncer-icon" style="--i:6" title="Gemini AI">&#10024;</span>
+        <span class="bouncer-icon" style="--i:7" title="YouTube Sync">&#9654;</span>
+        <span class="bouncer-icon" style="--i:8" title="File Sharing">&#128206;</span>
+        <span class="bouncer-icon" style="--i:9" title="SQLite WAL">&#128451;</span>
+        <span class="bouncer-icon" style="--i:10" title="Socket.IO">&#9889;</span>
+        <span class="bouncer-icon" style="--i:11" title="Android Native">&#128241;</span>
+      </div>
+
+      <p class="statement-copy">
+        SecureSphere is a unified real-time communication workspace, <span class="muted">built so your phone and desktop collaborate as one borderless room</span><span class="rainbow-caret" aria-hidden="true"></span>
+      </p>
+    </section>
+
+    <!-- 16:9 3D Product Suite Explorer -->
+    <section class="explorer-section" id="features">
+      <!-- 01: Cross-Platform Sync -->
+      <article class="explorer-row reveal">
+        <div class="explorer-copy">
+          <div class="explorer-eyebrow">01 · Cross-Platform Engine</div>
+          <h2 class="explorer-title">One room. Android &amp; Web in perfect sync.</h2>
+          <p class="explorer-desc">
+            Every chat message, whiteboard stroke, game turn, voice peer, and notification flows through a single Socket.IO &amp; SQLite backend — zero duplicate servers, zero WebView wrappers.
+          </p>
+          <ul class="explorer-points">
+            <li><span class="point-dot"></span><span>Create or join private rooms instantly with a Room ID</span></li>
+            <li><span class="point-dot"></span><span>Role-based Owner, Admin &amp; Member controls per room</span></li>
+            <li><span class="point-dot"></span><span>Encrypted Keystore JWT tokens on Android + HTTPS everywhere</span></li>
+          </ul>
+        </div>
+        <div class="media-stage tilt-stage" data-cursor="✦ Web + Android">
+          <img class="stage-bg" src="/media/3d-crossplatform.jpg" alt="SecureSphere 3D cross-platform laptop and Android sync illustration" loading="lazy" />
+          <div class="media-spotlight"></div>
+        </div>
+      </article>
+
+      <!-- 02: Team Chat & Infinite Whiteboard -->
+      <article class="explorer-row is-reversed reveal">
+        <div class="explorer-copy">
+          <div class="explorer-eyebrow">02 · Live Collaboration</div>
+          <h2 class="explorer-title">Encrypted team chat meets infinite vector whiteboard.</h2>
+          <p class="explorer-desc">
+            Share PDFs, images, videos, threaded replies, and emoji reactions alongside a live multi-tool whiteboard with 2-finger pinch-to-zoom, pan, sticky notes, undo/redo, and exact desktop world-space framing.
+          </p>
+          <ul class="explorer-points">
+            <li><span class="point-dot"></span><span>Pen, Highlighter, Arrows, Shapes, Text &amp; Sticky Notes</span></li>
+            <li><span class="point-dot"></span><span>Pinch-to-zoom, Fit All &amp; instant Clear All controls</span></li>
+            <li><span class="point-dot"></span><span>Built-in inline PDF/media viewer and saved bookmarks</span></li>
+          </ul>
+        </div>
+        <div class="media-stage tilt-stage" data-cursor="✦ Live Whiteboard">
+          <img class="stage-bg" src="/media/3d-workspace.jpg" alt="SecureSphere 3D collaborative whiteboard and encrypted chat illustration" loading="lazy" />
+          <img class="floating-app-preview" src="/media/app-whiteboard.jpg" alt="SecureSphere Live Whiteboard Mobile Screen" loading="lazy" />
+          <div class="media-spotlight"></div>
+        </div>
+      </article>
+
+      <!-- 03: Native WebRTC Voice Channels -->
+      <article class="explorer-row reveal">
+        <div class="explorer-copy">
+          <div class="explorer-eyebrow">03 · Two-Way WebRTC Audio</div>
+          <h2 class="explorer-title">Drop into live voice channels across mobile &amp; web.</h2>
+          <p class="explorer-desc">
+            Powered by native <code>react-native-webrtc</code> on Android and browser WebRTC on desktop, connecting every teammate in a low-latency peer-to-peer audio mesh with STUN/TURN signaling.
+          </p>
+          <ul class="explorer-points">
+            <li><span class="point-dot"></span><span>Talk seamlessly between Android phones and desktop browsers</span></li>
+            <li><span class="point-dot"></span><span>Instant hardware Mic Mute, Deafen &amp; live peer badges</span></li>
+            <li><span class="point-dot"></span><span>Create custom squad voice channels inside any room</span></li>
+          </ul>
+        </div>
+        <div class="media-stage tilt-stage" data-cursor="✦ Live Voice">
+          <img class="stage-bg" src="/media/3d-voice.jpg" alt="SecureSphere 3D WebRTC crystal voice studio illustration" loading="lazy" />
+          <div class="media-spotlight"></div>
+        </div>
+      </article>
+
+      <!-- 04: Multiplayer Games & 3D Ludo Dice -->
+      <article class="explorer-row is-reversed reveal">
+        <div class="explorer-copy">
+          <div class="explorer-eyebrow">04 · Multiplayer Lounge</div>
+          <h2 class="explorer-title">Tumbling 3D Ludo dice, live Chess &amp; YouTube watch party.</h2>
+          <p class="explorer-desc">
+            Unwind without leaving your room. Roll an animated 3D Ludo die with synthesized wooden clack sound effects, play timed Chess or Tic Tac Toe, or queue synchronized YouTube sessions.
+          </p>
+          <ul class="explorer-points">
+            <li><span class="point-dot"></span><span>Real visual 3D die pips (1–6) with bounce animation &amp; audio SFX</span></li>
+            <li><span class="point-dot"></span><span>Directly tappable board tokens, capture &amp; victory chimes</span></li>
+            <li><span class="point-dot"></span><span>Server-validated game engine with spectator &amp; Clear Lounge support</span></li>
+          </ul>
+        </div>
+        <div class="media-stage tilt-stage" data-cursor="✦ 3D Ludo &amp; Chess">
+          <img class="stage-bg" src="/media/3d-games.jpg" alt="SecureSphere 3D tumbling Ludo dice and glass Chess pieces illustration" loading="lazy" />
+          <div class="media-spotlight"></div>
+        </div>
+      </article>
+
+      <!-- 05: Gemini AI Workspace Assistant -->
+      <article class="explorer-row reveal">
+        <div class="explorer-copy">
+          <div class="explorer-eyebrow">05 · Grounded AI Intelligence</div>
+          <h2 class="explorer-title">Gemini AI, grounded in your live room context.</h2>
+          <p class="explorer-desc">
+            Stream workspace briefings, action items, unanswered threads, and code explanations over Server-Sent Events — rendered with aligned Markdown tables, copyable code blocks, and clean Unicode math with zero LaTeX clutter.
+          </p>
+          <ul class="explorer-points">
+            <li><span class="point-dot"></span><span>Automatic LaTeX-to-Unicode formatting (e.g. O(n²), n × m, i-th row)</span></li>
+            <li><span class="point-dot"></span><span>One-tap Workspace Briefing, Extract Tasks &amp; Regenerate</span></li>
+            <li><span class="point-dot"></span><span>Strict room-scoped privacy — never invents fake messages</span></li>
+          </ul>
+        </div>
+        <div class="media-stage tilt-stage" data-cursor="✦ Gemini AI">
+          <img class="stage-bg" src="/media/3d-architecture.jpg" alt="SecureSphere 3D Gemini AI crystal neural stack illustration" loading="lazy" />
+          <img class="floating-app-preview" src="/media/app-gemini.jpg" alt="SecureSphere Gemini AI Mobile Screen" loading="lazy" />
+          <div class="media-spotlight"></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Real Mobile App Screens Gallery -->
+    <section class="screens-section" id="screens">
+      <div class="screens-inner">
+        <div class="section-header-split reveal">
+          <h2 class="section-title">Crafted pixel-by-pixel for mobile speed.</h2>
+          <p class="section-lead">
+            A dedicated native React Native + Expo interface designed for one-handed dark-mode comfort — completely independent of the web frontend while sharing every live event.
+          </p>
+        </div>
+
+        <div class="screens-grid">
+          <div class="screen-item reveal">
+            <div class="screen-frame" data-cursor="Team Chat">
+              <img src="/media/app-chat.jpg" alt="SecureSphere Private Team Chat Android Screen" loading="lazy" />
+            </div>
+            <div class="screen-caption">
+              <h3>Private Team Chat</h3>
+              <p>Threaded replies, PDF &amp; media cards, emoji reactions, and keyboard-aware composer.</p>
+            </div>
+          </div>
+
+          <div class="screen-item reveal">
+            <div class="screen-frame" data-cursor="Whiteboard">
+              <img src="/media/app-whiteboard.jpg" alt="SecureSphere Live Whiteboard Android Screen" loading="lazy" />
+            </div>
+            <div class="screen-caption">
+              <h3>Live Whiteboard</h3>
+              <p>Pinch-to-zoom vector canvas with full desktop framing, sticky notes, and live strokes.</p>
+            </div>
+          </div>
+
+          <div class="screen-item reveal">
+            <div class="screen-frame" data-cursor="Gemini AI">
+              <img src="/media/app-gemini.jpg" alt="SecureSphere Gemini AI Assistant Android Screen" loading="lazy" />
+            </div>
+            <div class="screen-caption">
+              <h3>Gemini AI Assistant</h3>
+              <p>Streaming room summaries, action cards, clean math typography, and one-tap copy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inside the Making of SecureSphere — Full Engineering Story -->
+    <section class="making-section" id="making">
+      <div class="section-header-split reveal">
+        <h2 class="section-title">Everything involved in the making of SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
+        <p class="section-lead">
+          From zero-dependency real-time protocol design to native Android WebRTC compilation, here is the full architecture engineered behind this platform.
+        </p>
+      </div>
+
+      <div class="making-hero-stage reveal">
+        <div>
+          <div class="explorer-eyebrow" style="color:#7dd3fc;">SYSTEM ARCHITECTURE · END TO END</div>
+          <h3 style="margin:0 0 14px; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing:-0.03em; line-height:1.12;">
+            Single source of truth across Web, Android, Voice &amp; AI.
+          </h3>
+          <p style="margin:0 0 24px; color:#94a3b8; font-size:15.5px; line-height:1.65;">
+            Rather than duplicating backends, SecureSphere runs one unified Node.js + Socket.IO + SQLite WAL core on Render HTTPS. Both the web frontend and the standalone Expo Android app authenticate with the exact same JWT tokens, join the exact same rooms, draw on the exact same SVG world coordinates, and talk peer-to-peer over WebRTC.
+          </p>
+          <a class="pill pill-white" href="/" data-cursor="Try Live Web ↗">Explore Live Web Workspace ↗</a>
+        </div>
+
+        <div class="making-terminal" aria-label="SecureSphere architecture blueprint">
+          <div class="term-dots"><span></span><span></span><span></span></div>
+          <div><span class="tok-dim">$</span> <span class="tok-cyan">securesphere</span> inspect --architecture</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Backend Core</span>   Node.js · Express 5 · Socket.IO 4.8</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Persistence</span>    SQLite WAL (better-sqlite3) · Media FS</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Auth &amp; Crypto</span>  bcrypt (12 rounds) · JWT · Expo SecureStore</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Mobile App</span>     React Native 0.88 · Expo SDK 58 · TypeScript</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Motion &amp; GFX</span>   Reanimated 4 · SVG ViewBox · Gesture Handler</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Live Voice</span>     react-native-webrtc + STUN/TURN Mesh</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Game Audio</span>     expo-audio + Synthesized PCM WAV SFX</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">AI Pipeline</span>    @google/genai SSE · LaTeX-to-Unicode Engine</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">CI &amp; Hosting</span>   GitHub → Render HTTPS · EAS Cloud · Uptodown</div>
+        </div>
+      </div>
+
+      <div class="making-grid">
+        <div class="making-pillar reveal">
+          <span class="pillar-num">01 / BACKEND &amp; REAL-TIME SYNC</span>
+          <h3>Event-Driven Room Engine</h3>
+          <p>Built on Express 5 and Socket.IO with per-room runtime state, instant ack callbacks, presence heartbeats, chat history, reactions, whiteboard undo/redo stacks, and a server-authoritative multiplayer game engine.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">Node.js 20+</span>
+            <span class="stack-tag">Express 5</span>
+            <span class="stack-tag">Socket.IO</span>
+            <span class="stack-tag">SQLite WAL</span>
+          </div>
+        </div>
+
+        <div class="making-pillar reveal">
+          <span class="pillar-num">02 / NATIVE ANDROID ENGINEERING</span>
+          <h3>Standalone Expo + TypeScript App</h3>
+          <p>Architected cleanly inside <code>mobile/</code> with 16 native Expo Router screens, centralized Axios interceptors, strict Zod form validation, environment guards blocking HTTP in production, and smooth Reanimated animations.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">Expo SDK 58</span>
+            <span class="stack-tag">React Native</span>
+            <span class="stack-tag">TypeScript</span>
+            <span class="stack-tag">Expo Router</span>
+          </div>
+        </div>
+
+        <div class="making-pillar reveal">
+          <span class="pillar-num">03 / TWO-WAY WEBRTC VOICE</span>
+          <h3>Peer-to-Peer Audio Mesh</h3>
+          <p>Engineered a cross-platform WebRTC engine with polite-peer glare recovery, ICE candidate queueing, automatic ICE restarts, custom R8 ProGuard config plugin, and seamless interoperability between Android and desktop browsers.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">WebRTC</span>
+            <span class="stack-tag">STUN / TURN</span>
+            <span class="stack-tag">Android Audio</span>
+            <span class="stack-tag">Config Plugin</span>
+          </div>
+        </div>
+
+        <div class="making-pillar reveal">
+          <span class="pillar-num">04 / WHITEBOARD &amp; 3D LUDO ENGINE</span>
+          <h3>Touch Geometry &amp; Real Audio SFX</h3>
+          <p>Mapped mobile touch coordinates to desktop 1040×600 whiteboard space using native SVG <code>viewBox</code> pinch-to-zoom, and crafted an animated 3D Ludo die paired with custom-synthesized multi-bounce PCM WAV sound effects.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">SVG ViewBox</span>
+            <span class="stack-tag">Reanimated 4</span>
+            <span class="stack-tag">expo-audio</span>
+            <span class="stack-tag">Haptics</span>
+          </div>
+        </div>
+
+        <div class="making-pillar reveal">
+          <span class="pillar-num">05 / GROUNDED GEMINI AI</span>
+          <h3>Streaming SSE &amp; Math Cleanup</h3>
+          <p>Streams live room-grounded Gemini answers over Server-Sent Events with model fallback, custom Markdown table/code rendering, and a dedicated LaTeX-to-Unicode normalizer that turns raw math tokens into crisp prose.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">Gemini API</span>
+            <span class="stack-tag">SSE Stream</span>
+            <span class="stack-tag">Markdown UI</span>
+            <span class="stack-tag">Unicode Math</span>
+          </div>
+        </div>
+
+        <div class="making-pillar reveal">
+          <span class="pillar-num">06 / SECURITY &amp; DISTRIBUTION</span>
+          <h3>Zero-Cost Cloud &amp; Store Pipeline</h3>
+          <p>Hardware-backed Android Keystore session tokens, salted bcrypt hashes, automated GitHub-to-Render Blueprint deploys with <code>/healthz</code> &amp; <code>/privacy</code>, signed EAS Cloud APKs, OTA updates, and Uptodown store publishing.</p>
+          <div class="stack-tags">
+            <span class="stack-tag">SecureStore</span>
+            <span class="stack-tag">EAS Build</span>
+            <span class="stack-tag">Render HTTPS</span>
+            <span class="stack-tag">Uptodown</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Step Android Installation Flow -->
+    <section class="install-section" id="install">
+      <div class="section-header-split reveal">
+        <h2 class="section-title">Installed on Android in 15 seconds.</h2>
+        <p class="section-lead">Direct signed APK install — completely free, no store paywalls, and automatic over-the-air updates built in.</p>
+      </div>
+
+      <div class="install-grid">
+        <div class="install-step reveal">
+          <span class="install-num">1</span>
+          <h4>Download the APK</h4>
+          <p>Tap <strong>Download for Android (.APK)</strong> on your phone to save the signed <code>SecureSphere.apk</code>.</p>
+        </div>
+        <div class="install-step reveal">
+          <span class="install-num">2</span>
+          <h4>Allow Once</h4>
+          <p>Open the downloaded file; if prompted for <em>Install unknown apps</em>, toggle <strong>Allow from this source</strong> once.</p>
+        </div>
+        <div class="install-step reveal">
+          <span class="install-num">3</span>
+          <h4>Install &amp; Sign In</h4>
+          <p>Tap <strong>Install</strong>, launch SecureSphere, and sign in or create a brand-new private room in seconds.</p>
+        </div>
+        <div class="install-step reveal">
+          <span class="install-num">4</span>
+          <h4>Stay Updated Automatically</h4>
+          <p>Built-in EAS Update keeps your app fresh with the latest features automatically on launch.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Antigravity-Style Pure Black Radiating Particle Download CTA -->
+    <section class="download-cta-wrap">
+      <div class="download-cta-stage reveal" id="downloadStage">
+        <canvas class="download-particles-canvas" id="downloadParticles" aria-hidden="true"></canvas>
+        <div class="download-cta-inner">
+          <span class="download-cta-eyebrow">AVAILABLE AT NO CHARGE · v{{APP_VERSION}}</span>
+          <h2 class="download-cta-title">Download SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
+          <p class="download-cta-sub">
+            Start a private room with your team or friends right now. Native Android app and desktop web workspace, synchronized in real time.
+          </p>
+          <div class="hero-cta-row">
+            <a class="pill pill-white pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ SecureSphere.apk">
+              &#11015; Download Android APK (v{{APP_VERSION}})
+            </a>
+            <a class="pill pill-glass pill-lg" href="/" data-cursor="Launch Web ↗">
+              Launch Web App ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimalist Footer with Oversized Wordmark -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div>
+        <p class="footer-tagline">Experience liftoff in private rooms.</p>
+        <p class="footer-sub">Designed &amp; engineered by Rupayan Chattaraj · 100% Free &amp; Ad-Free.</p>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Product</h5>
+          <a href="{{APK_URL}}" {{APK_ATTRS}}>Android APK (v{{APP_VERSION}})</a>
+          <a href="/">Web Workspace</a>
+          <a href="#showcase">Showcase Film</a>
+          <a href="#features">Features</a>
+        </div>
+        <div class="footer-col">
+          <h5>Engineering &amp; Legal</h5>
+          <a href="#making">How It Was Built</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/healthz">Server Health</a>
+          <a href="mailto:rupayanchattaraj@gmail.com">Support</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-wordmark" aria-hidden="true">SecureSphere</div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 SecureSphere &middot; Package <code>com.rupayan.securesphere</code></span>
+      <div class="footer-bottom-links">
+        <a href="/privacy">Privacy</a>
+        <a href="/">Web App</a>
+        <a href="#top">Back to top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/download.js"></script>
+</body>
+</html>

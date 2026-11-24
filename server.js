@@ -339,147 +339,27 @@ app.get("/privacy", (_req, res) => {
 </html>`);
 });
 
+const APP_RELEASE_VERSION = String(process.env.APP_VERSION || "1.0.1").trim();
 const DEFAULT_ANDROID_APK_URL =
   process.env.ANDROID_APK_URL ||
   "https://expo.dev/artifacts/eas/wv4IPZFYGH5Em3_0jjz9GxWdSY5H0--XfojRru7Fjoo.apk";
 
 app.get("/download", (_req, res) => {
   const apkUrl = String(process.env.ANDROID_APK_URL || DEFAULT_ANDROID_APK_URL).trim();
+  const safeApkUrl = apkUrl.replace(/"/g, "&quot;");
   const isDirectApk = /\.apk(\?|$)/i.test(apkUrl);
-  res.type("html").send(`<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Download SecureSphere for Android</title>
-  <link rel="icon" type="image/png" href="/securesphere-icon.png" />
-  <style>
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: radial-gradient(circle at 18% 12%, rgba(56,189,248,0.16), transparent 42%),
-                  radial-gradient(circle at 82% 80%, rgba(59,130,246,0.14), transparent 46%),
-                  #0B0E14;
-      color: #F1F5F9;
-      min-height: 100vh;
-    }
-    main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
-    .hero {
-      background: rgba(20, 26, 38, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-    }
-    .banner { width: 100%; display: block; max-height: 300px; object-fit: cover; border-bottom: 1px solid rgba(148,163,184,0.14); }
-    .hero-body { padding: 28px; }
-    .brand-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .app-icon { width: 68px; height: 68px; border-radius: 16px; border: 1px solid rgba(96,165,250,0.4); }
-    h1 { margin: 0; font-size: 28px; letter-spacing: -0.4px; color: #FFFFFF; }
-    .meta { color: #94A3B8; font-size: 13.5px; margin-top: 4px; }
-    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-    .pill {
-      font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
-      background: rgba(56,189,248,0.12); color: #7DD3FC; border: 1px solid rgba(56,189,248,0.28);
-    }
-    .pill.green { background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.28); }
-    .lead { color: #CBD5E1; font-size: 15.5px; line-height: 1.65; margin: 18px 0 24px; }
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 14px 24px; border-radius: 14px; font-weight: 700; font-size: 15px;
-      text-decoration: none; transition: transform .15s ease, opacity .15s ease;
-    }
-    .btn:hover { transform: translateY(-1px); opacity: 0.96; }
-    .btn-primary {
-      background: linear-gradient(135deg, #38BDF8, #2563EB);
-      color: #FFFFFF; box-shadow: 0 10px 26px rgba(37,99,235,0.38);
-    }
-    .btn-secondary {
-      background: rgba(30,41,59,0.85); color: #E2E8F0; border: 1px solid rgba(148,163,184,0.28);
-    }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; }
-    .card {
-      background: rgba(20,26,38,0.82); border: 1px solid rgba(148,163,184,0.16);
-      border-radius: 16px; padding: 18px;
-    }
-    .card h3 { margin: 0 0 6px; font-size: 15.5px; color: #FFFFFF; }
-    .card p { margin: 0; font-size: 13.5px; line-height: 1.55; color: #94A3B8; }
-    .steps { margin-top: 22px; background: rgba(15,23,42,0.82); border: 1px solid rgba(96,165,250,0.22); border-radius: 16px; padding: 20px 24px; }
-    .steps h2 { margin: 0 0 12px; font-size: 17px; color: #38BDF8; }
-    .steps ol { margin: 0; padding-left: 20px; color: #CBD5E1; font-size: 14px; line-height: 1.75; }
-    footer { margin-top: 28px; text-align: center; font-size: 13px; color: #64748B; }
-    footer a { color: #60A5FA; text-decoration: none; }
-  </style>
-</head>
-<body>
-  <main>
-    <section class="hero">
-      <img class="banner" src="/securesphere-banner.png" alt="SecureSphere Android App Banner" />
-      <div class="hero-body">
-        <div class="brand-row">
-          <img class="app-icon" src="/securesphere-icon.png" alt="SecureSphere Icon" />
-          <div>
-            <h1>SecureSphere for Android</h1>
-            <div class="meta">Version 1.0.1 &middot; Package <code>com.rupayan.securesphere</code> &middot; Free Direct Install</div>
-          </div>
-        </div>
-        <div class="pills">
-          <span class="pill green">&#9679; Live Cloud Sync</span>
-          <span class="pill">Android APK</span>
-          <span class="pill">Zero Ads &middot; 100% Free</span>
-        </div>
-        <p class="lead">
-          Private rooms for real-time team chat, file sharing, live collaborative whiteboard, multiplayer games (Chess, Ludo, Tic Tac Toe), synchronized YouTube queue, and Gemini AI workspace assistant.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="${apkUrl.replace(/"/g, "&quot;")}" ${isDirectApk ? 'download="SecureSphere.apk"' : 'target="_blank" rel="noopener"'}>
-            &#11015; Download Android App (.APK)
-          </a>
-          <a class="btn btn-secondary" href="/">
-            Open Web App
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="steps">
-      <h2>How to Install on Android (Takes 15 Seconds)</h2>
-      <ol>
-        <li>Tap <strong>Download Android App (.APK)</strong> above on your Android phone.</li>
-        <li>Open the downloaded <code>SecureSphere.apk</code> file from your notifications or Downloads folder.</li>
-        <li>If Android prompts <em>"Install unknown apps"</em>, tap <strong>Settings &rarr; Allow from this source</strong> once, then tap <strong>Install</strong>.</li>
-        <li>Launch <strong>SecureSphere</strong>, sign in or create a private room, and collaborate in real time across mobile and web.</li>
-      </ol>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h3>Private Rooms &amp; Chat</h3>
-        <p>Role-based rooms with real-time messaging, replies, reactions, bookmarks, and instant media &amp; PDF sharing.</p>
-      </div>
-      <div class="card">
-        <h3>Live Whiteboard</h3>
-        <p>Draw, highlight, add shapes &amp; sticky notes with pinch-to-zoom, synced live with desktop users.</p>
-      </div>
-      <div class="card">
-        <h3>Gemini AI Assistant</h3>
-        <p>Summarize room chats, extract action items, and analyze discussions with clean, formatted answers.</p>
-      </div>
-      <div class="card">
-        <h3>Game Lounge &amp; Watch</h3>
-        <p>Play live Chess, Ludo, and Tic Tac Toe or watch YouTube together inside your room.</p>
-      </div>
-    </section>
-
-    <footer>
-      SecureSphere &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/">Launch Web App</a>
-    </footer>
-  </main>
-</body>
-</html>`);
+  const apkAttrs = isDirectApk ? 'download="SecureSphere.apk"' : 'target="_blank" rel="noopener"';
+  const htmlPath = path.join(__dirname, "public", "download.html");
+  try {
+    const template = fs.readFileSync(htmlPath, "utf8");
+    const rendered = template
+      .replace(/\{\{APK_URL\}\}/g, safeApkUrl)
+      .replace(/\{\{APK_ATTRS\}\}/g, apkAttrs)
+      .replace(/\{\{APP_VERSION\}\}/g, APP_RELEASE_VERSION);
+    res.type("html").send(rendered);
+  } catch (err) {
+    res.status(500).send("Unable to load download page.");
+  }
 });
 
 /* ── Per-Room In-Memory Runtime State ──────────────────────── */

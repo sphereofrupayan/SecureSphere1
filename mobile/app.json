@@ -67,6 +67,7 @@
         }
       ],
       "@config-plugins/react-native-webrtc",
+      "./plugins/withWebRtcProguard",
       "expo-asset"
     ],
     "experiments": {
