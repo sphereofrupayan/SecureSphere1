@@ -342,7 +342,7 @@ app.get("/privacy", (_req, res) => {
 const APP_RELEASE_VERSION = String(process.env.APP_VERSION || "1.0.1").trim();
 const DEFAULT_ANDROID_APK_URL =
   process.env.ANDROID_APK_URL ||
-  "https://expo.dev/artifacts/eas/wv4IPZFYGH5Em3_0jjz9GxWdSY5H0--XfojRru7Fjoo.apk";
+  "https://expo.dev/artifacts/eas/oeoCqLGgICCAmfJrbsIQMPsZZFyhJO9ZlotkbMLYHpM.apk";
 
 app.get("/download", (_req, res) => {
   const apkUrl = String(process.env.ANDROID_APK_URL || DEFAULT_ANDROID_APK_URL).trim();
