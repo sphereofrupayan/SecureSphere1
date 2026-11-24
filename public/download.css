@@ -227,11 +227,15 @@ button {
   letter-spacing: 0.05em;
   padding: 3px 9px;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .announcement-link {
   color: var(--ink);
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .announcement-link:hover {
