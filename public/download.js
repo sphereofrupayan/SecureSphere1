@@ -308,14 +308,16 @@
 
   const CHAPTERS = [
     { start: 0, label: "01 · Experience Liftoff" },
-    { start: 15, label: "02 · Web + Android Unified Sync" },
-    { start: 30, label: "03 · Private Rooms & Encrypted Chat" },
-    { start: 45, label: "04 · Infinite Live Whiteboard" },
-    { start: 60, label: "05 · Two-Way WebRTC Voice Channels" },
-    { start: 75, label: "06 · 3D Ludo Dice, Chess & Watch Queue" },
-    { start: 90, label: "07 · Gemini AI Workspace Intelligence" },
-    { start: 105, label: "08 · Inside the Making of SecureSphere" },
-    { start: 120, label: "09 · Free Forever · Download Now" },
+    { start: 13.7, label: "02 · Zero-Trust Security" },
+    { start: 27.4, label: "03 · Web + Android Unified Sync" },
+    { start: 41.1, label: "04 · Private Rooms & Encrypted Chat" },
+    { start: 54.8, label: "05 · Infinite Live Whiteboard" },
+    { start: 68.5, label: "06 · Two-Way WebRTC Voice Channels" },
+    { start: 82.2, label: "07 · 3D Ludo Dice, Chess & Watch Queue" },
+    { start: 95.9, label: "08 · Gemini AI Workspace Intelligence" },
+    { start: 109.6, label: "09 · Inside the Making of SecureSphere" },
+    { start: 122.6, label: "10 · Full-Stack Engineering & Cloud" },
+    { start: 136.0, label: "11 · Free Forever · Download Now" },
   ];
 
   const fmtTime = sec => {
