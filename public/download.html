@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/download.css" />
+  <link rel="stylesheet" href="/download.css?v=3" />
 </head>
 <body>
   <!-- Smooth Mouse-Tracking Cursor Elements -->
@@ -17,7 +17,7 @@
   <div class="ss-cursor-dot" id="ssCursorDot" aria-hidden="true"></div>
   <div class="ss-cursor-pill" id="ssCursorPill" aria-hidden="true"></div>
 
-  <!-- Minimal Sticky Navigation -->
+  <!-- Minimal Obsidian Sticky Navigation -->
   <header class="site-header">
     <div class="nav-inner">
       <a class="brand-lockup" href="#top" data-cursor="SecureSphere">
@@ -29,14 +29,14 @@
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#showcase">Showcase Film</a>
         <a href="#features">Platform</a>
-        <a href="#screens">App &amp; Web</a>
+        <a href="#screens">App Screens</a>
         <a href="#making">How It Was Built</a>
         <a href="#install">Install</a>
       </nav>
 
       <div class="nav-actions">
-        <a class="pill pill-soft" href="/" data-cursor="Open Web App ↗">Open web app ↗</a>
-        <a class="pill pill-dark" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download APK">Download APK</a>
+        <a class="pill pill-glass" href="/" data-cursor="Open Web App ↗">Open web app ↗</a>
+        <a class="pill pill-white" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download APK">Download APK</a>
       </div>
     </div>
 
@@ -49,31 +49,37 @@
   </header>
 
   <main id="top">
-    <!-- Hero Section with Prismatic Mouse-Reactive Particle Canvas -->
+    <!-- Flagship Black-Gradient Hero with Bioluminescent Mouse-Reactive Particles -->
     <section class="hero-section">
       <canvas class="hero-canvas" id="heroParticles" aria-hidden="true"></canvas>
 
       <div class="hero-content">
-        <div class="hero-brand-pill">
-          <img src="/securesphere-icon.png" alt="" />
-          <span class="live-dot"></span>
-          <span>SecureSphere · Android &amp; Web Live</span>
+        <div class="hero-emblem-wrap">
+          <div class="hero-emblem-aura" aria-hidden="true"></div>
+          <img class="hero-emblem" src="/securesphere-icon.png" alt="SecureSphere Emblem" />
         </div>
 
-        <h1 class="hero-title">Experience liftoff in private real-time rooms<span class="rainbow-caret" aria-hidden="true"></span></h1>
+        <br />
+
+        <div class="hero-brand-pill">
+          <span class="live-dot"></span>
+          <span>SecureSphere · Android &amp; Web Synchronized Live</span>
+        </div>
+
+        <h1 class="hero-title">Experience liftoff in private real-time <span style="white-space:nowrap">rooms<span class="rainbow-caret" aria-hidden="true"></span></span></h1>
 
         <p class="hero-sub">
-          Encrypted private rooms uniting team chat, infinite live whiteboard, two-way WebRTC voice channels, multiplayer 3D Ludo &amp; Chess, YouTube sync, and streaming Gemini AI — 100% free with zero ads.
+          Encrypted private rooms uniting team chat, infinite live whiteboard, two-way WebRTC voice channels, multiplayer 3D Ludo &amp; Chess, YouTube sync, and streaming Gemini AI — 100% free forever with zero ads.
         </p>
 
         <div class="hero-cta-row">
-          <a class="pill pill-dark pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download v{{APP_VERSION}}">
+          <a class="pill pill-white pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download v{{APP_VERSION}}">
             &#11015; Download for Android (.APK)
           </a>
-          <a class="pill pill-soft pill-lg" href="/" data-cursor="Launch Web App ↗">
+          <a class="pill pill-glass pill-lg" href="/" data-cursor="Launch Web App ↗">
             Open Web App ↗
           </a>
-          <a class="pill pill-soft pill-lg" href="#showcase" data-cursor="▶ Watch 2m Film">
+          <a class="pill pill-glow pill-lg" href="#showcase" data-cursor="▶ Watch Voiced Film">
             &#9654; Watch Showcase Film
           </a>
         </div>
@@ -87,16 +93,37 @@
           <span>&middot;</span>
           <span>$0 Free Forever</span>
         </div>
+
+        <!-- New Borderless Obsidian Telemetry Strip -->
+        <div class="hero-metrics-strip">
+          <div class="metric-tile" data-cursor="Latest Signed Build">
+            <span class="metric-val">v{{APP_VERSION}}</span>
+            <span class="metric-lbl">Signed Android APK &amp; live HTTPS web app</span>
+          </div>
+          <div class="metric-tile" data-cursor="Pure Native UI">
+            <span class="metric-val">16 Screens</span>
+            <span class="metric-lbl">100% native React Native + Expo TypeScript UI</span>
+          </div>
+          <div class="metric-tile" data-cursor="Live Voice Mesh">
+            <span class="metric-val">WebRTC P2P</span>
+            <span class="metric-lbl">Two-way Android &harr; Browser voice channels</span>
+          </div>
+          <div class="metric-tile" data-cursor="Privacy First">
+            <span class="metric-val">$0 Forever</span>
+            <span class="metric-lbl">Zero ads, zero trackers, isolated private rooms</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Full-Width 16:9 2m15s Looping Showcase Cinema -->
+    <!-- Full-Width 16:9 Stabilized Looping Voiced Showcase Cinema -->
     <section class="cinema-section" id="showcase">
+      <div class="cinema-ambient-glow" aria-hidden="true"></div>
       <div class="cinema-stage" id="cinemaStage" data-cursor="▶ Play / Pause">
         <video
           id="showcaseVideo"
           class="cinema-video"
-          src="/media/securesphere-showcase.mp4"
+          src="/media/securesphere-showcase.mp4?v=3"
           poster="/media/3d-hero.jpg"
           autoplay
           muted
@@ -105,9 +132,9 @@
           preload="metadata"
         ></video>
 
-        <button class="cinema-unmute-prompt" id="btnUnmutePrompt" type="button" aria-label="Enable narrator voiceover">
+        <button class="cinema-unmute-prompt" id="btnUnmutePrompt" type="button" aria-label="Enable narrator voiceover and sound effects">
           <span class="unmute-pulse"></span>
-          <span>&#128266; Tap to hear narrator voiceover</span>
+          <span>&#128266; Tap to hear voiceover &amp; cinema SFX</span>
         </button>
 
         <div class="cinema-hud">
@@ -129,7 +156,7 @@
             </div>
 
             <div class="cinema-right">
-              <span class="cinema-time" id="cinemaTime">0:00 / 3:04</span>
+              <span class="cinema-time" id="cinemaTime">0:00 / 3:09</span>
               <button class="cinema-btn" id="btnFullscreen" type="button" aria-label="Fullscreen video">
                 &#x26F6; Fullscreen
               </button>
@@ -141,20 +168,20 @@
       <!-- Interactive Chapter Jumper Pills (Exact Voiceover Synced Timestamps) -->
       <div class="chapter-pills" id="chapterPills" aria-label="Video chapters">
         <button class="chapter-pill is-active" data-seek="0" type="button">01 Hero</button>
-        <button class="chapter-pill" data-seek="15.45" type="button">02 Security</button>
-        <button class="chapter-pill" data-seek="32.87" type="button">03 Web + App</button>
-        <button class="chapter-pill" data-seek="47.87" type="button">04 Chat</button>
-        <button class="chapter-pill" data-seek="63.85" type="button">05 Whiteboard</button>
-        <button class="chapter-pill" data-seek="81.32" type="button">06 WebRTC Voice</button>
-        <button class="chapter-pill" data-seek="98.09" type="button">07 3D Ludo &amp; Chess</button>
-        <button class="chapter-pill" data-seek="114.94" type="button">08 Gemini AI</button>
-        <button class="chapter-pill" data-seek="132.6" type="button">09 Mobile Craft</button>
-        <button class="chapter-pill" data-seek="150.69" type="button">10 Full-Stack</button>
-        <button class="chapter-pill" data-seek="168.3" type="button">11 Download</button>
+        <button class="chapter-pill" data-seek="15.96" type="button">02 Security</button>
+        <button class="chapter-pill" data-seek="33.57" type="button">03 Web + App</button>
+        <button class="chapter-pill" data-seek="49.02" type="button">04 Chat</button>
+        <button class="chapter-pill" data-seek="66.18" type="button">05 Whiteboard</button>
+        <button class="chapter-pill" data-seek="84.47" type="button">06 WebRTC Voice</button>
+        <button class="chapter-pill" data-seek="101.53" type="button">07 3D Ludo &amp; Chess</button>
+        <button class="chapter-pill" data-seek="118.59" type="button">08 Gemini AI</button>
+        <button class="chapter-pill" data-seek="137.02" type="button">09 Mobile Craft</button>
+        <button class="chapter-pill" data-seek="155.5" type="button">10 Full-Stack</button>
+        <button class="chapter-pill" data-seek="173.11" type="button">11 Download</button>
       </div>
     </section>
 
-    <!-- Floating Icon Strip & Platform Statement -->
+    <!-- Floating Icon Strip, Statement & New 6-Card Black-Gradient Bento Showcase -->
     <section class="statement-section reveal">
       <div class="bouncer-strip" aria-hidden="true">
         <span class="bouncer-icon" style="--i:0" title="Private Rooms">&#128737;</span>
@@ -172,11 +199,44 @@
       </div>
 
       <p class="statement-copy">
-        SecureSphere is a unified real-time communication workspace, <span class="muted">built so your phone and desktop collaborate as one borderless room</span><span class="rainbow-caret" aria-hidden="true"></span>
+        SecureSphere is a unified real-time communication workspace, <span class="muted">built so your phone and desktop collaborate as one borderless obsidian room</span><span class="rainbow-caret" aria-hidden="true"></span>
       </p>
+
+      <div class="bento-strip">
+        <div class="bento-card reveal" data-cursor="✦ Zero-Trust">
+          <div class="bento-icon">&#128737;</div>
+          <h3>Zero-Trust Private Rooms</h3>
+          <p>Isolated rooms with salted bcrypt hashing, Keystore JWT sessions, and Owner/Admin role controls.</p>
+        </div>
+        <div class="bento-card reveal" data-cursor="✦ Live Voice">
+          <div class="bento-icon">&#127897;</div>
+          <h3>Two-Way WebRTC Voice</h3>
+          <p>Crystal-clear native peer-to-peer audio mesh connecting Android phones and desktop browsers seamlessly.</p>
+        </div>
+        <div class="bento-card reveal" data-cursor="✦ Infinite Canvas">
+          <div class="bento-icon">&#9998;</div>
+          <h3>Live Vector Whiteboard</h3>
+          <p>Multi-tool SVG canvas with pinch-to-zoom, pan, sticky notes, shapes, and pixel-accurate desktop framing.</p>
+        </div>
+        <div class="bento-card reveal" data-cursor="✦ 3D Dice + SFX">
+          <div class="bento-icon">&#127922;</div>
+          <h3>3D Ludo Dice &amp; Chess</h3>
+          <p>Animated tumbling 3D die with real multi-bounce audio SFX, timed Chess, Tic Tac Toe &amp; YouTube watch party.</p>
+        </div>
+        <div class="bento-card reveal" data-cursor="✦ Gemini SSE">
+          <div class="bento-icon">&#10024;</div>
+          <h3>Grounded Gemini AI</h3>
+          <p>Streaming room briefings, task extraction, clean tables, copyable code blocks, and Unicode math formatting.</p>
+        </div>
+        <div class="bento-card reveal" data-cursor="✦ One Backend">
+          <div class="bento-icon">&#9889;</div>
+          <h3>Unified Sync Engine</h3>
+          <p>One Node.js, Socket.IO &amp; SQLite WAL server powering Web &amp; Android together with automatic EAS updates.</p>
+        </div>
+      </div>
     </section>
 
-    <!-- 16:9 3D Product Suite Explorer -->
+    <!-- 16:9 3D Product Suite Explorer — 100% Unobstructed Renders, ZERO Colliding Images! -->
     <section class="explorer-section" id="features">
       <!-- 01: Cross-Platform Sync -->
       <article class="explorer-row reveal">
@@ -198,7 +258,7 @@
         </div>
       </article>
 
-      <!-- 02: Team Chat & Infinite Whiteboard -->
+      <!-- 02: Team Chat & Infinite Whiteboard (Clean Unobstructed 3D Artwork!) -->
       <article class="explorer-row is-reversed reveal">
         <div class="explorer-copy">
           <div class="explorer-eyebrow">02 · Live Collaboration</div>
@@ -214,7 +274,6 @@
         </div>
         <div class="media-stage tilt-stage" data-cursor="✦ Live Whiteboard">
           <img class="stage-bg" src="/media/3d-workspace.jpg" alt="SecureSphere 3D collaborative whiteboard and encrypted chat illustration" loading="lazy" />
-          <img class="floating-app-preview" src="/media/app-whiteboard.jpg" alt="SecureSphere Live Whiteboard Mobile Screen" loading="lazy" />
           <div class="media-spotlight"></div>
         </div>
       </article>
@@ -259,7 +318,7 @@
         </div>
       </article>
 
-      <!-- 05: Gemini AI Workspace Assistant -->
+      <!-- 05: Gemini AI Workspace Assistant (Clean Unobstructed 3D Artwork!) -->
       <article class="explorer-row reveal">
         <div class="explorer-copy">
           <div class="explorer-eyebrow">05 · Grounded AI Intelligence</div>
@@ -275,13 +334,12 @@
         </div>
         <div class="media-stage tilt-stage" data-cursor="✦ Gemini AI">
           <img class="stage-bg" src="/media/3d-architecture.jpg" alt="SecureSphere 3D Gemini AI crystal neural stack illustration" loading="lazy" />
-          <img class="floating-app-preview" src="/media/app-gemini.jpg" alt="SecureSphere Gemini AI Mobile Screen" loading="lazy" />
           <div class="media-spotlight"></div>
         </div>
       </article>
     </section>
 
-    <!-- Real Mobile App Screens Gallery -->
+    <!-- Dedicated Real Mobile App Screens Gallery (Spacious 3-Column Layout — Zero Collisions!) -->
     <section class="screens-section" id="screens">
       <div class="screens-inner">
         <div class="section-header-split reveal">
@@ -336,11 +394,9 @@
 
       <div class="making-hero-stage reveal">
         <div>
-          <div class="explorer-eyebrow" style="color:#7dd3fc;">SYSTEM ARCHITECTURE · END TO END</div>
-          <h3 style="margin:0 0 14px; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing:-0.03em; line-height:1.12;">
-            Single source of truth across Web, Android, Voice &amp; AI.
-          </h3>
-          <p style="margin:0 0 24px; color:#94a3b8; font-size:15.5px; line-height:1.65;">
+          <div class="explorer-eyebrow">SYSTEM ARCHITECTURE · END TO END</div>
+          <h3>Single source of truth across Web, Android, Voice &amp; AI.</h3>
+          <p>
             Rather than duplicating backends, SecureSphere runs one unified Node.js + Socket.IO + SQLite WAL core on Render HTTPS. Both the web frontend and the standalone Expo Android app authenticate with the exact same JWT tokens, join the exact same rooms, draw on the exact same SVG world coordinates, and talk peer-to-peer over WebRTC.
           </p>
           <a class="pill pill-white" href="/" data-cursor="Try Live Web ↗">Explore Live Web Workspace ↗</a>
@@ -357,7 +413,7 @@
           <div><span class="tok-green">✔</span> <span class="tok-amber">Live Voice</span>     react-native-webrtc + STUN/TURN Mesh</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">Game Audio</span>     expo-audio + Synthesized PCM WAV SFX</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">AI Pipeline</span>    @google/genai SSE · LaTeX-to-Unicode Engine</div>
-          <div><span class="tok-green">✔</span> <span class="tok-amber">CI &amp; Hosting</span>   GitHub → Render HTTPS · EAS Cloud · Uptodown</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">CI &amp; Hosting</span>   GitHub &rarr; Render HTTPS · EAS Cloud · Uptodown</div>
         </div>
       </div>
 
@@ -467,7 +523,7 @@
       </div>
     </section>
 
-    <!-- Antigravity-Style Pure Black Radiating Particle Download CTA -->
+    <!-- Pure Black Gradient Radiating Particle Download CTA -->
     <section class="download-cta-wrap">
       <div class="download-cta-stage reveal" id="downloadStage">
         <canvas class="download-particles-canvas" id="downloadParticles" aria-hidden="true"></canvas>
@@ -490,7 +546,7 @@
     </section>
   </main>
 
-  <!-- Minimalist Footer with Oversized Wordmark -->
+  <!-- Minimalist Black-Gradient Footer with Oversized Wordmark -->
   <footer class="site-footer">
     <div class="footer-top">
       <div>
@@ -528,6 +584,6 @@
     </div>
   </footer>
 
-  <script src="/download.js"></script>
+  <script src="/download.js?v=3"></script>
 </body>
 </html>
