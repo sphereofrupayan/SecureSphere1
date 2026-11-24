@@ -105,6 +105,11 @@
           preload="metadata"
         ></video>
 
+        <button class="cinema-unmute-prompt" id="btnUnmutePrompt" type="button" aria-label="Enable narrator voiceover">
+          <span class="unmute-pulse"></span>
+          <span>&#128266; Tap to hear narrator voiceover</span>
+        </button>
+
         <div class="cinema-hud">
           <div class="cinema-progress-wrap" id="cinemaProgressWrap" title="Seek showcase video">
             <div class="cinema-progress-fill" id="cinemaProgressFill"></div>
@@ -116,15 +121,15 @@
                 <span id="playPauseIcon">&#10074;&#10074;</span>
                 <span id="playPauseLabel">Pause</span>
               </button>
-              <button class="cinema-btn" id="btnMuteToggle" type="button" aria-label="Toggle ambient audio">
+              <button class="cinema-btn" id="btnMuteToggle" type="button" aria-label="Toggle voiceover audio">
                 <span id="muteIcon">&#128263;</span>
-                <span id="muteLabel">Sound Off</span>
+                <span id="muteLabel">Voice Off</span>
               </button>
               <span class="cinema-chapter-label" id="cinemaChapterLabel">01 · Experience Liftoff</span>
             </div>
 
             <div class="cinema-right">
-              <span class="cinema-time" id="cinemaTime">0:00 / 2:30</span>
+              <span class="cinema-time" id="cinemaTime">0:00 / 3:04</span>
               <button class="cinema-btn" id="btnFullscreen" type="button" aria-label="Fullscreen video">
                 &#x26F6; Fullscreen
               </button>
@@ -133,19 +138,19 @@
         </div>
       </div>
 
-      <!-- Interactive Chapter Jumper Pills -->
+      <!-- Interactive Chapter Jumper Pills (Exact Voiceover Synced Timestamps) -->
       <div class="chapter-pills" id="chapterPills" aria-label="Video chapters">
         <button class="chapter-pill is-active" data-seek="0" type="button">01 Hero</button>
-        <button class="chapter-pill" data-seek="14" type="button">02 Security B-Roll</button>
-        <button class="chapter-pill" data-seek="28" type="button">03 Web + App</button>
-        <button class="chapter-pill" data-seek="41" type="button">04 Chat</button>
-        <button class="chapter-pill" data-seek="55" type="button">05 Whiteboard</button>
-        <button class="chapter-pill" data-seek="69" type="button">06 WebRTC Voice</button>
-        <button class="chapter-pill" data-seek="82" type="button">07 3D Ludo &amp; Chess</button>
-        <button class="chapter-pill" data-seek="96" type="button">08 Gemini AI</button>
-        <button class="chapter-pill" data-seek="110" type="button">09 Inside the Making</button>
-        <button class="chapter-pill" data-seek="123" type="button">10 Full-Stack B-Roll</button>
-        <button class="chapter-pill" data-seek="137" type="button">11 Download</button>
+        <button class="chapter-pill" data-seek="15.45" type="button">02 Security</button>
+        <button class="chapter-pill" data-seek="32.87" type="button">03 Web + App</button>
+        <button class="chapter-pill" data-seek="47.87" type="button">04 Chat</button>
+        <button class="chapter-pill" data-seek="63.85" type="button">05 Whiteboard</button>
+        <button class="chapter-pill" data-seek="81.32" type="button">06 WebRTC Voice</button>
+        <button class="chapter-pill" data-seek="98.09" type="button">07 3D Ludo &amp; Chess</button>
+        <button class="chapter-pill" data-seek="114.94" type="button">08 Gemini AI</button>
+        <button class="chapter-pill" data-seek="132.6" type="button">09 Mobile Craft</button>
+        <button class="chapter-pill" data-seek="150.69" type="button">10 Full-Stack</button>
+        <button class="chapter-pill" data-seek="168.3" type="button">11 Download</button>
       </div>
     </section>
 

@@ -297,6 +297,7 @@
   const playIcon = document.getElementById("playPauseIcon");
   const playLabel = document.getElementById("playPauseLabel");
   const btnMute = document.getElementById("btnMuteToggle");
+  const btnUnmutePrompt = document.getElementById("btnUnmutePrompt");
   const muteIcon = document.getElementById("muteIcon");
   const muteLabel = document.getElementById("muteLabel");
   const btnFs = document.getElementById("btnFullscreen");
@@ -307,17 +308,17 @@
   const chapterButtons = Array.from(document.querySelectorAll(".chapter-pill"));
 
   const CHAPTERS = [
-    { start: 0, label: "01 · Experience Liftoff" },
-    { start: 13.7, label: "02 · Zero-Trust Security" },
-    { start: 27.4, label: "03 · Web + Android Unified Sync" },
-    { start: 41.1, label: "04 · Private Rooms & Encrypted Chat" },
-    { start: 54.8, label: "05 · Infinite Live Whiteboard" },
-    { start: 68.5, label: "06 · Two-Way WebRTC Voice Channels" },
-    { start: 82.2, label: "07 · 3D Ludo Dice, Chess & Watch Queue" },
-    { start: 95.9, label: "08 · Gemini AI Workspace Intelligence" },
-    { start: 109.6, label: "09 · Inside the Making of SecureSphere" },
-    { start: 122.6, label: "10 · Full-Stack Engineering & Cloud" },
-    { start: 136.0, label: "11 · Free Forever · Download Now" },
+    { start: 0.0, label: "01 · Experience Liftoff" },
+    { start: 15.45, label: "02 · Zero-Trust Security" },
+    { start: 32.87, label: "03 · Web & Android Unified Sync" },
+    { start: 47.87, label: "04 · Private Rooms & Team Chat" },
+    { start: 63.85, label: "05 · Infinite Live Whiteboard" },
+    { start: 81.32, label: "06 · Two-Way WebRTC Voice Channels" },
+    { start: 98.09, label: "07 · Multiplayer Games & 3D Ludo Dice" },
+    { start: 114.94, label: "08 · Gemini AI Workspace Intelligence" },
+    { start: 132.6, label: "09 · Inside the Making — Native Mobile" },
+    { start: 150.69, label: "10 · Full-Stack Engine & Cloud Delivery" },
+    { start: 168.3, label: "11 · Download SecureSphere Free" },
   ];
 
   const fmtTime = sec => {
@@ -337,7 +338,8 @@
     const syncMuteUi = () => {
       const muted = video.muted;
       if (muteIcon) muteIcon.textContent = muted ? "🔇" : "🔊";
-      if (muteLabel) muteLabel.textContent = muted ? "Sound Off" : "Sound On";
+      if (muteLabel) muteLabel.textContent = muted ? "Voice Off" : "Voice On";
+      if (btnUnmutePrompt) btnUnmutePrompt.classList.toggle("is-hidden", !muted);
     };
 
     const togglePlay = () => {
@@ -355,8 +357,15 @@
     });
 
     stage?.addEventListener("click", e => {
-      if (e.target.closest(".cinema-hud")) return;
+      if (e.target.closest(".cinema-hud") || e.target.closest(".cinema-unmute-prompt")) return;
       togglePlay();
+    });
+
+    btnUnmutePrompt?.addEventListener("click", e => {
+      e.stopPropagation();
+      video.muted = false;
+      if (video.paused) video.play().catch(() => {});
+      syncMuteUi();
     });
 
     btnMute?.addEventListener("click", e => {
@@ -400,7 +409,7 @@
 
     video.addEventListener("timeupdate", () => {
       const cur = video.currentTime || 0;
-      const dur = video.duration || 135.8;
+      const dur = video.duration || 184.22;
       if (progFill) progFill.style.width = `${Math.min(100, (cur / dur) * 100)}%`;
       if (timeEl) timeEl.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
 
