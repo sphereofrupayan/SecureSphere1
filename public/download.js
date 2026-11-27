@@ -308,17 +308,17 @@
   const chapterButtons = Array.from(document.querySelectorAll(".chapter-pill"));
 
   const CHAPTERS = [
-    { start: 0.0, label: "01 · Experience Liftoff" },
-    { start: 15.96, label: "02 · Zero-Trust Security" },
-    { start: 33.57, label: "03 · Web & Android Unified Sync" },
-    { start: 49.02, label: "04 · Private Rooms & Team Chat" },
-    { start: 66.18, label: "05 · Infinite Live Whiteboard" },
-    { start: 84.47, label: "06 · Two-Way WebRTC Voice Channels" },
-    { start: 101.53, label: "07 · Multiplayer Games & 3D Ludo Dice" },
-    { start: 118.59, label: "08 · Gemini AI Workspace Intelligence" },
-    { start: 137.02, label: "09 · Inside the Making — Native Mobile" },
-    { start: 155.5, label: "10 · Full-Stack Engine & Cloud Delivery" },
-    { start: 173.11, label: "11 · Download SecureSphere Free" },
+    { start: 0.0, label: "01 · Welcome to SecureSphere" },
+    { start: 20.85, label: "02 · Instant Private Rooms on the Website" },
+    { start: 41.46, label: "03 · Web & Android Unified Sync" },
+    { start: 59.79, label: "04 · Real-Time Team Chat Example" },
+    { start: 79.32, label: "05 · Live Collaborative Whiteboard Example" },
+    { start: 98.61, label: "06 · Live WebRTC Voice Channel Example" },
+    { start: 117.92, label: "07 · Live 3D Ludo & Chess on the Website" },
+    { start: 136.63, label: "08 · Live Gemini AI Room Intelligence Example" },
+    { start: 155.61, label: "09 · Native Mobile Engineering" },
+    { start: 176.1, label: "10 · Full-Stack Engine & Cloud Delivery" },
+    { start: 195.92, label: "11 · Download Now" },
   ];
 
   const fmtTime = sec => {
@@ -409,7 +409,7 @@
 
     video.addEventListener("timeupdate", () => {
       const cur = video.currentTime || 0;
-      const dur = video.duration || 189.44;
+      const dur = video.duration || 215.57;
       if (progFill) progFill.style.width = `${Math.min(100, (cur / dur) * 100)}%`;
       if (timeEl) timeEl.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
 
