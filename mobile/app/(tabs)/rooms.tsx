@@ -140,7 +140,7 @@ export default function RoomsScreen() {
   );
 
   return (
-    <ScreenContainer scroll keyboardAware>
+    <ScreenContainer scroll keyboardAware maxWidth={760}>
       <View style={styles.header}>
         <Text style={styles.title}>Rooms & Settings</Text>
         <Text style={styles.subtitle}>
@@ -354,6 +354,7 @@ const styles = StyleSheet.create({
   },
   flexOne: {
     flex: 1,
+    minWidth: 0,
   },
   eyebrow: {
     ...typography.label,

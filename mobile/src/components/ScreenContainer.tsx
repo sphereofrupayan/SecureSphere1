@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleProp,
   StyleSheet,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from "react-native";
@@ -34,8 +35,20 @@ export function ScreenContainer({
   ambient = true,
   maxWidth,
 }: ScreenContainerProps) {
-  const paddingStyle = padded ? styles.padded : undefined;
-  const widthStyle = maxWidth ? { maxWidth, width: "100%" as const, alignSelf: "center" as const } : undefined;
+  const { width } = useWindowDimensions();
+  const isCompact = width < 360;
+  const isWide = width >= 720;
+
+  const paddingStyle: ViewStyle | undefined = padded
+    ? {
+        paddingHorizontal: isCompact ? spacing.md : isWide ? spacing.xxl : spacing.lg,
+        paddingVertical: spacing.md,
+      }
+    : undefined;
+
+  const widthStyle: ViewStyle | undefined = maxWidth
+    ? { maxWidth, width: "100%", alignSelf: "center" }
+    : undefined;
 
   const body = scroll ? (
     <ScrollView
@@ -73,10 +86,6 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
     backgroundColor: "transparent",
-  },
-  padded: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
   },
   scrollContent: {
     flexGrow: 1,

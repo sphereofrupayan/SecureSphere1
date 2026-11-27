@@ -704,8 +704,10 @@ export default function WhiteboardScreen() {
           <Ionicons name="arrow-back" size={20} color={colors.text} />
         </Pressable>
         <View style={styles.flexOne}>
-          <Text style={styles.title}>Whiteboard</Text>
-          <Text style={styles.subtitle}>
+          <Text style={styles.title} numberOfLines={1}>
+            Whiteboard
+          </Text>
+          <Text style={styles.subtitle} numberOfLines={1}>
             Room {roomState?.roomId || activeRoomId} · {allRenderElements.length} items · Pinch to zoom
           </Text>
         </View>
@@ -1082,6 +1084,7 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: "row",
     gap: spacing.xs,
+    flexShrink: 0,
   },
   iconBtn: {
     width: 36,
@@ -1170,6 +1173,7 @@ const styles = StyleSheet.create({
   },
   flexOne: {
     flex: 1,
+    minWidth: 0,
   },
   title: {
     ...typography.heading,

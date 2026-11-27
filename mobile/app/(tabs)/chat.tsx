@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,7 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { mediaApi } from "@/api";
-import { FadeInView, FeedbackBanner, ScreenContainer, StatusBadge } from "@/components";
+import {
+  FadeInView,
+  FeedbackBanner,
+  PulseBeacon,
+  ScreenContainer,
+  StatusBadge,
+} from "@/components";
 import { useAuth } from "@/hooks/useAuth";
 import { useRoom } from "@/hooks/useRoom";
 import { colors, radii, spacing, typography } from "@/theme";
@@ -58,6 +65,21 @@ function getMediaBadgeStyle(kind: string): {
 
 export default function ChatScreen() {
   const router = useRouter();
+  const { width: screenWidth } = useWindowDimensions();
+  const isWideScreen = screenWidth >= 680;
+  const bubbleResponsiveStyle = useMemo(
+    () => ({
+      maxWidth: (isWideScreen ? "68%" : "86%") as `${number}%`,
+    }),
+    [isWideScreen]
+  );
+  const mediaResponsiveStyle = useMemo(
+    () => ({
+      width: Math.min(Math.round(screenWidth * 0.76), 350),
+    }),
+    [screenWidth]
+  );
+
   const { user, token, activeRoomId } = useAuth();
   const {
     roomState,
@@ -65,11 +87,25 @@ export default function ChatScreen() {
     savedItems,
     connectionStatus,
     isRoomAdminOrOwner,
+    voiceChannels,
+    activeVoiceChannelId,
+    voiceMuted,
+    voiceDeafened,
+    voiceSpeakerOn,
+    voiceAudioSupported,
+    voicePeerStates,
+    voiceMicPermission,
+    voiceError,
     sendChatMessage,
     toggleReaction,
     deleteChatMessage,
     clearChat,
     toggleSaveMessage,
+    joinVoiceChannel,
+    leaveVoiceChannel,
+    setVoiceState,
+    toggleVoiceSpeaker,
+    openVoicePermissionSettings,
   } = useRoom();
 
   const [filterMode, setFilterMode] = useState<"all" | "media">("all");
@@ -81,7 +117,48 @@ export default function ChatScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<ChatMessage | null>(null);
   const [attachSheetOpen, setAttachSheetOpen] = useState(false);
+  const [voiceSheetOpen, setVoiceSheetOpen] = useState(false);
+  const [joiningVoiceId, setJoiningVoiceId] = useState<string | null>(null);
   const [keyboardPadding, setKeyboardPadding] = useState(0);
+
+  const activeVoiceChannel = useMemo(
+    () => voiceChannels.find(c => c.id === activeVoiceChannelId) || null,
+    [activeVoiceChannelId, voiceChannels]
+  );
+  const totalVoiceParticipants = useMemo(
+    () => voiceChannels.reduce((acc, c) => acc + c.participants.length, 0),
+    [voiceChannels]
+  );
+  const liveJoinableChannel = useMemo(
+    () =>
+      voiceChannels.find(c => c.participants.length > 0) ||
+      voiceChannels.find(c => c.isDefault) ||
+      voiceChannels[0] ||
+      null,
+    [voiceChannels]
+  );
+  const connectedPeerCount = useMemo(
+    () => Object.values(voicePeerStates).filter(s => s === "connected").length,
+    [voicePeerStates]
+  );
+
+  const handleQuickVoiceJoin = async (channelId?: string) => {
+    const targetId = channelId || liveJoinableChannel?.id;
+    if (!targetId) {
+      router.push("/voice");
+      return;
+    }
+    setJoiningVoiceId(targetId);
+    setErrorMsg(null);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    const res = await joinVoiceChannel(targetId);
+    setJoiningVoiceId(null);
+    if (!res.ok) {
+      setErrorMsg(res.error || "Unable to connect Voice Chat.");
+      return;
+    }
+    setVoiceSheetOpen(false);
+  };
 
   const listRef = useRef<FlatList<ChatMessage>>(null);
   const maxContainerHeightRef = useRef(0);
@@ -360,8 +437,9 @@ export default function ChatScreen() {
               end={{ x: 1, y: 1 }}
               style={[
                 styles.bubble,
+                bubbleResponsiveStyle,
                 styles.bubbleOwn,
-                hasMedia && styles.bubbleMediaWide,
+                hasMedia && mediaResponsiveStyle,
               ]}
             >
               {bubbleInner}
@@ -370,8 +448,9 @@ export default function ChatScreen() {
             <View
               style={[
                 styles.bubble,
+                bubbleResponsiveStyle,
                 styles.bubbleOther,
-                hasMedia && styles.bubbleMediaWide,
+                hasMedia && mediaResponsiveStyle,
               ]}
             >
               {bubbleInner}
@@ -383,7 +462,7 @@ export default function ChatScreen() {
   };
 
   return (
-    <ScreenContainer keyboardAware padded={false}>
+    <ScreenContainer keyboardAware padded={false} maxWidth={860}>
       <View
         style={[styles.chatRoot, keyboardPadding > 0 && { paddingBottom: keyboardPadding }]}
         onLayout={handleContainerLayout}
@@ -400,17 +479,53 @@ export default function ChatScreen() {
               showDot
             />
           </View>
-          <Text style={styles.subtitle}>
+          <Text style={styles.subtitle} numberOfLines={1}>
             Room {roomState?.roomId || activeRoomId} · Hold any message for actions
           </Text>
         </View>
-        <Pressable
-          onPress={() => router.push("/whiteboard")}
-          style={({ pressed }) => [styles.headerIconBtn, pressed && styles.mediaPressed]}
-          accessibilityLabel="Open Whiteboard"
-        >
-          <Ionicons name="brush-outline" size={18} color={colors.primaryBright} />
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => {
+              if (activeVoiceChannel) {
+                setVoiceSheetOpen(true);
+              } else if (voiceChannels.length <= 1) {
+                void handleQuickVoiceJoin();
+              } else {
+                setVoiceSheetOpen(true);
+              }
+            }}
+            style={({ pressed }) => [
+              styles.voiceCallBtn,
+              activeVoiceChannel && styles.voiceCallBtnActive,
+              pressed && styles.mediaPressed,
+            ]}
+            accessibilityLabel="Voice Call in Chat"
+          >
+            <Ionicons
+              name={activeVoiceChannel ? "mic" : "call-outline"}
+              size={17}
+              color={activeVoiceChannel ? colors.success : colors.cyan}
+            />
+            {totalVoiceParticipants > 0 ? (
+              <Text
+                style={[
+                  styles.voiceCallCount,
+                  activeVoiceChannel && { color: colors.success },
+                ]}
+              >
+                {totalVoiceParticipants}
+              </Text>
+            ) : null}
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/whiteboard")}
+            style={({ pressed }) => [styles.headerIconBtn, pressed && styles.mediaPressed]}
+            accessibilityLabel="Open Whiteboard"
+          >
+            <Ionicons name="brush-outline" size={18} color={colors.primaryBright} />
+          </Pressable>
+        </View>
       </View>
 
       {/* Filter & Admin Clear Bar */}
@@ -451,11 +566,86 @@ export default function ChatScreen() {
         ) : null}
       </View>
 
-      {errorMsg ? (
+      {/* WhatsApp-style Live Voice Call Bar directly in Chat */}
+      {activeVoiceChannel ? (
+        <View style={styles.voiceLiveBar}>
+          <Pressable onPress={() => router.push("/voice")} style={styles.voiceLiveIdentity}>
+            <PulseBeacon color={colors.success} size={8} />
+            <View style={styles.flexOne}>
+              <Text style={styles.voiceLiveTitle} numberOfLines={1}>
+                {activeVoiceChannel.name} · {activeVoiceChannel.participants.length} in call
+              </Text>
+              <Text style={styles.voiceLiveSub} numberOfLines={1}>
+                {activeVoiceChannel.participants.length <= 1
+                  ? "Waiting for teammates · Tap for details"
+                  : `${connectedPeerCount}/${activeVoiceChannel.participants.length - 1} audio live · ${voiceAudioSupported ? "WebRTC" : "Signaling"}`}
+              </Text>
+            </View>
+          </Pressable>
+          <View style={styles.voiceLiveCtrls}>
+            <Pressable
+              onPress={() => {
+                void Haptics.selectionAsync().catch(() => {});
+                void setVoiceState({ muted: !voiceMuted });
+              }}
+              style={[styles.voiceMiniBtn, voiceMuted && styles.voiceMiniBtnMuted]}
+              accessibilityLabel={voiceMuted ? "Unmute microphone" : "Mute microphone"}
+            >
+              <Ionicons
+                name={voiceMuted ? "mic-off" : "mic"}
+                size={16}
+                color={voiceMuted ? colors.danger : colors.success}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                void Haptics.selectionAsync().catch(() => {});
+                void toggleVoiceSpeaker();
+              }}
+              style={[styles.voiceMiniBtn, voiceSpeakerOn && styles.voiceMiniBtnSpeaker]}
+              accessibilityLabel={voiceSpeakerOn ? "Switch to earpiece" : "Switch to speakerphone"}
+            >
+              <Ionicons
+                name={voiceSpeakerOn ? "volume-high" : "ear-outline"}
+                size={16}
+                color={voiceSpeakerOn ? colors.cyan : colors.textSecondary}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => void leaveVoiceChannel()}
+              style={[styles.voiceMiniBtn, styles.voiceMiniBtnEnd]}
+              accessibilityLabel="End voice call"
+            >
+              <Ionicons name="call" size={15} color="#FFFFFF" />
+            </Pressable>
+          </View>
+        </View>
+      ) : totalVoiceParticipants > 0 && liveJoinableChannel ? (
+        <Pressable
+          onPress={() => void handleQuickVoiceJoin(liveJoinableChannel.id)}
+          style={styles.voiceJoinPromptBar}
+        >
+          <PulseBeacon color={colors.cyan} size={7} />
+          <Text style={styles.voiceJoinPromptText} numberOfLines={1}>
+            {liveJoinableChannel.participants.length} online in {liveJoinableChannel.name} · Tap to join audio
+          </Text>
+          <Text style={styles.voiceJoinPromptAction}>Join</Text>
+        </Pressable>
+      ) : null}
+
+      {errorMsg || voiceError ? (
         <View style={styles.bannerWrap}>
           <FeedbackBanner
             tone="error"
-            message={errorMsg}
+            message={errorMsg || voiceError || ""}
+            actionLabel={voiceMicPermission === "blocked" ? "Open Settings" : "Voice Check"}
+            onAction={() => {
+              if (voiceMicPermission === "blocked") {
+                void openVoicePermissionSettings();
+              } else {
+                router.push("/voice");
+              }
+            }}
             onDismiss={() => setErrorMsg(null)}
           />
         </View>
@@ -688,6 +878,80 @@ export default function ChatScreen() {
           </Pressable>
         </Pressable>
       </Modal>
+
+      {/* Quick In-Chat Voice Call Modal */}
+      <Modal
+        visible={voiceSheetOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setVoiceSheetOpen(false)}
+      >
+        <Pressable style={styles.modalBackdrop} onPress={() => setVoiceSheetOpen(false)}>
+          <Pressable style={styles.sheet} onPress={e => e.stopPropagation()}>
+            <Text style={styles.sheetTitle}>Voice Call · Room {roomState?.roomId || activeRoomId}</Text>
+
+            {voiceChannels.map(ch => {
+              const joined = ch.id === activeVoiceChannelId;
+              return (
+                <Pressable
+                  key={ch.id}
+                  style={[styles.sheetAction, joined && styles.sheetVoiceActive]}
+                  onPress={() => {
+                    if (joined) {
+                      void leaveVoiceChannel();
+                      setVoiceSheetOpen(false);
+                    } else {
+                      void handleQuickVoiceJoin(ch.id);
+                    }
+                  }}
+                >
+                  <Ionicons
+                    name={joined ? "mic" : "call-outline"}
+                    size={19}
+                    color={joined ? colors.success : colors.cyan}
+                  />
+                  <View style={styles.flexOne}>
+                    <Text style={styles.sheetActionText}>{ch.name}</Text>
+                    <Text style={styles.stagingSub}>
+                      {ch.participants.length} online · {joined ? "Connected (tap to leave)" : "Tap to join"}
+                    </Text>
+                  </View>
+                  <Text style={[styles.voiceSheetBadge, joined && { color: colors.danger }]}>
+                    {joiningVoiceId === ch.id ? "Linking…" : joined ? "Leave" : "Join"}
+                  </Text>
+                </Pressable>
+              );
+            })}
+
+            {activeVoiceChannel ? (
+              <Pressable
+                style={styles.sheetAction}
+                onPress={() => void setVoiceState({ deafened: !voiceDeafened })}
+              >
+                <Ionicons
+                  name={voiceDeafened ? "volume-mute" : "headset-outline"}
+                  size={19}
+                  color={voiceDeafened ? colors.warning : colors.text}
+                />
+                <Text style={styles.sheetActionText}>
+                  {voiceDeafened ? "Undeafen Incoming Audio" : "Deafen Incoming Audio"}
+                </Text>
+              </Pressable>
+            ) : null}
+
+            <Pressable
+              style={styles.sheetAction}
+              onPress={() => {
+                setVoiceSheetOpen(false);
+                router.push("/voice");
+              }}
+            >
+              <Ionicons name="options-outline" size={19} color={colors.primaryBright} />
+              <Text style={styles.sheetActionText}>Open Full Voice Rooms & Diagnostics</Text>
+            </Pressable>
+          </Pressable>
+        </Pressable>
+      </Modal>
       </View>
     </ScreenContainer>
   );
@@ -711,6 +975,35 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+    minWidth: 0,
+  },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs + 2,
+    flexShrink: 0,
+  },
+  voiceCallBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    height: 38,
+    minWidth: 38,
+    paddingHorizontal: 10,
+    borderRadius: 19,
+    backgroundColor: "rgba(56, 189, 248, 0.14)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.35)",
+    justifyContent: "center",
+  },
+  voiceCallBtnActive: {
+    backgroundColor: colors.successSoft,
+    borderColor: colors.successBorder,
+  },
+  voiceCallCount: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.cyan,
   },
   headerIconBtn: {
     width: 38,
@@ -721,6 +1014,95 @@ const styles = StyleSheet.create({
     borderColor: colors.primaryBorder,
     alignItems: "center",
     justifyContent: "center",
+  },
+  voiceLiveBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    backgroundColor: "rgba(16, 185, 129, 0.12)",
+    borderBottomWidth: 1,
+    borderBottomColor: colors.successBorder,
+  },
+  voiceLiveIdentity: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  voiceLiveTitle: {
+    ...typography.caption,
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: colors.text,
+  },
+  voiceLiveSub: {
+    ...typography.caption,
+    fontSize: 11,
+    color: colors.textSecondary,
+  },
+  voiceLiveCtrls: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flexShrink: 0,
+  },
+  voiceMiniBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  voiceMiniBtnMuted: {
+    backgroundColor: colors.dangerSoft,
+    borderColor: colors.dangerBorder,
+  },
+  voiceMiniBtnSpeaker: {
+    backgroundColor: "rgba(56, 189, 248, 0.14)",
+    borderColor: "rgba(56, 189, 248, 0.32)",
+  },
+  voiceMiniBtnEnd: {
+    backgroundColor: colors.dangerSolid,
+    borderColor: colors.dangerSolid,
+  },
+  voiceJoinPromptBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 8,
+    backgroundColor: "rgba(14, 165, 233, 0.12)",
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(56, 189, 248, 0.25)",
+  },
+  voiceJoinPromptText: {
+    flex: 1,
+    ...typography.caption,
+    fontSize: 12,
+    color: colors.text,
+  },
+  voiceJoinPromptAction: {
+    ...typography.caption,
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.cyan,
+  },
+  sheetVoiceActive: {
+    borderColor: colors.successBorder,
+    backgroundColor: colors.successSoft,
+  },
+  voiceSheetBadge: {
+    ...typography.caption,
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.cyan,
   },
   title: {
     ...typography.heading,

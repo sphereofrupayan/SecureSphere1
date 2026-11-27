@@ -8,6 +8,8 @@ import { connectSocket, disconnectSocket, getActiveSocket } from "@/services/soc
 import {
   voiceWebRTCEngine,
   type PeerAudioState,
+  type VoiceDiagnosticCode,
+  type VoiceMicPermissionStatus,
 } from "@/services/voiceWebRTC";
 import type {
   ChatMessage,
@@ -53,8 +55,14 @@ export interface RoomContextValue {
   activeVoiceChannelId: string | null;
   voiceMuted: boolean;
   voiceDeafened: boolean;
+  voiceSpeakerOn: boolean;
   voiceAudioSupported: boolean;
   voicePeerStates: Record<string, PeerAudioState>;
+  voiceMicPermission: VoiceMicPermissionStatus;
+  voiceHasTurn: boolean;
+  voiceIceServerCount: number;
+  voiceDiagnosticCode: VoiceDiagnosticCode;
+  voiceError: string | null;
   notifications: UserNotification[];
   unreadNotificationsCount: number;
   connectionStatus: SocketConnectionStatus;
@@ -123,6 +131,10 @@ export interface RoomContextValue {
   joinVoiceChannel: (channelId: string) => ActionResult;
   leaveVoiceChannel: () => ActionResult;
   setVoiceState: (next: { muted?: boolean; deafened?: boolean }) => ActionResult;
+  toggleVoiceSpeaker: () => Promise<void>;
+  openVoicePermissionSettings: () => Promise<void>;
+  refreshVoiceDiagnostics: () => Promise<void>;
+  retryVoiceConnections: () => Promise<void>;
 
   // Notifications
   markNotificationRead: (id: string) => ActionResult;
@@ -179,10 +191,21 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   const [activeVoiceChannelId, setActiveVoiceChannelId] = useState<string | null>(null);
   const [voiceMuted, setVoiceMuted] = useState(false);
   const [voiceDeafened, setVoiceDeafened] = useState(false);
+  const [voiceSpeakerOn, setVoiceSpeakerOn] = useState(true);
   const [voiceAudioSupported, setVoiceAudioSupported] = useState<boolean>(() =>
     voiceWebRTCEngine.isSupported()
   );
   const [voicePeerStates, setVoicePeerStates] = useState<Record<string, PeerAudioState>>({});
+  const [voiceMicPermission, setVoiceMicPermission] = useState<VoiceMicPermissionStatus>(() =>
+    voiceWebRTCEngine.getSnapshot().micPermission
+  );
+  const [voiceHasTurn, setVoiceHasTurn] = useState(false);
+  const [voiceIceServerCount, setVoiceIceServerCount] = useState(
+    () => voiceWebRTCEngine.getSnapshot().iceServerCount
+  );
+  const [voiceDiagnosticCode, setVoiceDiagnosticCode] = useState<VoiceDiagnosticCode>(null);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const switchingVoiceChannelRef = useRef(false);
   const [notifications, setNotifications] = useState<UserNotification[]>([]);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<SocketConnectionStatus>("disconnected");
@@ -408,14 +431,23 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
 
     // Voice Channels live sync & WebRTC signaling binding
     voiceWebRTCEngine.bindSocket(socket);
+    void voiceWebRTCEngine.refreshMicPermissionStatus();
+    void voiceWebRTCEngine.refreshIceServers();
     const unsubVoiceEngine = voiceWebRTCEngine.subscribe(snap => {
       setVoiceAudioSupported(snap.supported);
       setVoicePeerStates(snap.peerStates);
+      setVoiceSpeakerOn(snap.speakerOn);
+      setVoiceMicPermission(snap.micPermission);
+      setVoiceHasTurn(snap.hasTurn);
+      setVoiceIceServerCount(snap.iceServerCount);
+      setVoiceDiagnosticCode(snap.lastDiagnosticCode);
+      setVoiceError(snap.error);
     });
 
     socket.on("voice:channelsUpdated", (payload: VoiceChannelsPayload) => {
       const nextChannels = Array.isArray(payload?.channels) ? payload.channels : [];
       setVoiceChannels(nextChannels);
+      if (switchingVoiceChannelRef.current) return;
       setActiveVoiceChannelId(prev => {
         if (!prev) return prev;
         const ch = nextChannels.find(c => c.id === prev);
@@ -501,6 +533,7 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState: AppStateStatus) => {
       if (nextState === "active") {
+        void voiceWebRTCEngine.refreshMicPermissionStatus();
         const socket = getActiveSocket();
         if (socket?.connected) {
           socket.emit("requestSync");
@@ -816,34 +849,40 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
   );
 
   const joinVoiceChannel = useCallback(async (channelId: string) => {
-    const prep = await voiceWebRTCEngine.prepareForJoin();
-    if (!prep.ok) {
-      return { ok: false, error: prep.error || "Unable to access microphone for voice chat." };
-    }
+    switchingVoiceChannelRef.current = true;
+    try {
+      const prep = await voiceWebRTCEngine.prepareForJoin();
+      if (!prep.ok) {
+        return { ok: false, error: prep.error || "Unable to access microphone for voice chat." };
+      }
 
-    const res = await emitWithAck<{
-      ok: boolean;
-      error?: string;
-      channelId?: string;
-      channelName?: string;
-      peers?: Array<{ socketId: string; username: string }>;
-    }>("voice:join", {
-      channelId,
-      muted: false,
-      deafened: false,
-    });
+      const res = await emitWithAck<{
+        ok: boolean;
+        error?: string;
+        channelId?: string;
+        channelName?: string;
+        peers?: Array<{ socketId: string; username: string }>;
+      }>("voice:join", {
+        channelId,
+        muted: false,
+        deafened: false,
+      });
 
-    if (res.ok) {
-      const joinedId = res.channelId || channelId;
-      voiceWebRTCEngine.setLocalVoiceFlags(false, false);
-      voiceWebRTCEngine.startChannelMesh(joinedId, Array.isArray(res.peers) ? res.peers : []);
-      setActiveVoiceChannelId(joinedId);
-      setVoiceMuted(false);
-      setVoiceDeafened(false);
-    } else {
-      voiceWebRTCEngine.stopLocalSession();
+      if (res.ok) {
+        const joinedId = res.channelId || channelId;
+        voiceWebRTCEngine.setLocalVoiceFlags(false, false);
+        voiceWebRTCEngine.startChannelMesh(joinedId, Array.isArray(res.peers) ? res.peers : []);
+        setActiveVoiceChannelId(joinedId);
+        setVoiceMuted(false);
+        setVoiceDeafened(false);
+      } else {
+        voiceWebRTCEngine.stopLocalSession();
+        setActiveVoiceChannelId(null);
+      }
+      return res;
+    } finally {
+      switchingVoiceChannelRef.current = false;
     }
-    return res;
   }, []);
 
   const leaveVoiceChannel = useCallback(async () => {
@@ -876,6 +915,23 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
     [voiceDeafened, voiceMuted]
   );
 
+  const toggleVoiceSpeaker = useCallback(async () => {
+    await voiceWebRTCEngine.setSpeakerOn(!voiceSpeakerOn);
+  }, [voiceSpeakerOn]);
+
+  const openVoicePermissionSettings = useCallback(async () => {
+    await voiceWebRTCEngine.openPermissionSettings();
+  }, []);
+
+  const refreshVoiceDiagnostics = useCallback(async () => {
+    await voiceWebRTCEngine.refreshMicPermissionStatus();
+    await voiceWebRTCEngine.refreshIceServers();
+  }, []);
+
+  const retryVoiceConnections = useCallback(async () => {
+    await voiceWebRTCEngine.retryPeerConnections();
+  }, []);
+
   // ── Notifications Actions ──
   const markNotificationRead = useCallback(
     (id: string) => emitWithAck("notifications:markRead", { id }),
@@ -903,8 +959,14 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       activeVoiceChannelId,
       voiceMuted,
       voiceDeafened,
+      voiceSpeakerOn,
       voiceAudioSupported,
       voicePeerStates,
+      voiceMicPermission,
+      voiceHasTurn,
+      voiceIceServerCount,
+      voiceDiagnosticCode,
+      voiceError,
       notifications,
       unreadNotificationsCount,
       connectionStatus,
@@ -957,6 +1019,10 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       joinVoiceChannel,
       leaveVoiceChannel,
       setVoiceState,
+      toggleVoiceSpeaker,
+      openVoicePermissionSettings,
+      refreshVoiceDiagnostics,
+      retryVoiceConnections,
       markNotificationRead,
       markAllNotificationsRead,
     }),
@@ -975,8 +1041,14 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       activeVoiceChannelId,
       voiceMuted,
       voiceDeafened,
+      voiceSpeakerOn,
       voiceAudioSupported,
       voicePeerStates,
+      voiceMicPermission,
+      voiceHasTurn,
+      voiceIceServerCount,
+      voiceDiagnosticCode,
+      voiceError,
       notifications,
       unreadNotificationsCount,
       connectionStatus,
@@ -1029,6 +1101,10 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
       joinVoiceChannel,
       leaveVoiceChannel,
       setVoiceState,
+      toggleVoiceSpeaker,
+      openVoicePermissionSettings,
+      refreshVoiceDiagnostics,
+      retryVoiceConnections,
       markNotificationRead,
       markAllNotificationsRead,
     ]

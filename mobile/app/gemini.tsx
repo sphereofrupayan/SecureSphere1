@@ -311,7 +311,12 @@ export default function GeminiModalScreen() {
   const canSend = Boolean(input.trim()) && configured !== false;
 
   return (
-    <ScreenContainer keyboardAware padded={false} edges={["top", "bottom", "left", "right"]}>
+    <ScreenContainer
+      keyboardAware
+      padded={false}
+      maxWidth={840}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <View
         style={[{ flex: 1 }, keyboardPadding > 0 && { paddingBottom: keyboardPadding }]}
         onLayout={handleRootLayout}

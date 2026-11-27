@@ -201,7 +201,7 @@ export default function LoungeScreen() {
   const youtubeEnabled = Boolean(roomState?.plugins.youtube);
 
   return (
-    <ScreenContainer scroll keyboardAware>
+    <ScreenContainer scroll keyboardAware maxWidth={760}>
       <View style={styles.header}>
         <Text style={styles.title}>Lounge</Text>
         <Text style={styles.subtitle}>
@@ -890,6 +890,7 @@ const styles = StyleSheet.create({
   },
   urlInput: {
     flex: 1,
+    minWidth: 0,
     height: 44,
     borderRadius: radii.md,
     backgroundColor: colors.surfaceInset,

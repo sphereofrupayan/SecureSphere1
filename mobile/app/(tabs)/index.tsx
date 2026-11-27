@@ -1,5 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +33,16 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function HubScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isCompact = width < 360;
+  const isWide = width >= 720;
+  const toolTileWidth = useMemo(() => {
+    const horizontalPad = isCompact ? spacing.md : isWide ? spacing.xxl : spacing.lg;
+    const containerWidth = Math.min(width, 760) - horizontalPad * 2;
+    const columns = width >= 660 ? 3 : 2;
+    return Math.max(120, Math.floor((containerWidth - spacing.md * (columns - 1)) / columns));
+  }, [isCompact, isWide, width]);
+
   const { user, activeRoomId } = useAuth();
   const {
     roomState,
@@ -90,9 +109,12 @@ export default function HubScreen() {
         : "Offline";
 
   return (
-    <ScreenContainer padded={false}>
+    <ScreenContainer padded={false} maxWidth={760}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isCompact && styles.scrollContentCompact,
+        ]}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -230,6 +252,7 @@ export default function HubScreen() {
         <FadeInView delay={200}>
           <View style={styles.toolsGrid}>
             <ToolTile
+              tileWidth={toolTileWidth}
               icon="brush-outline"
               iconColor={colors.primaryBright}
               gradientColors={["rgba(59, 130, 246, 0.22)", "rgba(20, 26, 38, 0.92)"]}
@@ -238,6 +261,7 @@ export default function HubScreen() {
               onPress={() => router.push("/whiteboard")}
             />
             <ToolTile
+              tileWidth={toolTileWidth}
               icon="mic-outline"
               iconColor={activeVoiceChannelId ? colors.success : colors.cyan}
               gradientColors={["rgba(14, 165, 233, 0.20)", "rgba(20, 26, 38, 0.92)"]}
@@ -250,6 +274,7 @@ export default function HubScreen() {
               onPress={() => router.push("/voice")}
             />
             <ToolTile
+              tileWidth={toolTileWidth}
               icon="sparkles-outline"
               iconColor="#A78BFA"
               gradientColors={["rgba(139, 92, 246, 0.22)", "rgba(20, 26, 38, 0.92)"]}
@@ -258,6 +283,7 @@ export default function HubScreen() {
               onPress={() => router.push("/gemini")}
             />
             <ToolTile
+              tileWidth={toolTileWidth}
               icon="bookmark-outline"
               iconColor={colors.warning}
               gradientColors={["rgba(245, 158, 11, 0.18)", "rgba(20, 26, 38, 0.92)"]}
@@ -378,6 +404,7 @@ export default function HubScreen() {
 }
 
 function ToolTile({
+  tileWidth,
   icon,
   iconColor,
   gradientColors,
@@ -385,6 +412,7 @@ function ToolTile({
   subtitle,
   onPress,
 }: {
+  tileWidth: number;
   icon: keyof typeof Ionicons.glyphMap;
   iconColor: string;
   gradientColors: readonly [string, string];
@@ -406,7 +434,7 @@ function ToolTile({
       onPressOut={() => {
         scale.value = withSpring(1, { damping: 16, stiffness: 320 });
       }}
-      style={[styles.toolTileWrap, animStyle]}
+      style={[{ width: tileWidth }, animStyle]}
     >
       <LinearGradient
         colors={gradientColors}
@@ -433,15 +461,21 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxxl,
     gap: spacing.lg,
   },
+  scrollContentCompact: {
+    paddingHorizontal: spacing.md,
+  },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: spacing.sm,
   },
   brandRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
+    flex: 1,
+    minWidth: 0,
   },
   greeting: {
     ...typography.caption,

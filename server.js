@@ -339,10 +339,10 @@ app.get("/privacy", (_req, res) => {
 </html>`);
 });
 
-const APP_RELEASE_VERSION = String(process.env.APP_VERSION || "1.0.1").trim();
+const APP_RELEASE_VERSION = String(process.env.APP_VERSION || "1.0.2").trim();
 const DEFAULT_ANDROID_APK_URL =
   process.env.ANDROID_APK_URL ||
-  "https://expo.dev/artifacts/eas/oeoCqLGgICCAmfJrbsIQMPsZZFyhJO9ZlotkbMLYHpM.apk";
+  "https://expo.dev/artifacts/eas/3zD7SddaRqqlJ6URfa6mIa7Ob51FHOC29TcPFPrjcFk.apk";
 
 app.get("/download", (_req, res) => {
   const apkUrl = String(process.env.ANDROID_APK_URL || DEFAULT_ANDROID_APK_URL).trim();
@@ -2620,25 +2620,113 @@ app.get("/api/media/:mediaId", requireAuth, (req, res) => {
 });
 
 /* ── WebRTC ICE / STUN / TURN Configuration Endpoint ───────── */
-function buildIceServersConfig(username) {
+const BASE_STUN_SERVERS = [
+  { urls: "stun:stun.l.google.com:19302" },
+  { urls: "stun:stun1.l.google.com:19302" },
+  { urls: "stun:stun2.l.google.com:19302" },
+  { urls: "stun:stun.cloudflare.com:3478" },
+  { urls: "stun:stun.relay.metered.ca:80" }
+];
+
+const cachedTurnState = {
+  provider: null,
+  servers: null,
+  expiresAt: 0
+};
+
+function countTurnEntries(iceServers) {
+  let stunCount = 0;
+  let turnCount = 0;
+  for (const entry of iceServers || []) {
+    const raw = Array.isArray(entry?.urls) ? entry.urls.join(" ") : String(entry?.urls || "");
+    if (/turns?:/i.test(raw)) turnCount++;
+    else if (/stun:/i.test(raw)) stunCount++;
+  }
+  return { stunCount, turnCount, hasTurn: turnCount > 0 };
+}
+
+async function fetchDynamicTurnServers() {
+  const now = Date.now();
+  if (cachedTurnState.servers && cachedTurnState.expiresAt > now) {
+    return { servers: cachedTurnState.servers, provider: cachedTurnState.provider };
+  }
+
+  // Option A: Cloudflare Realtime Calls TURN Credentials API
+  const cfKeyId = String(process.env.CLOUDFLARE_TURN_KEY_ID || "").trim();
+  const cfToken = String(process.env.CLOUDFLARE_TURN_API_TOKEN || "").trim();
+  if (cfKeyId && cfToken) {
+    try {
+      const resp = await fetch(
+        `https://rtc.live.cloudflare.com/v1/turn/keys/${encodeURIComponent(cfKeyId)}/credentials/generate`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${cfToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ttl: 43200 })
+        }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        const cfServers = Array.isArray(data?.iceServers)
+          ? data.iceServers
+          : data?.iceServers?.urls
+            ? [data.iceServers]
+            : [];
+        if (cfServers.length > 0) {
+          cachedTurnState.servers = cfServers;
+          cachedTurnState.provider = "cloudflare-turn";
+          cachedTurnState.expiresAt = now + 5 * 60 * 1000;
+          return { servers: cfServers, provider: "cloudflare-turn" };
+        }
+      }
+    } catch {
+      // fall through to other configured TURN providers
+    }
+  }
+
+  // Option B: Metered OpenRelay / TURN REST API
+  const meteredDomain = String(process.env.METERED_TURN_DOMAIN || "").trim();
+  const meteredKey = String(process.env.METERED_TURN_API_KEY || "").trim();
+  if (meteredDomain && meteredKey) {
+    try {
+      const cleanDomain = meteredDomain.replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+      const resp = await fetch(
+        `https://${cleanDomain}/api/v1/turn/credentials?apiKey=${encodeURIComponent(meteredKey)}`
+      );
+      if (resp.ok) {
+        const list = await resp.json();
+        if (Array.isArray(list) && list.length > 0) {
+          cachedTurnState.servers = list;
+          cachedTurnState.provider = "metered-turn";
+          cachedTurnState.expiresAt = now + 5 * 60 * 1000;
+          return { servers: list, provider: "metered-turn" };
+        }
+      }
+    } catch {
+      // fall through
+    }
+  }
+
+  return { servers: [], provider: null };
+}
+
+async function buildIceServersConfig(username) {
   if (process.env.VOICE_ICE_SERVERS_JSON) {
     const parsed = safeJsonParse(process.env.VOICE_ICE_SERVERS_JSON, null);
     if (Array.isArray(parsed) && parsed.length > 0) {
       return {
         iceServers: parsed,
-        hasTurn: parsed.some(s => String(s?.urls || "").includes("turn"))
+        provider: "custom-json",
+        ...countTurnEntries(parsed)
       };
     }
   }
 
-  const iceServers = [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-    { urls: "stun:stun2.l.google.com:19302" },
-    { urls: "stun:stun.cloudflare.com:3478" }
-  ];
+  const iceServers = BASE_STUN_SERVERS.map(s => ({ ...s }));
+  let provider = "stun-only";
 
-  let hasTurn = false;
   const turnUrls = String(process.env.TURN_URLS || "")
     .split(",")
     .map(u => u.trim())
@@ -2646,7 +2734,6 @@ function buildIceServersConfig(username) {
 
   if (turnUrls.length > 0) {
     if (process.env.TURN_SHARED_SECRET) {
-      // RFC / coturn use-auth-secret HMAC-SHA1 time-limited credentials (12h TTL)
       const ttlSeconds = 12 * 3600;
       const expiry = Math.floor(Date.now() / 1000) + ttlSeconds;
       const cleanUser = String(username || "user").replace(/[^a-zA-Z0-9_.-]/g, "_").slice(0, 40);
@@ -2660,27 +2747,53 @@ function buildIceServersConfig(username) {
         username: turnUsername,
         credential: turnCredential
       });
-      hasTurn = true;
+      provider = "coturn-hmac";
     } else if (process.env.TURN_USERNAME && process.env.TURN_CREDENTIAL) {
       iceServers.push({
         urls: turnUrls,
         username: process.env.TURN_USERNAME,
         credential: process.env.TURN_CREDENTIAL
       });
-      hasTurn = true;
+      provider = "static-turn";
+    }
+  } else {
+    const dynamicTurn = await fetchDynamicTurnServers();
+    if (dynamicTurn.servers.length > 0) {
+      for (const srv of dynamicTurn.servers) {
+        if (srv?.urls) iceServers.push(srv);
+      }
+      provider = dynamicTurn.provider || "dynamic-turn";
     }
   }
 
-  return { iceServers, hasTurn };
+  return {
+    iceServers,
+    provider,
+    ...countTurnEntries(iceServers)
+  };
 }
 
-app.get("/api/voice/ice-config", requireAuth, (req, res) => {
-  const cfg = buildIceServersConfig(req.user.username);
-  res.json({
-    ok: true,
-    iceServers: cfg.iceServers,
-    hasTurn: cfg.hasTurn
-  });
+app.get("/api/voice/ice-config", requireAuth, async (req, res) => {
+  try {
+    const cfg = await buildIceServersConfig(req.user.username);
+    res.json({
+      ok: true,
+      iceServers: cfg.iceServers,
+      hasTurn: cfg.hasTurn,
+      stunCount: cfg.stunCount,
+      turnCount: cfg.turnCount,
+      provider: cfg.provider
+    });
+  } catch {
+    res.json({
+      ok: true,
+      iceServers: BASE_STUN_SERVERS,
+      hasTurn: false,
+      stunCount: BASE_STUN_SERVERS.length,
+      turnCount: 0,
+      provider: "stun-fallback"
+    });
+  }
 });
 
 /* ── Socket.IO Real-Time Multi-Room Engine ─────────────────── */

@@ -328,10 +328,12 @@ const styles = StyleSheet.create({
   },
   quickGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.md,
   },
   quickTile: {
     flex: 1,
+    minWidth: 145,
     backgroundColor: "rgba(20, 26, 38, 0.88)",
     borderWidth: 1,
     borderColor: colors.borderStrong,

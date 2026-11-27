@@ -25,7 +25,7 @@ export default function SavedAndHistoryScreen() {
   };
 
   return (
-    <ScreenContainer padded={false} edges={["top", "bottom", "left", "right"]}>
+    <ScreenContainer padded={false} maxWidth={760} edges={["top", "bottom", "left", "right"]}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn} hitSlop={10}>
           <Ionicons name="arrow-back" size={20} color={colors.text} />

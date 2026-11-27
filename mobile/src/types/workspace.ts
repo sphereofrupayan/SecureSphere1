@@ -80,6 +80,9 @@ export interface VoiceIceConfigResponse {
   ok: boolean;
   iceServers: Array<{ urls: string | string[]; username?: string; credential?: string }>;
   hasTurn: boolean;
+  stunCount?: number;
+  turnCount?: number;
+  provider?: string;
 }
 
 export interface UserNotification {

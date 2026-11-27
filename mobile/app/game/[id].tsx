@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
   },
   flexOne: {
     flex: 1,
+    minWidth: 0,
   },
   title: {
     ...typography.heading,

@@ -68,7 +68,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScreenContainer scroll>
+    <ScreenContainer scroll maxWidth={760}>
       <View style={styles.header}>
         <Text style={styles.title}>Account & Security</Text>
         <Text style={styles.subtitle}>Session security, tools, admin access, and updates.</Text>
@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
   },
   flexOne: {
     flex: 1,
+    minWidth: 0,
     gap: 2,
   },
   username: {
