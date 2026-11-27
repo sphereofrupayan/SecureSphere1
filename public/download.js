@@ -1,23 +1,57 @@
 /* ==========================================================================
-   SecureSphere Download & Product Showcase Interactive Engine
-   - Spring-physics mouse pointer follower & contextual cursor pills
-   - Prismatic mouse-reactive hero particle canvas
-   - 3D mouse-tilt + spotlight on 16:9 illustrations
-   - Radiating dark cobalt particle burst in Download CTA
-   - 2m15s 9-chapter Cinema video player controls
-   - Smooth scroll reveals
+   SecureSphere Interactive Showcase Engine (Snapa-Inspired Smooth Motion)
+   - Lenis silky inertial scroll loop
+   - Contextual mouse halo, dot & cursor pills + 3D tilt stages
+   - Scroll-reactive manifesto illumination
+   - Characteristics sticky switcher & Control 01–03 phone showcase
+   - Mobile uncropped fullscreen video fix (aspect-ratio: auto + contain)
+   - Clickable 25-platform partner category filtering
    ========================================================================== */
 
 (() => {
   const prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ── 1. Announcement Dismiss ──────────────────────────────────────────── */
+  /* ── 1. Lenis Smooth Inertial Scrolling ──────────────────────────────── */
+  let lenis = null;
+  if (!prefersReducedMotion && typeof window.Lenis === "function") {
+    try {
+      lenis = new window.Lenis({
+        duration: 1.15,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 0.95,
+      });
+      const rafLenis = time => {
+        lenis.raf(time);
+        requestAnimationFrame(rafLenis);
+      };
+      requestAnimationFrame(rafLenis);
+    } catch {
+      lenis = null;
+    }
+  }
+
+  /* Smooth anchor jumps compatible with Lenis */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", e => {
+      const id = anchor.getAttribute("href");
+      if (!id || id === "#") return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      if (lenis) {
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: -72 });
+      }
+    });
+  });
+
+  /* ── 2. Announcement Bar Dismiss ──────────────────────────────────────── */
   const annBar = document.getElementById("announcementBar");
   const annClose = document.getElementById("announcementClose");
   annClose?.addEventListener("click", () => annBar?.classList.add("is-hidden"));
 
-  /* ── 2. Smooth Mouse-Tracking Cursor Halo, Dot & Contextual Pill ──────── */
+  /* ── 3. Smooth Mouse-Tracking Cursor Halo, Dot & Contextual Pill ──────── */
   const dot = document.getElementById("ssCursorDot");
   const halo = document.getElementById("ssCursorHalo");
   const pill = document.getElementById("ssCursorPill");
@@ -51,7 +85,6 @@
       pill.classList.remove("is-visible");
     });
 
-    // Contextual cursor labels via [data-cursor]
     document.querySelectorAll("[data-cursor]").forEach(el => {
       el.addEventListener("pointerenter", () => {
         const label = el.getAttribute("data-cursor");
@@ -68,7 +101,6 @@
     });
 
     const tickCursor = () => {
-      // Silky spring lerp
       smooth.x += (pointer.x - smooth.x) * 0.22;
       smooth.y += (pointer.y - smooth.y) * 0.22;
       smooth.px += (pointer.x - smooth.px) * 0.16;
@@ -83,15 +115,15 @@
     requestAnimationFrame(tickCursor);
   }
 
-  /* ── 3. Interactive 3D Mouse Tilt + Spotlight on 16:9 Media Stages ────── */
+  /* ── 4. Interactive 3D Mouse Tilt + Spotlight ─────────────────────────── */
   if (!prefersReducedMotion && window.matchMedia("(pointer: fine)").matches) {
     document.querySelectorAll(".tilt-stage").forEach(stage => {
       stage.addEventListener("pointermove", e => {
         const rect = stage.getBoundingClientRect();
         const relX = (e.clientX - rect.left) / rect.width;
         const relY = (e.clientY - rect.top) / rect.height;
-        const rotY = (relX - 0.5) * 9;
-        const rotX = (0.5 - relY) * 7;
+        const rotY = (relX - 0.5) * 7;
+        const rotX = (0.5 - relY) * 6;
         stage.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-3px)`;
         stage.style.setProperty("--mx", `${(relX * 100).toFixed(1)}%`);
         stage.style.setProperty("--my", `${(relY * 100).toFixed(1)}%`);
@@ -102,18 +134,18 @@
     });
   }
 
-  /* ── 4. Prismatic Hero Micro-Particle Field (Follows Mouse Pointer!) ──── */
+  /* ── 5. Hero Mouse-Reactive Micro-Particle Field ──────────────────────── */
   function initHeroParticles() {
     const canvas = document.getElementById("heroParticles");
     if (!canvas || prefersReducedMotion) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const palette = ["#38BDF8", "#60A5FA", "#818CF8", "#34D399", "#E2E8F0", "#A78BFA"];
+    const palette = ["#DE2900", "#38BDF8", "#FBBF24", "#E2E8F0", "#60A5FA"];
     let w = 0;
     let h = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const count = 92;
+    const count = 78;
     const particles = [];
 
     const resize = () => {
@@ -133,11 +165,11 @@
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        r: 1.8 + Math.random() * 2.8,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: 1.6 + Math.random() * 2.4,
         color: palette[i % palette.length],
-        alpha: 0.32 + Math.random() * 0.45,
+        alpha: 0.28 + Math.random() * 0.42,
       });
     }
 
@@ -158,38 +190,33 @@
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-
-        // Gentle magnetic swirl following the mouse pointer
         if (mouse.active) {
           const dx = mouse.x - p.x;
           const dy = mouse.y - p.y;
           const dist = Math.hypot(dx, dy);
           if (dist < 220 && dist > 1) {
-            const pull = (1 - dist / 220) * 0.045;
+            const pull = (1 - dist / 220) * 0.04;
             p.vx += (dx / dist) * pull - (dy / dist) * pull * 0.35;
             p.vy += (dy / dist) * pull + (dx / dist) * pull * 0.35;
           }
         }
-
-        // Gentle damping & drift
         p.vx *= 0.985;
         p.vy *= 0.985;
-        p.x += p.vx + Math.sin(Date.now() * 0.0005 + i) * 0.14;
-        p.y += p.vy + Math.cos(Date.now() * 0.0004 + i) * 0.12;
+        p.x += p.vx + Math.sin(Date.now() * 0.0005 + i) * 0.12;
+        p.y += p.vy + Math.cos(Date.now() * 0.0004 + i) * 0.1;
 
         if (p.x < -20) p.x = w + 20;
         if (p.x > w + 20) p.x = -20;
         if (p.y < -20) p.y = h + 20;
         if (p.y > h + 20) p.y = -20;
 
-        // Subtle connecting lines near pointer (bioluminescent cyan on black)
         if (mouse.active) {
           const md = Math.hypot(mouse.x - p.x, mouse.y - p.y);
-          if (md < 165) {
+          if (md < 160) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(56, 189, 248, ${((1 - md / 165) * 0.28).toFixed(3)})`;
+            ctx.strokeStyle = `rgba(222, 41, 0, ${((1 - md / 160) * 0.24).toFixed(3)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -208,7 +235,7 @@
   }
   initHeroParticles();
 
-  /* ── 5. Dark Orbital Radiating Particle Burst (Download CTA Banner) ───── */
+  /* ── 6. Radiating Orbital Particle Field (Download Stage) ─────────────── */
   function initDownloadParticles() {
     const canvas = document.getElementById("downloadParticles");
     if (!canvas || prefersReducedMotion) return;
@@ -218,7 +245,6 @@
     let w = 0;
     let h = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const total = 180;
     const rays = [];
 
     const resize = () => {
@@ -232,15 +258,15 @@
     resize();
     window.addEventListener("resize", resize);
 
-    const spawn = () => ({
-      angle: Math.random() * Math.PI * 2,
-      dist: 30 + Math.random() * 480,
-      speed: 0.45 + Math.random() * 1.1,
-      size: 1.1 + Math.random() * 2.1,
-      hue: Math.random() > 0.35 ? "#38BDF8" : "#3B82F6",
-    });
-
-    for (let i = 0; i < total; i++) rays.push(spawn());
+    for (let i = 0; i < 160; i++) {
+      rays.push({
+        angle: Math.random() * Math.PI * 2,
+        dist: 24 + Math.random() * 440,
+        speed: 0.45 + Math.random() * 1.0,
+        size: 1.1 + Math.random() * 2.0,
+        hue: Math.random() > 0.45 ? "#DE2900" : "#38BDF8",
+      });
+    }
 
     let ox = 0;
     let oy = 0;
@@ -261,7 +287,6 @@
       ctx.clearRect(0, 0, w, h);
       ox += (tx - ox) * 0.08;
       oy += (ty - oy) * 0.08;
-
       const cx = w * 0.5 + ox;
       const cy = h * 0.5 + oy;
       const maxR = Math.hypot(w, h) * 0.56;
@@ -269,16 +294,16 @@
       for (const p of rays) {
         p.dist += p.speed;
         if (p.dist > maxR) {
-          p.dist = 18 + Math.random() * 36;
+          p.dist = 18 + Math.random() * 34;
           p.angle = Math.random() * Math.PI * 2;
         }
         const x = cx + Math.cos(p.angle) * p.dist;
         const y = cy + Math.sin(p.angle) * p.dist;
         const progress = p.dist / maxR;
-        const alpha = Math.sin(progress * Math.PI) * 0.78;
+        const alpha = Math.sin(progress * Math.PI) * 0.72;
 
         ctx.beginPath();
-        ctx.arc(x, y, p.size * (0.65 + progress * 0.75), 0, Math.PI * 2);
+        ctx.arc(x, y, p.size * (0.65 + progress * 0.7), 0, Math.PI * 2);
         ctx.fillStyle = p.hue;
         ctx.globalAlpha = Math.max(0, alpha);
         ctx.fill();
@@ -290,7 +315,7 @@
   }
   initDownloadParticles();
 
-  /* ── 6. 2m15s Looping Cinema Video Player & Chapter Scrubber ─────────── */
+  /* ── 7. 16:9 Cinema Video Player + Non-Zoomed Fullscreen ──────────────── */
   const video = document.getElementById("showcaseVideo");
   const stage = document.getElementById("cinemaStage");
   const btnPlay = document.getElementById("btnPlayPause");
@@ -450,7 +475,51 @@
     syncMuteUi();
   }
 
-  /* ── 7. Platform & Partners Category Filter ───────────────────────────── */
+  /* ── 8. Scroll-Lit Manifesto Lines (Snapa About Behavior) ─────────────── */
+  const manifestoLines = Array.from(document.querySelectorAll(".manifesto-line"));
+  function updateManifestoScroll() {
+    if (!manifestoLines.length) return;
+    const mid = window.innerHeight * 0.62;
+    manifestoLines.forEach((line, idx) => {
+      const rect = line.getBoundingClientRect();
+      const lit = rect.top <= mid - idx * 14;
+      line.classList.toggle("is-lit", lit || idx === 0);
+    });
+  }
+  window.addEventListener("scroll", updateManifestoScroll, { passive: true });
+  updateManifestoScroll();
+
+  /* ── 9. Characteristics Sticky Switcher ─────────────────────────────────── */
+  const charRows = Array.from(document.querySelectorAll("#charRows .char-row"));
+  const charSlides = Array.from(document.querySelectorAll("[data-char-slide]"));
+  const setCharActive = idx => {
+    charRows.forEach((row, i) => row.classList.toggle("is-active", i === idx));
+    charSlides.forEach((slide, i) => slide.classList.toggle("is-active", i === idx));
+  };
+  charRows.forEach((row, idx) => {
+    row.addEventListener("click", () => setCharActive(idx));
+    row.addEventListener("pointerenter", () => setCharActive(idx));
+  });
+
+  /* ── 10. Control 01–03 Mobile Phone Mockup Switcher ───────────────────── */
+  const stepCards = Array.from(document.querySelectorAll("[data-screen-card]"));
+  const stepPills = Array.from(document.querySelectorAll("[data-screen-btn]"));
+  const phoneImgs = Array.from(document.querySelectorAll("[data-screen-idx]"));
+
+  const setScreenActive = idx => {
+    stepCards.forEach((c, i) => c.classList.toggle("is-active", i === idx));
+    stepPills.forEach((b, i) => {
+      const active = i === idx;
+      b.classList.toggle("is-active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    phoneImgs.forEach((img, i) => img.classList.toggle("is-active", i === idx));
+  };
+
+  stepCards.forEach((card, idx) => card.addEventListener("click", () => setScreenActive(idx)));
+  stepPills.forEach((btn, idx) => btn.addEventListener("click", () => setScreenActive(idx)));
+
+  /* ── 11. Platform & Partners Category Filter ──────────────────────────── */
   const partnerFilters = Array.from(document.querySelectorAll("[data-partner-cat]"));
   const partnerCards = Array.from(document.querySelectorAll("#partnersGrid .partner-card"));
 
@@ -470,7 +539,7 @@
     });
   });
 
-  /* ── 8. Smooth Scroll Reveal ──────────────────────────────────────────── */
+  /* ── 12. Smooth Scroll Reveal ─────────────────────────────────────────── */
   const revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !prefersReducedMotion) {
     const io = new IntersectionObserver(
@@ -482,7 +551,7 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
     );
     revealEls.forEach(el => io.observe(el));
   } else {

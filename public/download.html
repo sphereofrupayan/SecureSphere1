@@ -8,8 +8,8 @@
   <link rel="icon" type="image/png" href="/securesphere-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/download.css?v=4" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/download.css?v=5" />
 </head>
 <body>
   <!-- Smooth Mouse-Tracking Cursor Elements -->
@@ -17,8 +17,8 @@
   <div class="ss-cursor-dot" id="ssCursorDot" aria-hidden="true"></div>
   <div class="ss-cursor-pill" id="ssCursorPill" aria-hidden="true"></div>
 
-  <!-- Minimal Obsidian Sticky Navigation -->
-  <header class="site-header">
+  <!-- Midnight-Glass Sticky Navigation -->
+  <header class="site-header" id="siteHeader">
     <div class="nav-inner">
       <a class="brand-lockup" href="#top" data-cursor="SecureSphere">
         <img src="/securesphere-icon.png" alt="SecureSphere Logo" />
@@ -27,97 +27,104 @@
       </a>
 
       <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#showcase">Showcase Film</a>
-        <a href="#features">Platform</a>
-        <a href="#screens">App Screens</a>
-        <a href="#making">How It Was Built</a>
-        <a href="#partners">Partners &amp; Tech</a>
-        <a href="#install">Install</a>
+        <a href="#showcase">Showcase</a>
+        <a href="#about">Vision</a>
+        <a href="#features">Characteristics</a>
+        <a href="#screens">Mobile App</a>
+        <a href="#making">Architecture</a>
+        <a href="#partners">Partners</a>
+        <a href="#creator">Creator</a>
       </nav>
 
       <div class="nav-actions">
         <a class="pill pill-glass" href="/" data-cursor="Open Web App ↗">Open web app ↗</a>
-        <a class="pill pill-white" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download APK">Download APK</a>
+        <a class="pill pill-white" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ APK v{{APP_VERSION}}">Download APK</a>
       </div>
     </div>
 
     <div class="announcement-bar" id="announcementBar">
-      <span class="badge-new">+ NEW</span>
-      <span>SecureSphere v{{APP_VERSION}} — Native two-way WebRTC voice audio, animated 3D Ludo dice &amp; real sound effects.</span>
-      <a class="announcement-link" href="#making">See what's inside &rarr;</a>
+      <span class="badge-new">v{{APP_VERSION}}</span>
+      <span>Native Android WebRTC voice with global Metered TURN relay, WhatsApp-style in-chat call bar &amp; responsive mobile UI.</span>
+      <a class="announcement-link" href="#creator">Meet the creator &rarr;</a>
       <button class="announcement-close" id="announcementClose" type="button" aria-label="Dismiss announcement">&times;</button>
     </div>
   </header>
 
   <main id="top">
-    <!-- Flagship Black-Gradient Hero with Bioluminescent Mouse-Reactive Particles -->
+    <!-- 01 · Snapa Midnight-Navy Editorial Hero + Reactive Micro-Particles -->
     <section class="hero-section">
       <canvas class="hero-canvas" id="heroParticles" aria-hidden="true"></canvas>
+      <div class="hero-ambient-beam" aria-hidden="true"></div>
 
-      <div class="hero-content">
-        <div class="hero-emblem-wrap">
-          <div class="hero-emblem-aura" aria-hidden="true"></div>
-          <img class="hero-emblem" src="/securesphere-icon.png" alt="SecureSphere Emblem" />
+      <div class="hero-editorial-shell">
+        <div class="hero-top-grid">
+          <div class="hero-wordmark-col reveal-hero">
+            <div class="hero-kicker">
+              <span class="live-dot"></span>
+              <span>PRIVATE ROOM WORKSPACE · ANDROID &amp; WEB LIVE</span>
+            </div>
+            <div class="hero-mega-word">SecureSphere<span class="vermilion-dot">.</span></div>
+          </div>
+
+          <div class="hero-emblem-card reveal-hero" data-cursor="v{{APP_VERSION}}">
+            <div class="hero-emblem-aura" aria-hidden="true"></div>
+            <img class="hero-emblem" src="/securesphere-icon.png" alt="SecureSphere Shield Emblem" />
+            <div class="hero-emblem-meta">
+              <span class="mono-tag">BUILD v{{APP_VERSION}}</span>
+              <span>Zero Ads · Free Forever</span>
+            </div>
+          </div>
         </div>
 
-        <br />
+        <div class="hero-split-bottom">
+          <div class="hero-micro-captions reveal-hero">
+            <span>A New Standard for Real-Time Rooms</span>
+            <span>Two-Way Native WebRTC Voice Mesh</span>
+            <span>Synced Web Workspace + Standalone Android App</span>
+          </div>
 
-        <div class="hero-brand-pill">
-          <span class="live-dot"></span>
-          <span>SecureSphere · Android &amp; Web Synchronized Live</span>
+          <div class="hero-statement-col reveal-hero">
+            <h1 class="hero-title">One encrypted room for team chat, voice, whiteboard, games &amp; Gemini AI<span class="rainbow-caret" aria-hidden="true"></span></h1>
+            <div class="hero-cta-row">
+              <a class="pill pill-white pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download v{{APP_VERSION}}">
+                &#11015; Download Android (.APK)
+              </a>
+              <a class="pill pill-glass pill-lg" href="/" data-cursor="Launch Web App ↗">
+                Open Web App ↗
+              </a>
+              <a class="pill pill-accent pill-lg" href="#showcase" data-cursor="▶ Watch Voiced Film">
+                &#9654; Showcase Film
+              </a>
+            </div>
+          </div>
         </div>
 
-        <h1 class="hero-title">Experience liftoff in private real-time <span style="white-space:nowrap">rooms<span class="rainbow-caret" aria-hidden="true"></span></span></h1>
-
-        <p class="hero-sub">
-          Encrypted private rooms uniting team chat, infinite live whiteboard, two-way WebRTC voice channels, multiplayer 3D Ludo &amp; Chess, YouTube sync, and streaming Gemini AI — 100% free forever with zero ads.
-        </p>
-
-        <div class="hero-cta-row">
-          <a class="pill pill-white pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Download v{{APP_VERSION}}">
-            &#11015; Download for Android (.APK)
-          </a>
-          <a class="pill pill-glass pill-lg" href="/" data-cursor="Launch Web App ↗">
-            Open Web App ↗
-          </a>
-          <a class="pill pill-glow pill-lg" href="#showcase" data-cursor="▶ Watch Voiced Film">
-            &#9654; Watch Showcase Film
-          </a>
-        </div>
-
-        <div class="hero-meta-row">
-          <span>v{{APP_VERSION}}</span>
-          <span>&middot;</span>
-          <span>com.rupayan.securesphere</span>
-          <span>&middot;</span>
-          <span>Android 8+ &amp; Modern Web</span>
-          <span>&middot;</span>
-          <span>$0 Free Forever</span>
-        </div>
-
-        <!-- New Borderless Obsidian Telemetry Strip -->
         <div class="hero-metrics-strip">
-          <div class="metric-tile" data-cursor="Latest Signed Build">
+          <div class="metric-tile reveal" data-cursor="Signed APK v{{APP_VERSION}}">
+            <span class="metric-idx">01</span>
             <span class="metric-val">v{{APP_VERSION}}</span>
             <span class="metric-lbl">Signed Android APK &amp; live HTTPS web app</span>
           </div>
-          <div class="metric-tile" data-cursor="Pure Native UI">
+          <div class="metric-tile reveal" data-cursor="Native UI">
+            <span class="metric-idx">02</span>
             <span class="metric-val">16 Screens</span>
-            <span class="metric-lbl">100% native React Native + Expo TypeScript UI</span>
+            <span class="metric-lbl">Pure Expo React Native TypeScript mobile suite</span>
           </div>
-          <div class="metric-tile" data-cursor="Live Voice Mesh">
-            <span class="metric-val">WebRTC P2P</span>
-            <span class="metric-lbl">Two-way Android &harr; Browser voice channels</span>
+          <div class="metric-tile reveal" data-cursor="Global TURN">
+            <span class="metric-idx">03</span>
+            <span class="metric-val">STUN + TURN</span>
+            <span class="metric-lbl">Cross-network 5G &harr; Wi-Fi peer voice relays</span>
           </div>
-          <div class="metric-tile" data-cursor="Privacy First">
+          <div class="metric-tile reveal" data-cursor="Zero Paywalls">
+            <span class="metric-idx">04</span>
             <span class="metric-val">$0 Forever</span>
-            <span class="metric-lbl">Zero ads, zero trackers, isolated private rooms</span>
+            <span class="metric-lbl">Private room isolation with Keystore security</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Full-Width 16:9 Stabilized Looping Voiced Showcase Cinema -->
+    <!-- 02 · Full-Width 16:9 Stabilized Cinema Stage (Fixed Mobile Fullscreen Scaling) -->
     <section class="cinema-section" id="showcase">
       <div class="cinema-ambient-glow" aria-hidden="true"></div>
       <div class="cinema-stage" id="cinemaStage" data-cursor="▶ Play / Pause">
@@ -166,7 +173,6 @@
         </div>
       </div>
 
-      <!-- Interactive Chapter Jumper Pills (Exact Voiceover Synced Timestamps) -->
       <div class="chapter-pills" id="chapterPills" aria-label="Video chapters">
         <button class="chapter-pill is-active" data-seek="0" type="button">01 Hero</button>
         <button class="chapter-pill" data-seek="20.85" type="button">02 Instant Rooms</button>
@@ -182,223 +188,210 @@
       </div>
     </section>
 
-    <!-- Floating Icon Strip, Statement & New 6-Card Black-Gradient Bento Showcase -->
-    <section class="statement-section reveal">
-      <div class="bouncer-strip" aria-hidden="true">
-        <span class="bouncer-icon" style="--i:0" title="Private Rooms">&#128737;</span>
-        <span class="bouncer-icon" style="--i:1" title="Real-Time Chat">&#128172;</span>
-        <span class="bouncer-icon" style="--i:2" title="WebRTC Voice">&#127897;</span>
-        <span class="bouncer-icon" style="--i:3" title="Live Whiteboard">&#9998;</span>
-        <span class="bouncer-icon" style="--i:4" title="3D Ludo Dice">&#127922;</span>
-        <span class="bouncer-icon" style="--i:5" title="Live Chess">&#9822;</span>
-        <span class="bouncer-icon" style="--i:6" title="Gemini AI">&#10024;</span>
-        <span class="bouncer-icon" style="--i:7" title="YouTube Sync">&#9654;</span>
-        <span class="bouncer-icon" style="--i:8" title="File Sharing">&#128206;</span>
-        <span class="bouncer-icon" style="--i:9" title="SQLite WAL">&#128451;</span>
-        <span class="bouncer-icon" style="--i:10" title="Socket.IO">&#9889;</span>
-        <span class="bouncer-icon" style="--i:11" title="Android Native">&#128241;</span>
-      </div>
+    <!-- 03 · Snapa Warm Ivory Curtain Manifesto (#faf3ef + #de2900) -->
+    <section class="editorial-about-curtain" id="about">
+      <div class="curtain-inner">
+        <div class="curtain-eyebrow reveal">02 · PRODUCT PHILOSOPHY</div>
+        <h2 class="curtain-manifesto reveal" id="scrollManifesto">
+          <span class="manifesto-line is-lit">No bloated feeds.</span>
+          <span class="manifesto-line">No scattered team links.</span>
+          <span class="manifesto-line">Your phone and browser share</span>
+          <span class="manifesto-line">one fast encrypted room.</span>
+        </h2>
 
-      <p class="statement-copy">
-        SecureSphere is a unified real-time communication workspace, <span class="muted">built so your phone and desktop collaborate as one borderless obsidian room</span><span class="rainbow-caret" aria-hidden="true"></span>
-      </p>
-
-      <div class="bento-strip">
-        <div class="bento-card reveal" data-cursor="✦ Zero-Trust">
-          <div class="bento-icon">&#128737;</div>
-          <h3>Zero-Trust Private Rooms</h3>
-          <p>Isolated rooms with salted bcrypt hashing, Keystore JWT sessions, and Owner/Admin role controls.</p>
-        </div>
-        <div class="bento-card reveal" data-cursor="✦ Live Voice">
-          <div class="bento-icon">&#127897;</div>
-          <h3>Two-Way WebRTC Voice</h3>
-          <p>Crystal-clear native peer-to-peer audio mesh connecting Android phones and desktop browsers seamlessly.</p>
-        </div>
-        <div class="bento-card reveal" data-cursor="✦ Infinite Canvas">
-          <div class="bento-icon">&#9998;</div>
-          <h3>Live Vector Whiteboard</h3>
-          <p>Multi-tool SVG canvas with pinch-to-zoom, pan, sticky notes, shapes, and pixel-accurate desktop framing.</p>
-        </div>
-        <div class="bento-card reveal" data-cursor="✦ 3D Dice + SFX">
-          <div class="bento-icon">&#127922;</div>
-          <h3>3D Ludo Dice &amp; Chess</h3>
-          <p>Animated tumbling 3D die with real multi-bounce audio SFX, timed Chess, Tic Tac Toe &amp; YouTube watch party.</p>
-        </div>
-        <div class="bento-card reveal" data-cursor="✦ Gemini SSE">
-          <div class="bento-icon">&#10024;</div>
-          <h3>Grounded Gemini AI</h3>
-          <p>Streaming room briefings, task extraction, clean tables, copyable code blocks, and Unicode math formatting.</p>
-        </div>
-        <div class="bento-card reveal" data-cursor="✦ One Backend">
-          <div class="bento-icon">&#9889;</div>
-          <h3>Unified Sync Engine</h3>
-          <p>One Node.js, Socket.IO &amp; SQLite WAL server powering Web &amp; Android together with automatic EAS updates.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 16:9 3D Product Suite Explorer — 100% Unobstructed Renders, ZERO Colliding Images! -->
-    <section class="explorer-section" id="features">
-      <!-- 01: Cross-Platform Sync -->
-      <article class="explorer-row reveal">
-        <div class="explorer-copy">
-          <div class="explorer-eyebrow">01 · Cross-Platform Engine</div>
-          <h2 class="explorer-title">One room. Android &amp; Web in perfect sync.</h2>
-          <p class="explorer-desc">
-            Every chat message, whiteboard stroke, game turn, voice peer, and notification flows through a single Socket.IO &amp; SQLite backend — zero duplicate servers, zero WebView wrappers.
+        <div class="curtain-subgrid reveal">
+          <p class="curtain-lead">
+            Built for friends, study squads, and engineering teams who want real-time chat, infinite whiteboard drawing, instant WebRTC voice channels, 3D board games, and Gemini AI unified in a single zero-friction workspace.
           </p>
-          <ul class="explorer-points">
-            <li><span class="point-dot"></span><span>Create or join private rooms instantly with a Room ID</span></li>
-            <li><span class="point-dot"></span><span>Role-based Owner, Admin &amp; Member controls per room</span></li>
-            <li><span class="point-dot"></span><span>Encrypted Keystore JWT tokens on Android + HTTPS everywhere</span></li>
-          </ul>
-        </div>
-        <div class="media-stage tilt-stage" data-cursor="✦ Web + Android">
-          <img class="stage-bg" src="/media/3d-crossplatform.jpg" alt="SecureSphere 3D cross-platform laptop and Android sync illustration" loading="lazy" />
-          <div class="media-spotlight"></div>
-        </div>
-      </article>
 
-      <!-- 02: Team Chat & Infinite Whiteboard (Clean Unobstructed 3D Artwork!) -->
-      <article class="explorer-row is-reversed reveal">
-        <div class="explorer-copy">
-          <div class="explorer-eyebrow">02 · Live Collaboration</div>
-          <h2 class="explorer-title">Encrypted team chat meets infinite vector whiteboard.</h2>
-          <p class="explorer-desc">
-            Share PDFs, images, videos, threaded replies, and emoji reactions alongside a live multi-tool whiteboard with 2-finger pinch-to-zoom, pan, sticky notes, undo/redo, and exact desktop world-space framing.
-          </p>
-          <ul class="explorer-points">
-            <li><span class="point-dot"></span><span>Pen, Highlighter, Arrows, Shapes, Text &amp; Sticky Notes</span></li>
-            <li><span class="point-dot"></span><span>Pinch-to-zoom, Fit All &amp; instant Clear All controls</span></li>
-            <li><span class="point-dot"></span><span>Built-in inline PDF/media viewer and saved bookmarks</span></li>
-          </ul>
-        </div>
-        <div class="media-stage tilt-stage" data-cursor="✦ Live Whiteboard">
-          <img class="stage-bg" src="/media/3d-workspace.jpg" alt="SecureSphere 3D collaborative whiteboard and encrypted chat illustration" loading="lazy" />
-          <div class="media-spotlight"></div>
-        </div>
-      </article>
-
-      <!-- 03: Native WebRTC Voice Channels -->
-      <article class="explorer-row reveal">
-        <div class="explorer-copy">
-          <div class="explorer-eyebrow">03 · Two-Way WebRTC Audio</div>
-          <h2 class="explorer-title">Drop into live voice channels across mobile &amp; web.</h2>
-          <p class="explorer-desc">
-            Powered by native <code>react-native-webrtc</code> on Android and browser WebRTC on desktop, connecting every teammate in a low-latency peer-to-peer audio mesh with STUN/TURN signaling.
-          </p>
-          <ul class="explorer-points">
-            <li><span class="point-dot"></span><span>Talk seamlessly between Android phones and desktop browsers</span></li>
-            <li><span class="point-dot"></span><span>Instant hardware Mic Mute, Deafen &amp; live peer badges</span></li>
-            <li><span class="point-dot"></span><span>Create custom squad voice channels inside any room</span></li>
-          </ul>
-        </div>
-        <div class="media-stage tilt-stage" data-cursor="✦ Live Voice">
-          <img class="stage-bg" src="/media/3d-voice.jpg" alt="SecureSphere 3D WebRTC crystal voice studio illustration" loading="lazy" />
-          <div class="media-spotlight"></div>
-        </div>
-      </article>
-
-      <!-- 04: Multiplayer Games & 3D Ludo Dice -->
-      <article class="explorer-row is-reversed reveal">
-        <div class="explorer-copy">
-          <div class="explorer-eyebrow">04 · Multiplayer Lounge</div>
-          <h2 class="explorer-title">Tumbling 3D Ludo dice, live Chess &amp; YouTube watch party.</h2>
-          <p class="explorer-desc">
-            Unwind without leaving your room. Roll an animated 3D Ludo die with synthesized wooden clack sound effects, play timed Chess or Tic Tac Toe, or queue synchronized YouTube sessions.
-          </p>
-          <ul class="explorer-points">
-            <li><span class="point-dot"></span><span>Real visual 3D die pips (1–6) with bounce animation &amp; audio SFX</span></li>
-            <li><span class="point-dot"></span><span>Directly tappable board tokens, capture &amp; victory chimes</span></li>
-            <li><span class="point-dot"></span><span>Server-validated game engine with spectator &amp; Clear Lounge support</span></li>
-          </ul>
-        </div>
-        <div class="media-stage tilt-stage" data-cursor="✦ 3D Ludo &amp; Chess">
-          <img class="stage-bg" src="/media/3d-games.jpg" alt="SecureSphere 3D tumbling Ludo dice and glass Chess pieces illustration" loading="lazy" />
-          <div class="media-spotlight"></div>
-        </div>
-      </article>
-
-      <!-- 05: Gemini AI Workspace Assistant (Clean Unobstructed 3D Artwork!) -->
-      <article class="explorer-row reveal">
-        <div class="explorer-copy">
-          <div class="explorer-eyebrow">05 · Grounded AI Intelligence</div>
-          <h2 class="explorer-title">Gemini AI, grounded in your live room context.</h2>
-          <p class="explorer-desc">
-            Stream workspace briefings, action items, unanswered threads, and code explanations over Server-Sent Events — rendered with aligned Markdown tables, copyable code blocks, and clean Unicode math with zero LaTeX clutter.
-          </p>
-          <ul class="explorer-points">
-            <li><span class="point-dot"></span><span>Automatic LaTeX-to-Unicode formatting (e.g. O(n²), n × m, i-th row)</span></li>
-            <li><span class="point-dot"></span><span>One-tap Workspace Briefing, Extract Tasks &amp; Regenerate</span></li>
-            <li><span class="point-dot"></span><span>Strict room-scoped privacy — never invents fake messages</span></li>
-          </ul>
-        </div>
-        <div class="media-stage tilt-stage" data-cursor="✦ Gemini AI">
-          <img class="stage-bg" src="/media/3d-architecture.jpg" alt="SecureSphere 3D Gemini AI crystal neural stack illustration" loading="lazy" />
-          <div class="media-spotlight"></div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Dedicated Real Mobile App Screens Gallery (Spacious 3-Column Layout — Zero Collisions!) -->
-    <section class="screens-section" id="screens">
-      <div class="screens-inner">
-        <div class="section-header-split reveal">
-          <h2 class="section-title">Crafted pixel-by-pixel for mobile speed.</h2>
-          <p class="section-lead">
-            A dedicated native React Native + Expo interface designed for one-handed dark-mode comfort — completely independent of the web frontend while sharing every live event.
-          </p>
-        </div>
-
-        <div class="screens-grid">
-          <div class="screen-item reveal">
-            <div class="screen-frame" data-cursor="Team Chat">
-              <img src="/media/app-chat.jpg" alt="SecureSphere Private Team Chat Android Screen" loading="lazy" />
+          <div class="curtain-bento-mini">
+            <div class="ivory-card reveal">
+              <span class="ivory-num">01</span>
+              <h3>Zero-Trust Isolation</h3>
+              <p>Per-room membership, salted bcrypt hashes, hardware Keystore JWTs &amp; Owner controls.</p>
             </div>
-            <div class="screen-caption">
-              <h3>Private Team Chat</h3>
-              <p>Threaded replies, PDF &amp; media cards, emoji reactions, and keyboard-aware composer.</p>
+            <div class="ivory-card reveal">
+              <span class="ivory-num">02</span>
+              <h3>Native Audio Mesh</h3>
+              <p>Two-way WebRTC voice calls with global Metered STUN + TURN relays &amp; WhatsApp-style chat bar.</p>
             </div>
-          </div>
-
-          <div class="screen-item reveal">
-            <div class="screen-frame" data-cursor="Whiteboard">
-              <img src="/media/app-whiteboard.jpg" alt="SecureSphere Live Whiteboard Android Screen" loading="lazy" />
+            <div class="ivory-card reveal">
+              <span class="ivory-num">03</span>
+              <h3>Infinite Canvas &amp; Play</h3>
+              <p>Pinch-zoom SVG whiteboard, tumbling 3D Ludo dice with WAV SFX, timed Chess &amp; YouTube queue.</p>
             </div>
-            <div class="screen-caption">
-              <h3>Live Whiteboard</h3>
-              <p>Pinch-to-zoom vector canvas with full desktop framing, sticky notes, and live strokes.</p>
-            </div>
-          </div>
-
-          <div class="screen-item reveal">
-            <div class="screen-frame" data-cursor="Gemini AI">
-              <img src="/media/app-gemini.jpg" alt="SecureSphere Gemini AI Assistant Android Screen" loading="lazy" />
-            </div>
-            <div class="screen-caption">
-              <h3>Gemini AI Assistant</h3>
-              <p>Streaming room summaries, action cards, clean math typography, and one-tap copy.</p>
+            <div class="ivory-card reveal">
+              <span class="ivory-num">04</span>
+              <h3>Grounded Gemini AI</h3>
+              <p>Streaming SSE room briefings, action extraction &amp; crisp Unicode math formatting.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Inside the Making of SecureSphere — Full Engineering Story -->
+    <!-- 04 · Snapa Signature Characteristics Showcase (Sticky Visual + Numbered Rows) -->
+    <section class="characteristics-section" id="features">
+      <div class="characteristics-shell">
+        <div class="char-visual-col">
+          <div class="char-sticky-frame" id="charStickyFrame">
+            <div class="char-slide is-active" data-char-slide="0">
+              <img src="/media/3d-crossplatform.jpg" alt="Cross-Platform Web and Android Room Sync" loading="lazy" />
+              <div class="char-slide-badge">01 · Cross-Platform Engine</div>
+            </div>
+            <div class="char-slide" data-char-slide="1">
+              <img src="/media/3d-workspace.jpg" alt="Encrypted Team Chat and Live Vector Whiteboard" loading="lazy" />
+              <div class="char-slide-badge">02 · Live Chat &amp; Whiteboard</div>
+            </div>
+            <div class="char-slide" data-char-slide="2">
+              <img src="/media/3d-voice.jpg" alt="Native Two-Way WebRTC Voice Channels" loading="lazy" />
+              <div class="char-slide-badge">03 · WebRTC + TURN Audio</div>
+            </div>
+            <div class="char-slide" data-char-slide="3">
+              <img src="/media/3d-games.jpg" alt="3D Ludo Dice, Live Chess and YouTube Watch Party" loading="lazy" />
+              <div class="char-slide-badge">04 · 3D Ludo &amp; Games Lounge</div>
+            </div>
+            <div class="char-slide" data-char-slide="4">
+              <img src="/media/3d-architecture.jpg" alt="Grounded Gemini AI SSE Assistant" loading="lazy" />
+              <div class="char-slide-badge">05 · Grounded Gemini AI</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-list-col">
+          <div class="char-header">
+            <span class="char-kicker">Characteristics</span>
+            <h2 class="char-heading">Built as one synchronized organism.</h2>
+          </div>
+
+          <div class="char-rows" id="charRows">
+            <button class="char-row is-active" type="button" data-char-idx="0" data-cursor="01 Sync Engine">
+              <div class="char-row-top">
+                <span class="char-num">01.</span>
+                <span class="char-title">Unified Web &amp; Android Room Engine</span>
+                <span class="char-dot" aria-hidden="true"></span>
+              </div>
+              <p class="char-desc">One Express 5 + Socket.IO + SQLite WAL core powers both desktop browsers and the native Android APK with identical tokens and zero sync lag.</p>
+            </button>
+
+            <button class="char-row" type="button" data-char-idx="1" data-cursor="02 Collaboration">
+              <div class="char-row-top">
+                <span class="char-num">02.</span>
+                <span class="char-title">Encrypted Team Chat &amp; Vector Whiteboard</span>
+                <span class="char-dot" aria-hidden="true"></span>
+              </div>
+              <p class="char-desc">Threaded replies, emoji reactions, inline PDF/media preview, and an infinite SVG whiteboard mapped accurately to desktop coordinates.</p>
+            </button>
+
+            <button class="char-row" type="button" data-char-idx="2" data-cursor="03 Voice Audio">
+              <div class="char-row-top">
+                <span class="char-num">03.</span>
+                <span class="char-title">Two-Way WebRTC Voice Inside Team Chat</span>
+                <span class="char-dot" aria-hidden="true"></span>
+              </div>
+              <p class="char-desc">Start calls straight from the Chat header bar with live mute, speakerphone/earpiece switch, native Android audio permissions, and Metered TURN relays.</p>
+            </button>
+
+            <button class="char-row" type="button" data-char-idx="3" data-cursor="04 Lounge Games">
+              <div class="char-row-top">
+                <span class="char-num">04.</span>
+                <span class="char-title">3D Tumbling Ludo Dice, Chess &amp; YouTube</span>
+                <span class="char-dot" aria-hidden="true"></span>
+              </div>
+              <p class="char-desc">Animated 3D Ludo dice with real multi-bounce PCM audio SFX, timed multiplayer Chess, Tic Tac Toe, and synchronized YouTube playback.</p>
+            </button>
+
+            <button class="char-row" type="button" data-char-idx="4" data-cursor="05 Gemini AI">
+              <div class="char-row-top">
+                <span class="char-num">05.</span>
+                <span class="char-title">Grounded Gemini AI Intelligence</span>
+                <span class="char-dot" aria-hidden="true"></span>
+              </div>
+              <p class="char-desc">Real-time SSE chat summaries, action item extraction, Markdown tables, code blocks, and clean Unicode math typography grounded in room context.</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · Snapa Control-Inspired Interactive Mobile Showcase (Numbered 01–03 Pills + Device) -->
+    <section class="control-screens-section" id="screens">
+      <div class="control-shell">
+        <div class="control-header reveal">
+          <div class="ivory-kicker">04 · NATIVE MOBILE CRAFT</div>
+          <h2 class="control-title">Control the workspace from your pocket.</h2>
+          <p class="control-lead">Sixteen fluid screens built natively in TypeScript &amp; React Native — tap a module pill or scroll through the Android suite.</p>
+        </div>
+
+        <div class="control-stage-grid">
+          <div class="control-copy-left">
+            <div class="control-step-card is-active" data-screen-card="0">
+              <span class="step-badge">01 · MESSAGING + VOICE CALLS</span>
+              <h3>WhatsApp-style Voice Bar inside Team Chat</h3>
+              <p>Reply to threads, attach documents &amp; photos, react with haptics, and join live two-way audio rooms right from the chat header.</p>
+              <div class="control-line"><span class="control-line-fill"></span></div>
+            </div>
+            <div class="control-step-card" data-screen-card="1">
+              <span class="step-badge">02 · INFINITE CANVAS</span>
+              <h3>Pinch-Zoom SVG Whiteboard</h3>
+              <p>Draw smoothly with pen, highlighter, shapes, sticky notes &amp; arrows synced stroke-by-stroke across web laptops and Android phones.</p>
+              <div class="control-line"><span class="control-line-fill"></span></div>
+            </div>
+            <div class="control-step-card" data-screen-card="2">
+              <span class="step-badge">03 · ROOM INTELLIGENCE</span>
+              <h3>Gemini AI with Streaming SSE</h3>
+              <p>Summarize active room discussions, extract pending tasks, and copy formatted answers in one tap with zero raw LaTeX tokens.</p>
+              <div class="control-line"><span class="control-line-fill"></span></div>
+            </div>
+          </div>
+
+          <div class="control-device-col">
+            <div class="phone-bezel reveal" data-cursor="Native Android">
+              <div class="phone-notch" aria-hidden="true"></div>
+              <div class="phone-screen-stack">
+                <img class="phone-screen-img is-active" data-screen-idx="0" src="/media/app-chat.jpg" alt="SecureSphere Android Team Chat Screen" loading="lazy" />
+                <img class="phone-screen-img" data-screen-idx="1" src="/media/app-whiteboard.jpg" alt="SecureSphere Android Whiteboard Screen" loading="lazy" />
+                <img class="phone-screen-img" data-screen-idx="2" src="/media/app-gemini.jpg" alt="SecureSphere Android Gemini AI Screen" loading="lazy" />
+              </div>
+            </div>
+
+            <div class="control-pills-bar" role="tablist" aria-label="Select mobile app screen">
+              <button class="control-pill is-active" type="button" data-screen-btn="0" role="tab" aria-selected="true">
+                <span class="pill-num">01</span>
+                <span class="pill-txt">Team Chat</span>
+              </button>
+              <button class="control-pill" type="button" data-screen-btn="1" role="tab" aria-selected="false">
+                <span class="pill-num">02</span>
+                <span class="pill-txt">Whiteboard</span>
+              </button>
+              <button class="control-pill" type="button" data-screen-btn="2" role="tab" aria-selected="false">
+                <span class="pill-num">03</span>
+                <span class="pill-txt">Gemini AI</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · Midnight Obsidian Architecture Blueprint (#making) -->
     <section class="making-section" id="making">
       <div class="section-header-split reveal">
-        <h2 class="section-title">Everything involved in the making of SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
+        <div>
+          <div class="explorer-eyebrow">05 · SYSTEM ARCHITECTURE</div>
+          <h2 class="section-title">Everything engineered behind SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
+        </div>
         <p class="section-lead">
-          From zero-dependency real-time protocol design to native Android WebRTC compilation, here is the full architecture engineered behind this platform.
+          From real-time Socket.IO acknowledgments and SQLite WAL locks to ProGuard R8 WebRTC packaging and automated cloud deployments.
         </p>
       </div>
 
       <div class="making-hero-stage reveal">
         <div>
-          <div class="explorer-eyebrow">SYSTEM ARCHITECTURE · END TO END</div>
+          <div class="explorer-eyebrow">UNIFIED REAL-TIME CORE</div>
           <h3>Single source of truth across Web, Android, Voice &amp; AI.</h3>
           <p>
-            Rather than duplicating backends, SecureSphere runs one unified Node.js + Socket.IO + SQLite WAL core on Render HTTPS. Both the web frontend and the standalone Expo Android app authenticate with the exact same JWT tokens, join the exact same rooms, draw on the exact same SVG world coordinates, and talk peer-to-peer over WebRTC.
+            SecureSphere runs one Express 5 + Socket.IO + SQLite WAL core on Render HTTPS. Both browsers and the standalone Expo Android build verify against the exact same JWT crypto, collaborate on identical SVG world coordinates, and negotiate P2P WebRTC audio over Metered STUN + TURN servers.
           </p>
           <a class="pill pill-white" href="/" data-cursor="Try Live Web ↗">Explore Live Web Workspace ↗</a>
         </div>
@@ -411,10 +404,10 @@
           <div><span class="tok-green">✔</span> <span class="tok-amber">Auth &amp; Crypto</span>  bcrypt (12 rounds) · JWT · Expo SecureStore</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">Mobile App</span>     React Native 0.88 · Expo SDK 58 · TypeScript</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">Motion &amp; GFX</span>   Reanimated 4 · SVG ViewBox · Gesture Handler</div>
-          <div><span class="tok-green">✔</span> <span class="tok-amber">Live Voice</span>     react-native-webrtc + STUN/TURN Mesh</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">Live Voice</span>     react-native-webrtc + Metered TURN Mesh</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">Game Audio</span>     expo-audio + Synthesized PCM WAV SFX</div>
           <div><span class="tok-green">✔</span> <span class="tok-amber">AI Pipeline</span>    @google/genai SSE · LaTeX-to-Unicode Engine</div>
-          <div><span class="tok-green">✔</span> <span class="tok-amber">CI &amp; Hosting</span>   GitHub &rarr; Render HTTPS · EAS Cloud · Uptodown</div>
+          <div><span class="tok-green">✔</span> <span class="tok-amber">CI &amp; Hosting</span>   GitHub &rarr; Render HTTPS · EAS Cloud · App Stores</div>
         </div>
       </div>
 
@@ -422,9 +415,9 @@
         <div class="making-pillar reveal">
           <span class="pillar-num">01 / BACKEND &amp; REAL-TIME SYNC</span>
           <h3>Event-Driven Room Engine</h3>
-          <p>Built on Express 5 and Socket.IO with per-room runtime state, instant ack callbacks, presence heartbeats, chat history, reactions, whiteboard undo/redo stacks, and a server-authoritative multiplayer game engine.</p>
+          <p>Express 5 and Socket.IO with isolated room runtimes, presence heartbeats, chat history, reactions, whiteboard undo stacks, and server-validated games.</p>
           <div class="stack-tags">
-            <span class="stack-tag">Node.js 20+</span>
+            <span class="stack-tag">Node.js</span>
             <span class="stack-tag">Express 5</span>
             <span class="stack-tag">Socket.IO</span>
             <span class="stack-tag">SQLite WAL</span>
@@ -434,74 +427,38 @@
         <div class="making-pillar reveal">
           <span class="pillar-num">02 / NATIVE ANDROID ENGINEERING</span>
           <h3>Standalone Expo + TypeScript App</h3>
-          <p>Architected cleanly inside <code>mobile/</code> with 16 native Expo Router screens, centralized Axios interceptors, strict Zod form validation, environment guards blocking HTTP in production, and smooth Reanimated animations.</p>
+          <p>Built inside <code>mobile/</code> with 16 native Expo Router screens, strict Zod schemas, HTTPS production guards, hardware Keystore auth, and Reanimated motion.</p>
           <div class="stack-tags">
             <span class="stack-tag">Expo SDK 58</span>
             <span class="stack-tag">React Native</span>
             <span class="stack-tag">TypeScript</span>
-            <span class="stack-tag">Expo Router</span>
+            <span class="stack-tag">SecureStore</span>
           </div>
         </div>
 
         <div class="making-pillar reveal">
           <span class="pillar-num">03 / TWO-WAY WEBRTC VOICE</span>
-          <h3>Peer-to-Peer Audio Mesh</h3>
-          <p>Engineered a cross-platform WebRTC engine with polite-peer glare recovery, ICE candidate queueing, automatic ICE restarts, custom R8 ProGuard config plugin, and seamless interoperability between Android and desktop browsers.</p>
+          <h3>Global TURN Peer Audio Mesh</h3>
+          <p>Polite-peer glare recovery, ICE candidate queues, 12s stall watchdog, Bluetooth &amp; speakerphone routing, R8 ProGuard config plugin &amp; Metered TURN relays.</p>
           <div class="stack-tags">
             <span class="stack-tag">WebRTC</span>
-            <span class="stack-tag">STUN / TURN</span>
+            <span class="stack-tag">Metered TURN</span>
+            <span class="stack-tag">STUN Mesh</span>
             <span class="stack-tag">Android Audio</span>
-            <span class="stack-tag">Config Plugin</span>
-          </div>
-        </div>
-
-        <div class="making-pillar reveal">
-          <span class="pillar-num">04 / WHITEBOARD &amp; 3D LUDO ENGINE</span>
-          <h3>Touch Geometry &amp; Real Audio SFX</h3>
-          <p>Mapped mobile touch coordinates to desktop 1040×600 whiteboard space using native SVG <code>viewBox</code> pinch-to-zoom, and crafted an animated 3D Ludo die paired with custom-synthesized multi-bounce PCM WAV sound effects.</p>
-          <div class="stack-tags">
-            <span class="stack-tag">SVG ViewBox</span>
-            <span class="stack-tag">Reanimated 4</span>
-            <span class="stack-tag">expo-audio</span>
-            <span class="stack-tag">Haptics</span>
-          </div>
-        </div>
-
-        <div class="making-pillar reveal">
-          <span class="pillar-num">05 / GROUNDED GEMINI AI</span>
-          <h3>Streaming SSE &amp; Math Cleanup</h3>
-          <p>Streams live room-grounded Gemini answers over Server-Sent Events with model fallback, custom Markdown table/code rendering, and a dedicated LaTeX-to-Unicode normalizer that turns raw math tokens into crisp prose.</p>
-          <div class="stack-tags">
-            <span class="stack-tag">Gemini API</span>
-            <span class="stack-tag">SSE Stream</span>
-            <span class="stack-tag">Markdown UI</span>
-            <span class="stack-tag">Unicode Math</span>
-          </div>
-        </div>
-
-        <div class="making-pillar reveal">
-          <span class="pillar-num">06 / SECURITY &amp; DISTRIBUTION</span>
-          <h3>Zero-Cost Cloud &amp; Store Pipeline</h3>
-          <p>Hardware-backed Android Keystore session tokens, salted bcrypt hashes, automated GitHub-to-Render Blueprint deploys with <code>/healthz</code> &amp; <code>/privacy</code>, signed EAS Cloud APKs, OTA updates, and Uptodown store publishing.</p>
-          <div class="stack-tags">
-            <span class="stack-tag">SecureStore</span>
-            <span class="stack-tag">EAS Build</span>
-            <span class="stack-tag">Render HTTPS</span>
-            <span class="stack-tag">Uptodown</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Powered By & Platform Ecosystem — Every Website, Cloud, Media & Store Partner -->
+    <!-- 07 · Powered By & Platform Ecosystem — All 25 Websites With Original Brand Logos -->
     <section class="partners-section" id="partners">
       <div class="section-header-split reveal">
         <div>
-          <div class="explorer-eyebrow">ECOSYSTEM &amp; PLATFORM PARTNERS · 25 SERVICES</div>
-          <h2 class="section-title">Powered by the best websites &amp; tools across the stack<span class="rainbow-caret" aria-hidden="true"></span></h2>
+          <div class="explorer-eyebrow">06 · TECHNOLOGY &amp; PLATFORM PARTNERS · 25 SERVICES</div>
+          <h2 class="section-title">Every website &amp; platform that powers SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
         </div>
         <p class="section-lead">
-          Every cloud host, TURN relay, AI model, mobile build pipeline, showcase audio studio, real-time protocol, and app store involved in creating and shipping SecureSphere — click any card to visit the platform.
+          Every cloud provider, TURN network, AI engine, mobile framework, showcase audio/video studio, and app distribution storefront behind this project — click any logo card to open its official site.
         </p>
       </div>
 
@@ -509,153 +466,153 @@
         <button class="partner-filter-pill is-active" data-partner-cat="all" type="button" role="tab" aria-selected="true">All Platforms (25)</button>
         <button class="partner-filter-pill" data-partner-cat="cloud" type="button" role="tab" aria-selected="false">Cloud &amp; Relay</button>
         <button class="partner-filter-pill" data-partner-cat="mobile" type="button" role="tab" aria-selected="false">Mobile &amp; Core Tech</button>
-        <button class="partner-filter-pill" data-partner-cat="media" type="button" role="tab" aria-selected="false">AI, Voice &amp; Media</button>
+        <button class="partner-filter-pill" data-partner-cat="media" type="button" role="tab" aria-selected="false">AI, Voice &amp; Design</button>
         <button class="partner-filter-pill" data-partner-cat="stores" type="button" role="tab" aria-selected="false">App Stores</button>
       </div>
 
       <div class="partners-grid" id="partnersGrid">
-        <!-- Cloud, Hosting, Source & Network -->
+        <!-- Cloud & Network -->
         <a class="partner-card reveal" data-cat="cloud" href="https://render.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Render ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-render" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h8.5a5.5 5.5 0 0 1 1.9 10.67L20 20h-4.4l-4.2-4.8H8.5V20H5V4Zm3.5 3v5.2h4.9a2.6 2.6 0 0 0 0-5.2H8.5Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.263.007c-3.121-.147-5.744 2.109-6.192 5.082-.018.138-.045.272-.067.405-.696 3.703-3.936 6.507-7.827 6.507-1.388 0-2.691-.356-3.825-.979a.2024.2024 0 0 0-.302.178V24H12v-8.999c0-1.656 1.338-3 2.987-3h2.988c3.382 0 6.103-2.817 5.97-6.244-.12-3.084-2.61-5.603-5.682-5.75"/></svg>
             </span>
             <span class="partner-cat">Cloud Hosting</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Render</h3>
-          <p>Live HTTPS server hosting, Blueprint CI/CD &amp; environment orchestration.</p>
+          <p>Live HTTPS server hosting, Blueprint CI/CD &amp; environment management.</p>
           <span class="partner-url">render.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="cloud" href="https://www.metered.ca" target="_blank" rel="noopener noreferrer" data-cursor="Visit Metered ↗">
           <div class="partner-top">
-            <span class="partner-logo partner-logo-metered" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 14c2.5-6 5.5-6 8 0s5.5 6 8 0"/><path d="M5 9c2.5-4.5 5-4.5 7 0s4.5 4.5 7 0" opacity=".65"/></svg>
+            <span class="partner-logo partner-logo-img" aria-hidden="true">
+              <img src="/media/logos/metered.png" alt="Metered logo" loading="lazy" />
             </span>
             <span class="partner-cat">STUN / TURN Relay</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Metered</h3>
-          <p>Global TURN servers enabling reliable cross-network 4G/5G WebRTC voice.</p>
+          <p>Global TURN relay edge infrastructure powering 5G &amp; cross-network calls.</p>
           <span class="partner-url">metered.ca</span>
         </a>
 
         <a class="partner-card reveal" data-cat="cloud" href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Cloudflare ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-cf" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4 10.7A5.6 5.6 0 0 0 7.6 9.3a4.2 4.2 0 0 0-4.1 5.1A3.6 3.6 0 0 0 6.8 18h11.3a3.7 3.7 0 0 0 .3-7.3Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771 0-.1611 0-.2383.0112-.0566 0-.1054.0415-.127.0976l-.3378 1.1744c-.1475.5068-.0918.9707.1543 1.3164.2256.3164.6055.498 1.0625.5195l1.8437.1133c.0557 0 .1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527 1.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771 0 .1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803 0-2.6025-2.125-4.727-4.7344-4.727"/></svg>
             </span>
             <span class="partner-cat">Edge STUN &amp; DNS</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Cloudflare</h3>
-          <p>Anycast edge STUN discovery &amp; optional Realtime Calls TURN integration.</p>
+          <p>Anycast edge STUN discovery &amp; optional Realtime TURN credentials support.</p>
           <span class="partner-url">cloudflare.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="cloud" href="https://github.com/sphereofrupayan/SecureSphere1" target="_blank" rel="noopener noreferrer" data-cursor="Open GitHub Repo ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-github" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.28.1-2.66 0 0 .84-.27 2.75 1.02A9.5 9.5 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.41.1 2.66.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
             </span>
             <span class="partner-cat">Source &amp; CI</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>GitHub</h3>
-          <p>Version control &amp; automatic push-to-deploy pipeline for Web &amp; Server.</p>
+          <p>Source repository &amp; automated main-branch deployment pipeline.</p>
           <span class="partner-url">github.com/sphereofrupayan</span>
         </a>
 
-        <!-- AI, Voice & Showcase Media -->
+        <!-- AI, Design & Showcase Media -->
         <a class="partner-card reveal" data-cat="media" href="https://ai.google.dev" target="_blank" rel="noopener noreferrer" data-cursor="Visit Gemini AI ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-gemini" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 5.2 4.8 8.8 10 10-5.2 1.2-8.8 4.8-10 10-1.2-5.2-4.8-8.8-10-10C7.2 10.8 10.8 7.2 12 2Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>
             </span>
             <span class="partner-cat">Generative AI</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Google Gemini</h3>
-          <p>Room-grounded SSE summaries, action extraction &amp; smart Q&amp;A assistant.</p>
+          <p>Room-grounded SSE summaries, task extraction &amp; smart AI chat.</p>
           <span class="partner-url">ai.google.dev</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://antigravity.google" target="_blank" rel="noopener noreferrer" data-cursor="Visit Antigravity ↗">
           <div class="partner-top">
-            <span class="partner-logo partner-logo-ag" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 3.8 20.2h3.4l2.1-4.6h5.4l2.1 4.6h3.4L12 3Zm-1.5 9.8L12 9.2l1.5 3.6h-3Z"/></svg>
+            <span class="partner-logo partner-logo-img" aria-hidden="true">
+              <img src="/media/logos/antigravity.png" alt="Google Antigravity logo" loading="lazy" />
             </span>
             <span class="partner-cat">Design &amp; Engineering</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Google Antigravity</h3>
-          <p>Obsidian aesthetic design reference &amp; agentic engineering environment.</p>
+          <p>Agentic coding platform &amp; UI visual engineering workspace.</p>
           <span class="partner-url">antigravity.google</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" data-cursor="Visit ElevenLabs ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-eleven" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="4" width="3.4" height="16" rx="1.2"/><rect x="13.6" y="4" width="3.4" height="16" rx="1.2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.6035 0v24h4.9317V0zm9.8613 0v24h4.9317V0z"/></svg>
             </span>
-            <span class="partner-cat">Sound Design</span>
+            <span class="partner-cat">Audio &amp; SFX</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>ElevenLabs</h3>
-          <p>Studio transition swooshes &amp; cinema sound effects layered into the film.</p>
+          <p>Signature transition swooshes &amp; emotional SFX mastered in the video.</p>
           <span class="partner-url">elevenlabs.io</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit YouTube ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-yt" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 4.8 12 4.8 12 4.8s-6 0-7.7.5a2.7 2.7 0 0 0-1.9 1.9A28.5 28.5 0 0 0 2 12a28.5 28.5 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9c1.7.5 7.7.5 7.7.5s6 0 7.7-.5a2.7 2.7 0 0 0 1.9-1.9A28.5 28.5 0 0 0 22 12a28.5 28.5 0 0 0-.4-4.8ZM10 15.2V8.8L15.6 12 10 15.2Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </span>
             <span class="partner-cat">Watch Party</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>YouTube</h3>
-          <p>Synchronized room video playback &amp; shared Watch Party queue engine.</p>
+          <p>Synchronized room iframe playback &amp; collaborative video queue.</p>
           <span class="partner-url">youtube.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Pexels ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-pexels" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h6.4a5.1 5.1 0 0 1 .2 10.2H10v5.8H6V4Zm4 3.2v3.9h2.2a2 2 0 1 0 0-3.9H10Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 0A1.5 1.5 0 000 1.5v21A1.5 1.5 0 001.5 24h21a1.5 1.5 0 001.5-1.5v-21A1.5 1.5 0 0022.5 0h-21zm6.75 6.75h5.2715a3.843 3.843 0 01.627 7.6348V17.25H8.25V6.75zm1.5 1.5v7.5h2.8984v-2.8145h.873a2.343 2.343 0 100-4.6855H9.75Z"/></svg>
             </span>
             <span class="partner-cat">Showcase B-Roll</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Pexels</h3>
-          <p>Licensed HD &amp; 4K studio motion footage featured cleanly in the showcase reel.</p>
+          <p>Licensed HD/4K motion footage integrated cleanly into our video reel.</p>
           <span class="partner-url">pexels.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://fonts.google.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Google Fonts ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-gfonts" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18 9.5 5 15 18"/><path d="M6 14h7"/><circle cx="18.2" cy="14.5" r="2.8"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2.8A3.6 3.6 0 1 0 4 10a3.6 3.6 0 0 0 0-7.2zm7.6 0v18.4h7.2a5.2 5.2 0 1 1 0-10.4 4 4 0 1 1 0-8zm7.2 0v8a4 4 0 1 0 0-8zm0 8v10.4A5.2 5.2 0 0 0 24 16a5.2 5.2 0 0 0-5.2-5.2zm-7.7-7.206L0 21.199h8.8l2.3-3.64Z"/></svg>
             </span>
             <span class="partner-cat">Typography</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Google Fonts</h3>
-          <p>Plus Jakarta Sans, Inter &amp; JetBrains Mono web typefaces.</p>
+          <p>Plus Jakarta Sans, Instrument Serif &amp; JetBrains Mono web typefaces.</p>
           <span class="partner-url">fonts.google.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="media" href="https://ffmpeg.org" target="_blank" rel="noopener noreferrer" data-cursor="Visit FFmpeg ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-ffmpeg" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h5l-5 6h7l-7 6h14l-5-6h7l-5-6h5"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.72 17.91V6.5l-.53-.49L9.05 18.52l-1.29-.06L24 1.53l-.33-.95-11.93 1-5.75 6.6v-.23l4.7-5.39-1.38-.77-9.11.77v2.85l1.91.46v.01l.19-.01-.56.66v10.6c.609-.126 1.22-.241 1.83-.36L14.12 5.22l.83-.04L0 21.44l9.67.82 1.35-.77 6.82-6.74v2.15l-5.72 5.57 11.26.95.35-.94v-3.16l-3.29-.18c.434-.403.858-.816 1.28-1.23z"/></svg>
             </span>
-            <span class="partner-cat">Video Pipeline</span>
+            <span class="partner-cat">Cinema Mastering</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>FFmpeg</h3>
-          <p>16:9 cinema transcoding, frame stabilization &amp; multi-track SFX mixing.</p>
+          <p>16:9 showcase mastering, animated voiceover captions &amp; SFX mixing.</p>
           <span class="partner-url">ffmpeg.org</span>
         </a>
 
@@ -663,7 +620,7 @@
         <a class="partner-card reveal" data-cat="mobile" href="https://expo.dev" target="_blank" rel="noopener noreferrer" data-cursor="Visit Expo & EAS ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-expo" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.2 3.4 18.6c-.4.7.2 1.4.9 1.4.5 0 .9-.2 1.2-.7L12 8.7l6.5 10.6c.3.5.7.7 1.2.7.7 0 1.3-.7.9-1.4L12 4.2Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 20.084c.043.53.23 1.063.718 1.778.58.849 1.576 1.315 2.303.567.49-.505 5.794-9.776 8.35-13.29a.761.761 0 011.248 0c2.556 3.514 7.86 12.785 8.35 13.29.727.748 1.723.282 2.303-.567.57-.835.728-1.42.728-2.046 0-.426-8.26-15.798-9.092-17.078-.8-1.23-1.044-1.498-2.397-1.542h-1.032c-1.353.044-1.597.311-2.398 1.542C8.267 3.991.33 18.758 0 19.77Z"/></svg>
             </span>
             <span class="partner-cat">Mobile &amp; EAS Build</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
@@ -676,111 +633,111 @@
         <a class="partner-card reveal" data-cat="mobile" href="https://reactnative.dev" target="_blank" rel="noopener noreferrer" data-cursor="Visit React Native ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-rn" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/></svg>
             </span>
             <span class="partner-cat">Native UI</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>React Native</h3>
-          <p>Native Android UI surfaces, Reanimated 4 physics &amp; vector graphics.</p>
+          <p>Native Android UI surfaces, Reanimated 4 motion &amp; vector graphics.</p>
           <span class="partner-url">reactnative.dev</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://webrtc.org" target="_blank" rel="noopener noreferrer" data-cursor="Visit WebRTC ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-webrtc" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="2.6"/><circle cx="6.8" cy="15.5" r="2.6"/><circle cx="17.2" cy="15.5" r="2.6"/><circle cx="12" cy="12.2" r="1.9" opacity=".65"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.9998.3598c-2.8272 0-5.1456 2.1733-5.3793 4.94a5.4117 5.4117 0 00-1.2207-.1401C2.418 5.1597 0 7.5779 0 10.5603c0 2.2203 1.341 4.1274 3.2568 4.957a5.3734 5.3734 0 00-.7372 2.7227c0 2.9823 2.4175 5.4002 5.4002 5.4002 1.6627 0 3.1492-.7522 4.1397-1.934.9906 1.1818 2.4773 1.934 4.1398 1.934 2.983 0 5.4004-2.418 5.4004-5.4002 0-.9719-.258-1.883-.7073-2.6708C22.7283 14.7068 24 12.8418 24 10.6795c0-2.9823-2.4175-5.4006-5.3998-5.4006-.417 0-.8223.049-1.2121.1384C17.2112 2.5949 14.867.3598 11.9998.3598zm-5.717 6.8683h10.5924c.7458 0 1.352.605 1.352 1.3487v7.6463c0 .7438-.6062 1.3482-1.352 1.3482h-3.6085l-7.24 3.5491 1.1008-3.5491h-.8447c-.7458 0-1.3522-.6044-1.3522-1.3482V8.5768c0-.7438.6064-1.3487 1.3522-1.3487Z"/></svg>
             </span>
-            <span class="partner-cat">Voice Engine</span>
+            <span class="partner-cat">Voice Standard</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>WebRTC</h3>
-          <p>Low-latency peer-to-peer audio mesh linking Android phones &amp; browsers.</p>
+          <p>Low-latency peer-to-peer audio mesh across Android &amp; browsers.</p>
           <span class="partner-url">webrtc.org</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://developer.android.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Android Dev ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-android" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.2 8.2 17.7 5.7a.5.5 0 1 0-.86-.5l-1.5 2.55a7.2 7.2 0 0 0-6.68 0L7.16 5.2a.5.5 0 1 0-.86.5L7.8 8.2A6.5 6.5 0 0 0 4.5 14h15a6.5 6.5 0 0 0-3.3-5.8ZM9 11.7a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm6 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8ZM5 15.5h14V18a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2.5Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></svg>
             </span>
             <span class="partner-cat">Mobile OS</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Android Platform</h3>
-          <p>APK &amp; AAB builds, hardware Keystore storage &amp; Android audio permissions.</p>
+          <p>Signed APK/AAB builds, hardware Keystore &amp; AudioManager focus.</p>
           <span class="partner-url">developer.android.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://socket.io" target="_blank" rel="noopener noreferrer" data-cursor="Visit Socket.IO ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-socketio" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 6.6 8.6 12h3.1l-.7 5.4L15.4 12h-3.1L13 6.6Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.9362.0137a12.1694 12.1694 0 00-2.9748.378C4.2816 1.5547.5678 5.7944.0918 10.6012c-.59 4.5488 1.7079 9.2856 5.6437 11.6345 3.8608 2.4179 9.0926 2.3199 12.8734-.223 3.3969-2.206 5.5118-6.2277 5.3858-10.2845-.058-4.0159-2.31-7.9167-5.7588-9.9796C16.354.5876 14.1431.0047 11.9362.0137zm-.063 1.696c4.9448-.007 9.7886 3.8137 10.2815 8.9245.945 5.6597-3.7528 11.4125-9.4875 11.5795-5.4538.544-10.7245-4.0798-10.8795-9.5566-.407-4.4338 2.5159-8.8346 6.6977-10.2995a9.1126 9.1126 0 013.3878-.647zm5.0908 3.2248c-2.6869 2.0849-5.2598 4.3078-7.8886 6.4567 1.2029.017 2.4118.016 3.6208.01 1.41-2.165 2.8589-4.3008 4.2678-6.4667zm-5.6647 7.6536c-1.41 2.166-2.86 4.3088-4.2699 6.4737 2.693-2.0799 5.2548-4.3198 7.9017-6.4557a255.4132 255.4132 0 00-3.6318-.018z"/></svg>
             </span>
             <span class="partner-cat">Real-Time Sync</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Socket.IO</h3>
-          <p>Instant room events for chat, whiteboard strokes, games &amp; WebRTC signaling.</p>
+          <p>Bidirectional real-time chat, whiteboard, games &amp; WebRTC signaling.</p>
           <span class="partner-url">socket.io</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://nodejs.org" target="_blank" rel="noopener noreferrer" data-cursor="Visit Node.js ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-node" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4 3.6 7.2v9.6L12 21.6l8.4-4.8V7.2L12 2.4Zm0 3.3 5.5 3.1v6.4L12 18.3l-5.5-3.1V8.8L12 5.7Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"/></svg>
             </span>
             <span class="partner-cat">Backend Runtime</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Node.js</h3>
-          <p>Unified JavaScript server engine synchronizing Web &amp; mobile rooms live.</p>
+          <p>Unified JavaScript runtime executing API, auth, media &amp; rooms live.</p>
           <span class="partner-url">nodejs.org</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://expressjs.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Express ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-express" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h6M4 12h5M4 15h6"/><path d="m13 9 6 6m0-6-6 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.262 16.666h1.146l6.975-9.325H19.22zm9.778 1.441v.004l-4.334-5.706-.557.74 4.873 6.682H.945V4.173h9.505l5.026 6.7.574-.772-4.374-5.928h.003l-.719-.945H0v17.544h24zM10.917 8.705a3.8 3.8 0 0 0-1.292-1.183q-.796-.45-1.916-.45c-.746 0-1.37.14-1.906.424a3.76 3.76 0 0 0-1.31 1.12 4.9 4.9 0 0 0-.75 1.581 7.17 7.17 0 0 0 0 3.696c.148.567.402 1.101.75 1.573a3.5 3.5 0 0 0 1.31 1.066q.803.39 1.906.389 1.77 0 2.739-.868.966-.867 1.328-2.457h-1.139q-.271 1.084-.977 1.734-.704.651-1.952.65-.812 0-1.392-.342a3.1 3.1 0 0 1-.957-.869 3.5 3.5 0 0 1-.551-1.182 5 5 0 0 1-.17-1.133 9 9 0 0 0-.015-.286 4.5 4.5 0 0 1 .015-.829c.047-.418.147-.83.296-1.223A3.7 3.7 0 0 1 5.54 9.05a2.9 2.9 0 0 1 .922-.742q.541-.28 1.246-.28c.47 0 .869.093 1.23.28q.541.281.922.742.379.461.587 1.057t.225 1.246H5.625l.004.957h6.182a7.3 7.3 0 0 0-.18-1.924 4.9 4.9 0 0 0-.715-1.68z"/></svg>
             </span>
             <span class="partner-cat">REST &amp; Media API</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Express 5</h3>
-          <p>Authenticated room REST API, encrypted JWT middleware &amp; file uploads.</p>
+          <p>REST API server powering JWT auth, encrypted file transfers &amp; ICE endpoints.</p>
           <span class="partner-url">expressjs.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://sqlite.org" target="_blank" rel="noopener noreferrer" data-cursor="Visit SQLite ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-sqlite" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v5.5c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8V6.5"/><path d="M5 12v5.5c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8V12"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.678.521c-1.032-.92-2.28-.55-3.513.544a8.71 8.71 0 0 0-.547.535c-2.109 2.237-4.066 6.38-4.674 9.544.237.48.422 1.093.544 1.561a13.044 13.044 0 0 1 .164.703s-.019-.071-.096-.296l-.05-.146a1.689 1.689 0 0 0-.033-.08c-.138-.32-.518-.995-.686-1.289-.143.423-.27.818-.376 1.176.484.884.778 2.4.778 2.4s-.025-.099-.147-.442c-.107-.303-.644-1.244-.772-1.464-.217.804-.304 1.346-.226 1.478.152.256.296.698.422 1.186.286 1.1.485 2.44.485 2.44l.017.224a22.41 22.41 0 0 0 .056 2.748c.095 1.146.273 2.13.5 2.657l.155-.084c-.334-1.038-.47-2.399-.41-3.967.09-2.398.642-5.29 1.661-8.304 1.723-4.55 4.113-8.201 6.3-9.945-1.993 1.8-4.692 7.63-5.5 9.788-.904 2.416-1.545 4.684-1.931 6.857.666-2.037 2.821-2.912 2.821-2.912s1.057-1.304 2.292-3.166c-.74.169-1.955.458-2.362.629-.6.251-.762.337-.762.337s1.945-1.184 3.613-1.72C21.695 7.9 24.195 2.767 21.678.521m-18.573.543A1.842 1.842 0 0 0 1.27 2.9v16.608a1.84 1.84 0 0 0 1.835 1.834h9.418a22.953 22.953 0 0 1-.052-2.707c-.006-.062-.011-.141-.016-.2a27.01 27.01 0 0 0-.473-2.378c-.121-.47-.275-.898-.369-1.057-.116-.197-.098-.31-.097-.432 0-.12.015-.245.037-.386a9.98 9.98 0 0 1 .234-1.045l.217-.028c-.017-.035-.014-.065-.031-.097l-.041-.381a32.8 32.8 0 0 1 .382-1.194l.2-.019c-.008-.016-.01-.038-.018-.053l-.043-.316c.63-3.28 2.587-7.443 4.8-9.791.066-.069.133-.128.198-.194Z"/></svg>
             </span>
             <span class="partner-cat">Database WAL</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>SQLite</h3>
-          <p>Zero-latency WAL persistence via better-sqlite3 for rooms, chat &amp; history.</p>
+          <p>Zero-latency WAL persistence via better-sqlite3 for rooms &amp; logs.</p>
           <span class="partner-url">sqlite.org</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer" data-cursor="Visit TypeScript ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-ts" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.2 10.6h4.6v1.4H10.2V17H8.8v-5H7.2v-1.4Zm6.3 5.2.9-1.1c.6.5 1.2.8 1.9.8.6 0 1-.2 1-.6 0-.4-.3-.6-1.2-.9-1.3-.4-2.2-.9-2.2-2.1 0-1.2 1-2 2.4-2 .9 0 1.7.3 2.3.8l-.8 1.1c-.5-.4-1-.6-1.5-.6-.6 0-.9.2-.9.6s.3.5 1.2.8c1.3.4 2.1 1 2.1 2.1 0 1.3-1 2.1-2.5 2.1-1.1 0-2-.3-2.7-.6Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/></svg>
             </span>
-            <span class="partner-cat">Language Safety</span>
+            <span class="partner-cat">Strict Typing</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>TypeScript</h3>
-          <p>Strict typed mobile screens, API clients, games engines &amp; Socket contracts.</p>
+          <p>End-to-end typed mobile components, REST clients &amp; Socket contracts.</p>
           <span class="partner-url">typescriptlang.org</span>
         </a>
 
         <a class="partner-card reveal" data-cat="mobile" href="https://www.npmjs.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit npm Registry ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-npm" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7h18v9h-4.5v2.2h-4.5V16H3V7Zm2 2v5h2.2v-3.5h1.6V14H10V9H5Zm6.6 0v7h2.1v-2h2.2V9h-4.3Zm2.1 1.6h.8v1.8h-.8v-1.8Zm3-1.6v5h2.2v-3.5h.8V14H20V9h-3.3Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
             </span>
             <span class="partner-cat">Packages</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
@@ -790,101 +747,104 @@
           <span class="partner-url">npmjs.com</span>
         </a>
 
-        <!-- Android App Stores & Distribution -->
+        <!-- Android App Stores -->
         <a class="partner-card reveal" data-cat="stores" href="https://en.uptodown.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Uptodown ↗">
           <div class="partner-top">
-            <span class="partner-logo partner-logo-uptodown" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="m7 12.2 5 5 5-5-1.8-1.8L12 13.6 8.8 10.4 7 12.2Zm0-4.6 5 5 5-5-1.8-1.8L12 9 8.8 5.8 7 7.6Z"/></svg>
+            <span class="partner-logo partner-logo-img" aria-hidden="true">
+              <img src="/media/logos/uptodown.png" alt="Uptodown logo" loading="lazy" />
             </span>
-            <span class="partner-cat">APK Storefront</span>
+            <span class="partner-cat">APK Store</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Uptodown</h3>
-          <p>Global multi-region Android APK store listing &amp; release archive.</p>
+          <p>Multi-region Android APK store catalog &amp; versioned distribution.</p>
           <span class="partner-url">en.uptodown.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="stores" href="https://play.google.com/console" target="_blank" rel="noopener noreferrer" data-cursor="Visit Google Play ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-gplay" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.5 4.2c-.3.3-.5.7-.5 1.2v13.2c0 .5.2.9.5 1.2l.1.1 7.4-7.4v-.2L5.6 4.1l-.1.1Zm9.9 10.6-2.4-2.4v-.2l2.4-2.4.1.1 2.9 1.6c.8.5.8 1.3 0 1.8l-2.9 1.6-.1-.1Zm-2.5 2.5L6.4 20.6c.6.3 1.4.3 2.1-.1l6.4-3.7-2-2.1v2.6Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg>
             </span>
-            <span class="partner-cat">App Store Portal</span>
+            <span class="partner-cat">Store Console</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Google Play Console</h3>
-          <p>Signed production AAB packaging, store compliance &amp; telemetry console.</p>
+          <p>Production signed AAB bundle readiness, store metadata &amp; Play track.</p>
           <span class="partner-url">play.google.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="stores" href="https://developer.amazon.com/appstore" target="_blank" rel="noopener noreferrer" data-cursor="Visit Amazon Appstore ↗">
           <div class="partner-top">
             <span class="partner-logo partner-logo-amazon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M7.5 14c2.8 2 6.2 2 9 0"/><path d="m14.8 13.1 2 .5-.4 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></svg>
             </span>
-            <span class="partner-cat">App Store Portal</span>
+            <span class="partner-cat">App Store</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Amazon Appstore</h3>
-          <p>Android APK &amp; Fire tablet developer store submission portal.</p>
+          <p>Cross-device Android APK &amp; tablet store developer portal.</p>
           <span class="partner-url">developer.amazon.com</span>
         </a>
 
         <a class="partner-card reveal" data-cat="stores" href="https://www.indusappstore.com" target="_blank" rel="noopener noreferrer" data-cursor="Visit Indus Appstore ↗">
           <div class="partner-top">
-            <span class="partner-logo partner-logo-indus" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 19.5 8v8L12 20.2 4.5 16V8L12 3.8Z"/><path d="M12 8.2v7.6M8.5 10.5l7 3"/></svg>
+            <span class="partner-logo partner-logo-img" aria-hidden="true">
+              <img src="/media/logos/indus.png" alt="Indus Appstore logo" loading="lazy" />
             </span>
-            <span class="partner-cat">App Store Portal</span>
+            <span class="partner-cat">App Store</span>
             <span class="partner-arrow" aria-hidden="true">&nearr;</span>
           </div>
           <h3>Indus Appstore</h3>
-          <p>Localized Indian Android marketplace publishing &amp; release workflow.</p>
+          <p>Indian Android marketplace storefront &amp; multi-language reach.</p>
           <span class="partner-url">indusappstore.com</span>
         </a>
       </div>
     </section>
 
-    <!-- 4-Step Android Installation Flow -->
+    <!-- 08 · 4-Step Android Installation Flow -->
     <section class="install-section" id="install">
       <div class="section-header-split reveal">
-        <h2 class="section-title">Installed on Android in 15 seconds.</h2>
-        <p class="section-lead">Direct signed APK install — completely free, no store paywalls, and automatic over-the-air updates built in.</p>
+        <div>
+          <div class="explorer-eyebrow">07 · 15-SECOND SETUP</div>
+          <h2 class="section-title">Installed cleanly on any Android phone.</h2>
+        </div>
+        <p class="section-lead">Direct signed APK install — completely free forever with automatic over-the-air updates built in.</p>
       </div>
 
       <div class="install-grid">
         <div class="install-step reveal">
-          <span class="install-num">1</span>
+          <span class="install-num">01</span>
           <h4>Download the APK</h4>
-          <p>Tap <strong>Download for Android (.APK)</strong> on your phone to save the signed <code>SecureSphere.apk</code>.</p>
+          <p>Tap <strong>Download Android (.APK)</strong> to save the signed <code>SecureSphere v{{APP_VERSION}}</code> package.</p>
         </div>
         <div class="install-step reveal">
-          <span class="install-num">2</span>
-          <h4>Allow Once</h4>
-          <p>Open the downloaded file; if prompted for <em>Install unknown apps</em>, toggle <strong>Allow from this source</strong> once.</p>
+          <span class="install-num">02</span>
+          <h4>Allow Source Once</h4>
+          <p>Open the downloaded APK and toggle <strong>Allow from this source</strong> once on Android settings.</p>
         </div>
         <div class="install-step reveal">
-          <span class="install-num">3</span>
-          <h4>Install &amp; Sign In</h4>
-          <p>Tap <strong>Install</strong>, launch SecureSphere, and sign in or create a brand-new private room in seconds.</p>
+          <span class="install-num">03</span>
+          <h4>Create or Enter a Room</h4>
+          <p>Launch SecureSphere, pick your display name, and create a private room or join by code.</p>
         </div>
         <div class="install-step reveal">
-          <span class="install-num">4</span>
-          <h4>Stay Updated Automatically</h4>
-          <p>Built-in EAS Update keeps your app fresh with the latest features automatically on launch.</p>
+          <span class="install-num">04</span>
+          <h4>Auto OTA Updates</h4>
+          <p>Built-in EAS Update keeps screens, fixes &amp; voice capabilities synced automatically on launch.</p>
         </div>
       </div>
     </section>
 
-    <!-- Pure Black Gradient Radiating Particle Download CTA -->
+    <!-- 09 · Midnight Particle Download CTA Stage -->
     <section class="download-cta-wrap">
       <div class="download-cta-stage reveal" id="downloadStage">
         <canvas class="download-particles-canvas" id="downloadParticles" aria-hidden="true"></canvas>
         <div class="download-cta-inner">
-          <span class="download-cta-eyebrow">AVAILABLE AT NO CHARGE · v{{APP_VERSION}}</span>
-          <h2 class="download-cta-title">Download SecureSphere<span class="rainbow-caret" aria-hidden="true"></span></h2>
+          <span class="download-cta-eyebrow">AVAILABLE AT $0 · BUILD v{{APP_VERSION}}</span>
+          <h2 class="download-cta-title">Launch your room now<span class="rainbow-caret" aria-hidden="true"></span></h2>
           <p class="download-cta-sub">
-            Start a private room with your team or friends right now. Native Android app and desktop web workspace, synchronized in real time.
+            Talk clearly across networks, sketch on an infinite whiteboard, roll 3D Ludo dice, and ask Gemini — all inside one room.
           </p>
           <div class="hero-cta-row">
             <a class="pill pill-white pill-lg" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ SecureSphere.apk">
@@ -897,32 +857,103 @@
         </div>
       </div>
     </section>
+
+    <!-- 10 · Meet the Creator (Snapa Editorial Polaroid & Contrast Section + Social Links) -->
+    <section class="creator-section" id="creator">
+      <div class="creator-shell">
+        <div class="creator-kicker reveal">08 · MEET THE CREATOR</div>
+
+        <div class="creator-grid">
+          <div class="creator-portrait-wrap reveal" data-cursor="Rupayan Chattaraj">
+            <div class="creator-photo-frame tilt-stage">
+              <img src="/media/creator-rupayan.jpg" alt="Rupayan Chattaraj — Creator and Software Engineer of SecureSphere" loading="lazy" />
+              <div class="creator-photo-caption">
+                <span class="caption-script">Rupayan</span>
+                <span class="caption-meta">Creator · Full-Stack &amp; Android Architect</span>
+              </div>
+              <div class="media-spotlight"></div>
+            </div>
+          </div>
+
+          <div class="creator-info reveal">
+            <h2 class="creator-title">Rupayan<br />Chattaraj<span class="vermilion-dot">.</span></h2>
+            <p class="creator-role">Full-Stack Engineer · Real-Time Systems &amp; Mobile Architect</p>
+            <p class="creator-bio">
+              I engineered SecureSphere from scratch to bring encrypted team chat, native Android &amp; web WebRTC voice calls with TURN relays, a collaborative infinite vector whiteboard, 3D Ludo with synthesized sound effects, and streaming Gemini AI intelligence into one borderless workspace — free, fast, and built to feel effortless.
+            </p>
+
+            <div class="creator-links-grid">
+              <a class="creator-link-card" href="https://www.linkedin.com/in/rupayanchattaraj/" target="_blank" rel="noopener noreferrer" data-cursor="LinkedIn ↗">
+                <span class="creator-link-icon is-linkedin" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </span>
+                <span class="creator-link-text">
+                  <strong>LinkedIn</strong>
+                  <span>in/rupayanchattaraj</span>
+                </span>
+                <span class="creator-link-arrow" aria-hidden="true">&nearr;</span>
+              </a>
+
+              <a class="creator-link-card" href="https://portfolio-3gvr.onrender.com/" target="_blank" rel="noopener noreferrer" data-cursor="Portfolio ↗">
+                <span class="creator-link-icon is-portfolio" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5a14 14 0 0 1 0 19 14 14 0 0 1 0-19Z"/></svg>
+                </span>
+                <span class="creator-link-text">
+                  <strong>Portfolio</strong>
+                  <span>portfolio-3gvr.onrender.com</span>
+                </span>
+                <span class="creator-link-arrow" aria-hidden="true">&nearr;</span>
+              </a>
+
+              <a class="creator-link-card" href="https://x.com/rupayan_01" target="_blank" rel="noopener noreferrer" data-cursor="X Profile ↗">
+                <span class="creator-link-icon is-x" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+                </span>
+                <span class="creator-link-text">
+                  <strong>X (Twitter)</strong>
+                  <span>@rupayan_01</span>
+                </span>
+                <span class="creator-link-arrow" aria-hidden="true">&nearr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Minimalist Black-Gradient Footer with Oversized Wordmark -->
+  <!-- 11 · Snapa Signature Bold Vermilion-Obsidian Kinetic Footer -->
   <footer class="site-footer">
-    <div class="footer-top">
-      <div>
-        <p class="footer-tagline">Experience liftoff in private rooms.</p>
-        <p class="footer-sub">Designed &amp; engineered by Rupayan Chattaraj · 100% Free &amp; Ad-Free.</p>
+    <div class="footer-hero-band">
+      <span class="footer-eyebrow">SECURESPHERE · REAL-TIME PRIVATE ROOMS</span>
+      <a class="footer-kinetic-title" href="{{APK_URL}}" {{APK_ATTRS}} data-cursor="↓ Install v{{APP_VERSION}}">
+        Make Teams Sync Better
+      </a>
+    </div>
+
+    <div class="footer-credits-grid">
+      <div class="footer-credit-col">
+        <h5>Product</h5>
+        <a href="{{APK_URL}}" {{APK_ATTRS}}>Android APK (v{{APP_VERSION}})</a>
+        <a href="/">Web Workspace</a>
+        <a href="#showcase">Showcase Film</a>
+        <a href="#features">Characteristics</a>
       </div>
 
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h5>Product</h5>
-          <a href="{{APK_URL}}" {{APK_ATTRS}}>Android APK (v{{APP_VERSION}})</a>
-          <a href="/">Web Workspace</a>
-          <a href="#showcase">Showcase Film</a>
-          <a href="#features">Features</a>
-        </div>
-        <div class="footer-col">
-          <h5>Engineering &amp; Legal</h5>
-          <a href="#making">How It Was Built</a>
-          <a href="#partners">Partners &amp; Tech</a>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/healthz">Server Health</a>
-          <a href="mailto:rupayanchattaraj@gmail.com">Support</a>
-        </div>
+      <div class="footer-credit-col">
+        <h5>Engineering</h5>
+        <a href="#making">System Architecture</a>
+        <a href="#partners">Partners &amp; Ecosystem</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/healthz">Server Health</a>
+      </div>
+
+      <div class="footer-credit-col">
+        <h5>Creator</h5>
+        <a href="https://www.linkedin.com/in/rupayanchattaraj/" target="_blank" rel="noopener noreferrer">LinkedIn · Rupayan Chattaraj</a>
+        <a href="https://portfolio-3gvr.onrender.com/" target="_blank" rel="noopener noreferrer">Portfolio Website</a>
+        <a href="https://x.com/rupayan_01" target="_blank" rel="noopener noreferrer">X · @rupayan_01</a>
+        <a href="mailto:rupayanchattaraj@gmail.com">rupayanchattaraj@gmail.com</a>
       </div>
     </div>
 
@@ -938,6 +969,8 @@
     </div>
   </footer>
 
-  <script src="/download.js?v=6"></script>
+  <!-- Lenis Smooth Inertial Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.8/dist/lenis.min.js"></script>
+  <script src="/download.js?v=7"></script>
 </body>
 </html>
