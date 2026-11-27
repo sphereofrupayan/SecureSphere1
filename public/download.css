@@ -566,8 +566,43 @@ code {
 .cinema-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+}
+
+.cinema-stage:fullscreen,
+.cinema-stage:-webkit-full-screen,
+.cinema-stage.is-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #000000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.cinema-stage:fullscreen .cinema-video,
+.cinema-stage:-webkit-full-screen .cinema-video,
+.cinema-stage.is-fullscreen .cinema-video,
+.cinema-video:fullscreen,
+.cinema-video:-webkit-full-screen {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  transform: none !important;
+}
+
+.cinema-stage.is-fullscreen .cinema-hud {
+  padding: 20px 18px 16px;
 }
 
 .cinema-unmute-prompt {
@@ -1170,6 +1205,164 @@ code {
   color: #bae6fd;
 }
 
+/* ── Powered By & Platform Partners Showcase (Zero Borders, Clickable Logos) ── */
+.partners-section {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 24px 28px 112px;
+}
+
+.partner-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.partner-filter-pill {
+  padding: 9px 17px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.partner-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.partner-filter-pill.is-active {
+  background: linear-gradient(135deg, #ffffff, #dbeafe);
+  color: #030712;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.22);
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.partner-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 20px;
+  border-radius: 20px;
+  background: var(--surface-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.partner-card.is-hidden {
+  display: none;
+}
+
+.partner-card:hover {
+  transform: translateY(-4px);
+  background: var(--surface-card-hover);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55), 0 0 32px rgba(56, 189, 248, 0.12);
+}
+
+.partner-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.partner-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+
+.partner-logo svg {
+  width: 21px;
+  height: 21px;
+}
+
+.partner-logo-render { background: rgba(70, 227, 183, 0.14); color: #46e3b7; }
+.partner-logo-metered { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.partner-logo-cf { background: rgba(249, 115, 22, 0.16); color: #fb923c; }
+.partner-logo-github { background: rgba(226, 232, 240, 0.12); color: #f8fafc; }
+.partner-logo-gemini { background: rgba(96, 165, 250, 0.16); color: #7dd3fc; }
+.partner-logo-ag { background: rgba(129, 140, 248, 0.16); color: #a5b4fc; }
+.partner-logo-eleven { background: rgba(244, 244, 245, 0.14); color: #ffffff; }
+.partner-logo-yt { background: rgba(239, 68, 68, 0.16); color: #f87171; }
+.partner-logo-pexels { background: rgba(5, 160, 129, 0.18); color: #34d399; }
+.partner-logo-gfonts { background: rgba(251, 113, 133, 0.16); color: #fda4af; }
+.partner-logo-ffmpeg { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+.partner-logo-expo { background: rgba(148, 163, 184, 0.15); color: #f1f5f9; }
+.partner-logo-rn { background: rgba(56, 189, 248, 0.16); color: #67e8f9; }
+.partner-logo-webrtc { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+.partner-logo-android { background: rgba(61, 220, 132, 0.16); color: #4ade80; }
+.partner-logo-socketio { background: rgba(226, 232, 240, 0.14); color: #e2e8f0; }
+.partner-logo-node { background: rgba(132, 204, 22, 0.16); color: #a3e635; }
+.partner-logo-express { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; }
+.partner-logo-sqlite { background: rgba(59, 130, 246, 0.16); color: #60a5fa; }
+.partner-logo-ts { background: rgba(59, 130, 246, 0.18); color: #93c5fd; }
+.partner-logo-npm { background: rgba(239, 68, 68, 0.16); color: #fca5a5; }
+.partner-logo-uptodown { background: rgba(45, 212, 191, 0.16); color: #5eead4; }
+.partner-logo-gplay { background: rgba(52, 211, 153, 0.16); color: #6ee7b7; }
+.partner-logo-amazon { background: rgba(251, 191, 36, 0.16); color: #fcd34d; }
+.partner-logo-indus { background: rgba(167, 139, 250, 0.16); color: #c4b5fd; }
+
+.partner-cat {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-right: auto;
+}
+
+.partner-arrow {
+  font-size: 14px;
+  color: var(--ink-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.partner-card:hover .partner-arrow {
+  transform: translate(2px, -2px);
+  color: #38bdf8;
+}
+
+.partner-card h3 {
+  margin: 0 0 6px;
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.partner-card p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.54;
+  color: var(--ink-secondary);
+  flex: 1;
+}
+
+.partner-url {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: #7dd3fc;
+}
+
 /* ── 4-Step Android Installation Flow ─────────────────────────────────────── */
 .install-section {
   max-width: var(--container);
@@ -1425,6 +1618,10 @@ code {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .partners-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .install-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1454,6 +1651,7 @@ code {
   .bento-strip,
   .screens-grid,
   .making-grid,
+  .partners-grid,
   .install-grid {
     grid-template-columns: 1fr;
   }

@@ -377,16 +377,34 @@
       syncMuteUi();
     });
 
+    const syncFullscreenUi = () => {
+      const activeEl = document.fullscreenElement || document.webkitFullscreenElement;
+      const isFs = Boolean(activeEl === stage || activeEl === video);
+      stage?.classList.toggle("is-fullscreen", isFs);
+      if (btnFs) {
+        btnFs.innerHTML = isFs ? "&#x2922; Exit" : "&#x26F6; Fullscreen";
+        btnFs.setAttribute("aria-label", isFs ? "Exit fullscreen" : "Fullscreen video");
+      }
+    };
+
     btnFs?.addEventListener("click", e => {
       e.stopPropagation();
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+      const activeEl = document.fullscreenElement || document.webkitFullscreenElement;
+      if (activeEl) {
+        (document.exitFullscreen || document.webkitExitFullscreen)?.call(document).catch?.(() => {});
       } else if (stage?.requestFullscreen) {
-        stage.requestFullscreen().catch(() => {});
+        stage.requestFullscreen().catch(() => {
+          if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+        });
+      } else if (stage?.webkitRequestFullscreen) {
+        stage.webkitRequestFullscreen();
       } else if (video.webkitEnterFullscreen) {
         video.webkitEnterFullscreen();
       }
     });
+
+    document.addEventListener("fullscreenchange", syncFullscreenUi);
+    document.addEventListener("webkitfullscreenchange", syncFullscreenUi);
 
     progWrap?.addEventListener("click", e => {
       e.stopPropagation();
@@ -432,7 +450,27 @@
     syncMuteUi();
   }
 
-  /* ── 7. Smooth Scroll Reveal ──────────────────────────────────────────── */
+  /* ── 7. Platform & Partners Category Filter ───────────────────────────── */
+  const partnerFilters = Array.from(document.querySelectorAll("[data-partner-cat]"));
+  const partnerCards = Array.from(document.querySelectorAll("#partnersGrid .partner-card"));
+
+  partnerFilters.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cat = btn.getAttribute("data-partner-cat") || "all";
+      partnerFilters.forEach(b => {
+        const active = b === btn;
+        b.classList.toggle("is-active", active);
+        b.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      partnerCards.forEach(card => {
+        const show = cat === "all" || card.getAttribute("data-cat") === cat;
+        card.classList.toggle("is-hidden", !show);
+        if (show) card.classList.add("is-in");
+      });
+    });
+  });
+
+  /* ── 8. Smooth Scroll Reveal ──────────────────────────────────────────── */
   const revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !prefersReducedMotion) {
     const io = new IntersectionObserver(
