@@ -402,14 +402,29 @@
       syncMuteUi();
     });
 
+    let fallbackFsActive = false;
+
     const syncFullscreenUi = () => {
       const activeEl = document.fullscreenElement || document.webkitFullscreenElement;
-      const isFs = Boolean(activeEl === stage || activeEl === video);
+      const isNativeFs = Boolean(activeEl === stage || activeEl === video);
+      if (isNativeFs) fallbackFsActive = false;
+      const isFs = isNativeFs || fallbackFsActive;
       stage?.classList.toggle("is-fullscreen", isFs);
+      document.documentElement.classList.toggle("is-video-fullscreen", fallbackFsActive);
       if (btnFs) {
         btnFs.innerHTML = isFs ? "&#x2922; Exit" : "&#x26F6; Fullscreen";
         btnFs.setAttribute("aria-label", isFs ? "Exit fullscreen" : "Fullscreen video");
       }
+    };
+
+    const setFallbackFs = active => {
+      fallbackFsActive = active;
+      if (active) {
+        lenis?.stop?.();
+      } else {
+        lenis?.start?.();
+      }
+      syncFullscreenUi();
     };
 
     btnFs?.addEventListener("click", e => {
@@ -417,19 +432,55 @@
       const activeEl = document.fullscreenElement || document.webkitFullscreenElement;
       if (activeEl) {
         (document.exitFullscreen || document.webkitExitFullscreen)?.call(document).catch?.(() => {});
-      } else if (stage?.requestFullscreen) {
-        stage.requestFullscreen().catch(() => {
-          if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-        });
+        setFallbackFs(false);
+        return;
+      }
+      if (fallbackFsActive) {
+        setFallbackFs(false);
+        return;
+      }
+      const enterFallbackIfNeeded = () => {
+        setTimeout(() => {
+          const cur = document.fullscreenElement || document.webkitFullscreenElement;
+          if (!cur) setFallbackFs(true);
+        }, 90);
+      };
+      if (stage?.requestFullscreen) {
+        try {
+          const p = stage.requestFullscreen();
+          if (p && typeof p.then === "function") {
+            p.then(enterFallbackIfNeeded).catch(() => setFallbackFs(true));
+          } else {
+            enterFallbackIfNeeded();
+          }
+        } catch {
+          setFallbackFs(true);
+        }
       } else if (stage?.webkitRequestFullscreen) {
-        stage.webkitRequestFullscreen();
-      } else if (video.webkitEnterFullscreen) {
-        video.webkitEnterFullscreen();
+        try {
+          stage.webkitRequestFullscreen();
+          enterFallbackIfNeeded();
+        } catch {
+          setFallbackFs(true);
+        }
+      } else {
+        setFallbackFs(true);
       }
     });
 
-    document.addEventListener("fullscreenchange", syncFullscreenUi);
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && fallbackFsActive) {
+        setFallbackFs(false);
+      } else {
+        syncFullscreenUi();
+      }
+    });
     document.addEventListener("webkitfullscreenchange", syncFullscreenUi);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && fallbackFsActive) {
+        setFallbackFs(false);
+      }
+    });
 
     progWrap?.addEventListener("click", e => {
       e.stopPropagation();
