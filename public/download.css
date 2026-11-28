@@ -1927,6 +1927,17 @@ html.is-video-fullscreen body {
     radial-gradient(ellipse 150% 50% at 50% 50%, #faf3ef 30%, #de2900);
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.site-footer {
+  max-width: 100vw;
+  contain: paint;
+}
+
 .fx-contact {
   position: relative;
   width: 100%;
@@ -2065,9 +2076,9 @@ html.is-video-fullscreen body {
       linear-gradient(#faf3ef 10%, transparent 20%),
       radial-gradient(ellipse 150% 50% at 50% 20%, #faf3ef 10%, #de2900);
   }
-  .fx-contact { padding: 50px 0 250px; }
+  .fx-contact { padding: 110px 0 250px; }
   .fx-oval { padding: 22px 28px; font-size: 13px; }
-  .fx-oval-mail { top: -2rem; left: 6%; }
+  .fx-oval-mail { top: 1rem; left: 6%; }
   .fx-oval-in { top: 15rem; bottom: auto; right: 8%; }
   .fx-oval-x { top: 22rem; bottom: auto; left: 8%; }
   .fm-brand { font-size: 22px; }

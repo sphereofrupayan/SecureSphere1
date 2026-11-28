@@ -439,31 +439,21 @@
         setFallbackFs(false);
         return;
       }
-      const enterFallbackIfNeeded = () => {
-        setTimeout(() => {
-          const cur = document.fullscreenElement || document.webkitFullscreenElement;
-          if (!cur) setFallbackFs(true);
-        }, 90);
-      };
-      if (stage?.requestFullscreen) {
-        try {
+      /* Some webviews never settle the requestFullscreen promise, so always check on a timer. */
+      setTimeout(() => {
+        const cur = document.fullscreenElement || document.webkitFullscreenElement;
+        if (!cur && !fallbackFsActive) setFallbackFs(true);
+      }, 350);
+      try {
+        if (stage?.requestFullscreen) {
           const p = stage.requestFullscreen();
-          if (p && typeof p.then === "function") {
-            p.then(enterFallbackIfNeeded).catch(() => setFallbackFs(true));
-          } else {
-            enterFallbackIfNeeded();
-          }
-        } catch {
-          setFallbackFs(true);
-        }
-      } else if (stage?.webkitRequestFullscreen) {
-        try {
+          if (p && typeof p.catch === "function") p.catch(() => setFallbackFs(true));
+        } else if (stage?.webkitRequestFullscreen) {
           stage.webkitRequestFullscreen();
-          enterFallbackIfNeeded();
-        } catch {
+        } else {
           setFallbackFs(true);
         }
-      } else {
+      } catch {
         setFallbackFs(true);
       }
     });
