@@ -580,23 +580,90 @@
     });
   });
 
-  /* ── 12. Smooth Scroll Reveal ─────────────────────────────────────────── */
+  /* ── 12. Smooth Fade-In / Fade-Out Scroll Reveal (Every Time) ────────── */
   const revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !prefersReducedMotion) {
     const io = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
-            io.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("is-in", entry.isIntersecting);
         });
       },
-      { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
+      { threshold: 0.06, rootMargin: "-2% 0px -2% 0px" }
     );
     revealEls.forEach(el => io.observe(el));
   } else {
     revealEls.forEach(el => el.classList.add("is-in"));
+  }
+
+  /* ── 12b. Cover Page Cursor-Tracking Brand Gradient + Typewriter ─────── */
+  const brandWord = document.getElementById("heroBrandWord");
+  const brandGrad = brandWord?.querySelector(".hero-brand-gradient");
+  const heroSection = document.querySelector(".hero-section");
+  if (brandGrad && heroSection && !prefersReducedMotion) {
+    let gx = 160, gy = 48, tx = 160, ty = 48, pointerActive = false;
+    const updateTarget = (clientX, clientY) => {
+      const r = brandGrad.getBoundingClientRect();
+      tx = clientX - r.left;
+      ty = clientY - r.top;
+    };
+    heroSection.addEventListener("pointermove", e => {
+      pointerActive = true;
+      updateTarget(e.clientX, e.clientY);
+    });
+    heroSection.addEventListener("pointerleave", () => {
+      pointerActive = false;
+    });
+    const stepGrad = t => {
+      if (!pointerActive) {
+        const r = brandGrad.getBoundingClientRect();
+        tx = r.width * (0.5 + 0.34 * Math.sin(t * 0.0012));
+        ty = r.height * (0.5 + 0.25 * Math.cos(t * 0.0015));
+      }
+      gx += (tx - gx) * 0.14;
+      gy += (ty - gy) * 0.14;
+      brandGrad.style.setProperty("--gx", gx.toFixed(1) + "px");
+      brandGrad.style.setProperty("--gy", gy.toFixed(1) + "px");
+      requestAnimationFrame(stepGrad);
+    };
+    requestAnimationFrame(stepGrad);
+  }
+
+  const twEl = document.getElementById("heroTypewriter");
+  if (twEl && !prefersReducedMotion) {
+    const phrases = [
+      "One encrypted room for team chat, voice, whiteboard, games & Gemini AI",
+      "Two-way native WebRTC voice calls powered by global Metered TURN relays",
+      "Collaborative infinite vector whiteboard, 3D Ludo, Chess & Watch Party",
+      "Standalone Android APK & synced real-time web workspace — free forever"
+    ];
+    let pIdx = 0;
+    let cIdx = phrases[0].length;
+    let deleting = true;
+    const tickType = () => {
+      const cur = phrases[pIdx];
+      if (!deleting) {
+        cIdx++;
+        twEl.textContent = cur.slice(0, cIdx);
+        if (cIdx >= cur.length) {
+          deleting = true;
+          setTimeout(tickType, 2200);
+        } else {
+          setTimeout(tickType, 34);
+        }
+      } else {
+        cIdx--;
+        twEl.textContent = cur.slice(0, Math.max(0, cIdx));
+        if (cIdx <= 0) {
+          deleting = false;
+          pIdx = (pIdx + 1) % phrases.length;
+          setTimeout(tickType, 260);
+        } else {
+          setTimeout(tickType, 18);
+        }
+      }
+    };
+    setTimeout(tickType, 1600);
   }
 })();
 
