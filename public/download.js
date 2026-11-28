@@ -599,3 +599,129 @@
     revealEls.forEach(el => el.classList.add("is-in"));
   }
 })();
+
+/* ── 13. Kind-50 motion: orbit ring, flourish springs, radial buttons, stagger ── */
+(function kind50Motion() {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // stagger index for reveal children
+  document.querySelectorAll(".reveal").forEach(el => {
+    const sibs = Array.from(el.parentElement.children).filter(c => c.classList.contains("reveal"));
+    el.style.setProperty("--i", String(Math.min(sibs.indexOf(el), 6)));
+  });
+
+  // radial pill hover origin
+  document.querySelectorAll(".pill").forEach(p => {
+    const set = e => {
+      const r = p.getBoundingClientRect();
+      p.style.setProperty("--bx", (e.clientX - r.left) + "px");
+      p.style.setProperty("--by", (e.clientY - r.top) + "px");
+    };
+    p.addEventListener("pointerenter", set);
+    p.addEventListener("pointermove", set);
+    p.addEventListener("pointerleave", set);
+  });
+
+  // flourish setup
+  const flourishes = Array.from(document.querySelectorAll("[data-flourish]")).map(el => ({
+    fill: el.querySelector(".fl-fill"),
+    edge: el.querySelector(".fl-edge"),
+    last: NaN
+  }));
+  const drawFlourish = (f, d) => {
+    if (Math.abs(f.last - d) < 0.02) return;
+    f.last = d;
+    const base = 40;
+    const ctrl = base - 2 * (14 + d);
+    const dPath = "M0 64 L0 " + base + " Q720 " + ctrl + " 1440 " + base + " L1440 64 Z";
+    f.fill.setAttribute("d", dPath);
+    f.edge.setAttribute("d", "M0 " + base + " Q720 " + ctrl + " 1440 " + base);
+  };
+  flourishes.forEach(f => drawFlourish(f, 0));
+
+  // orbit setup
+  const stage = document.getElementById("orbitStage");
+  const cards = stage ? Array.from(stage.querySelectorAll(".orbit-card")) : [];
+  let rot = 0;
+  let spin = 0; // momentum rad/ms
+  let leanX = 0, leanY = 0, leanTX = 0, leanTY = 0;
+  let dragging = false, dragX = 0, dragT = 0;
+  let orbitVisible = true;
+
+  if (stage) {
+    new IntersectionObserver(es => { orbitVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(stage);
+    stage.addEventListener("pointermove", e => {
+      const r = stage.getBoundingClientRect();
+      leanTX = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      leanTY = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      if (dragging) {
+        const now = performance.now();
+        const dx = e.clientX - dragX;
+        const dt = Math.max(1, now - dragT);
+        rot += dx * 0.0042;
+        spin = (dx * 0.0042) / dt;
+        dragX = e.clientX; dragT = now;
+      }
+    });
+    stage.addEventListener("pointerleave", () => { leanTX = 0; leanTY = 0; });
+    stage.addEventListener("pointerdown", e => {
+      dragging = true; dragX = e.clientX; dragT = performance.now();
+      stage.classList.add("is-dragging");
+      try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    const end = () => { dragging = false; stage.classList.remove("is-dragging"); };
+    stage.addEventListener("pointerup", end);
+    stage.addEventListener("pointercancel", end);
+  }
+
+  const BASE = reduced ? 0 : 0.00017; // rad per ms, clockwise
+  let lastT = performance.now();
+  let lastY = window.scrollY;
+  let fd = 0, fv = 0; // flourish spring state
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  const tick = now => {
+    const dt = Math.min(48, now - lastT);
+    lastT = now;
+    const y = window.scrollY;
+    const scrollV = ((y - lastY) / Math.max(1, dt)) * 1000; // px/s
+    const scrollDelta = y - lastY;
+    lastY = y;
+
+    // flourish spring (stiffness 140, damping 18, mass 1)
+    if (!reduced && flourishes.length) {
+      const target = clamp(scrollV / 900, -1, 1) * 0.7 * 14;
+      const s = dt / 1000;
+      fv += (-140 * (fd - target) - 18 * fv) * s;
+      fd += fv * s;
+      flourishes.forEach(f => drawFlourish(f, fd));
+    }
+
+    if (stage && orbitVisible) {
+      if (!dragging) {
+        rot += BASE * dt + spin * dt + scrollDelta * 0.0007;
+        spin *= Math.pow(0.94, dt / 16);
+        if (Math.abs(spin) < 0.000002) spin = 0;
+      }
+      leanX += (leanTX - leanX) * 0.06;
+      leanY += (leanTY - leanY) * 0.06;
+      const w = stage.clientWidth, h = stage.clientHeight;
+      const Rx = Math.min(w * 0.46, 760);
+      const Ry = Math.max(70, h * 0.2);
+      const n = cards.length;
+      for (let i = 0; i < n; i++) {
+        const th = rot + (i * Math.PI * 2) / n;
+        const c = Math.cos(th), s = Math.sin(th);
+        const x = c * Rx + leanX * s * 26;
+        const yy = s * Ry + h * 0.04 + leanY * c * 12;
+        const sc = 0.82 + 0.28 * (s * 0.5 + 0.5);
+        const el = cards[i];
+        el.style.transform = "translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px," + yy.toFixed(1) + "px,0) rotate(" + (c * -7).toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")";
+        el.style.zIndex = c < 0 ? 3 : 1;
+        el.style.filter = c < 0 ? "none" : "brightness(" + (0.62 + 0.3 * (1 - c * 0.5)).toFixed(2) + ")";
+      }
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
