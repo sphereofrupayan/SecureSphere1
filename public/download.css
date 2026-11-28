@@ -2378,64 +2378,42 @@ body {
 /* Orbit stage */
 .orbit-section {
   position: relative;
-  min-height: clamp(660px, 90vh, 840px);
-  padding: 56px 16px 64px;
+  min-height: clamp(540px, 76vh, 720px);
+  padding: 44px 16px 48px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   overflow: hidden;
   background:
-    radial-gradient(70% 55% at 50% 48%, rgba(255, 255, 255, 0.06), transparent 70%),
-    radial-gradient(40% 36% at 50% 54%, rgba(222, 41, 0, 0.16), transparent 70%),
+    radial-gradient(70% 55% at 50% 50%, rgba(255, 255, 255, 0.055), transparent 70%),
+    radial-gradient(40% 36% at 50% 52%, rgba(222, 41, 0, 0.16), transparent 70%),
     linear-gradient(180deg, #050507 0%, #0b0b0f 100%);
 }
 .orbit-stage {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 360px;
   touch-action: pan-y;
   cursor: grab;
 }
 .orbit-stage.is-dragging { cursor: grabbing; }
-.orbit-copy {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 0 20px;
-  pointer-events: none;
-}
-.orbit-copy .pill {
-  pointer-events: auto;
-  margin-top: clamp(110px, 16vh, 152px);
+.orbit-kicker {
   position: relative;
   z-index: 6;
-}
-.orbit-kicker {
+  text-align: center;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.68);
+  margin-bottom: 12px;
 }
-.orbit-word {
-  font-size: clamp(4.2rem, 13.5vw, 15rem);
-  font-weight: 800;
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-  margin: 0;
-  background: linear-gradient(180deg, #ffffff 10%, #8a8a94 60%, #3a3a42 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.orbit-sub {
-  margin: 18px auto 0;
-  max-width: 28ch;
-  font-size: clamp(1.05rem, 1.6vw, 1.45rem);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.86);
+.orbit-cta-wrap {
+  position: relative;
+  z-index: 6;
+  margin-top: 16px;
 }
 .orbit-card {
   position: absolute;

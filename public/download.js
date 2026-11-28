@@ -707,9 +707,10 @@
       leanY += (leanTY - leanY) * 0.06;
       const w = stage.clientWidth, h = stage.clientHeight;
       const cardW = cards[0] ? cards[0].offsetWidth : 140;
+      const cardH = cards[0] ? cards[0].offsetHeight : 100;
       const Rx = Math.max(90, Math.min(w * 0.48 - cardW * 0.62, 540));
-      const Ry = Math.max(54, Math.min(h * 0.135, 118));
-      const cy = -h * 0.08;
+      const Ry = Math.max(46, Math.min(h * 0.44 - cardH * 0.56, 118));
+      const cy = 0;
       const n = cards.length;
       for (let i = 0; i < n; i++) {
         const th = rot + (i * Math.PI * 2) / n;
