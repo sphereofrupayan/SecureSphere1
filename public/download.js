@@ -706,14 +706,16 @@
       leanX += (leanTX - leanX) * 0.06;
       leanY += (leanTY - leanY) * 0.06;
       const w = stage.clientWidth, h = stage.clientHeight;
-      const Rx = Math.min(w * 0.46, 760);
-      const Ry = Math.max(70, h * 0.2);
+      const cardW = cards[0] ? cards[0].offsetWidth : 140;
+      const Rx = Math.max(90, Math.min(w * 0.48 - cardW * 0.62, 540));
+      const Ry = Math.max(54, Math.min(h * 0.135, 118));
+      const cy = -h * 0.08;
       const n = cards.length;
       for (let i = 0; i < n; i++) {
         const th = rot + (i * Math.PI * 2) / n;
         const c = Math.cos(th), s = Math.sin(th);
-        const x = c * Rx + leanX * s * 26;
-        const yy = s * Ry + h * 0.04 + leanY * c * 12;
+        const x = c * Rx + leanX * s * 22;
+        const yy = cy + s * Ry + leanY * c * 10;
         const sc = 0.82 + 0.28 * (s * 0.5 + 0.5);
         const el = cards[i];
         el.style.transform = "translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px," + yy.toFixed(1) + "px,0) rotate(" + (c * -7).toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")";
