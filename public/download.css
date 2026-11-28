@@ -1447,86 +1447,95 @@ html.is-video-fullscreen body {
   padding: 28px 28px 104px;
 }
 
-.partner-filters {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
+.partners-head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 44px;
 }
 
-.partner-filter-pill {
-  padding: 9px 17px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--ink-light-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
-}
-
-.partner-filter-pill:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-}
-
-.partner-filter-pill.is-active {
-  background: var(--accent-vermilion);
-  color: #fffdff;
-}
-
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.partner-card {
+.partner-slider-shell {
   display: flex;
   flex-direction: column;
-  padding: 20px 18px;
-  border-radius: 20px;
-  background: var(--surface-card);
-  transition: transform 0.3s var(--ease-snapa), background 0.25s ease, box-shadow 0.3s ease;
+  gap: 18px;
+  padding: 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000000 10%, #000000 90%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000000 10%, #000000 90%, transparent 100%);
 }
 
-.partner-card.is-hidden {
-  display: none;
+.partner-marquee {
+  width: 100%;
+  overflow: hidden;
 }
 
-.partner-card:hover {
-  transform: translateY(-4px);
-  background: var(--surface-card-hover);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.52);
-}
-
-.partner-top {
+.partner-track {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 18px;
+  width: max-content;
+  will-change: transform;
+}
+
+.partner-track-left {
+  animation: partnerSlideLeft 38s linear infinite;
+}
+
+.partner-track-right {
+  animation: partnerSlideRight 42s linear infinite;
+}
+
+.partner-marquee:hover .partner-track {
+  animation-play-state: paused;
+}
+
+@keyframes partnerSlideLeft {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes partnerSlideRight {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.partner-logo-tile {
+  width: 148px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: linear-gradient(155deg, rgba(22, 22, 29, 0.74) 0%, rgba(7, 7, 10, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.28s var(--ease-snapa), border-color 0.24s ease, box-shadow 0.28s ease, background 0.24s ease;
+}
+
+.partner-logo-tile:hover {
+  transform: translateY(-4px) scale(1.04);
+  border-color: rgba(255, 255, 255, 0.24);
+  background: linear-gradient(155deg, rgba(32, 32, 42, 0.9) 0%, rgba(12, 12, 17, 0.98) 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
 }
 
 .partner-logo {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
 }
 
 .partner-logo svg {
-  width: 21px;
-  height: 21px;
+  width: 28px;
+  height: 28px;
 }
 
 .partner-logo-img {
-  background: rgba(255, 255, 255, 0.94);
-  padding: 5px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 7px;
 }
 
 .partner-logo-img img {
@@ -1536,13 +1545,10 @@ html.is-video-fullscreen body {
 }
 
 .partner-logo-render { background: #0f172a; color: #ffffff; }
-.partner-logo-cf { background: rgba(243, 128, 32, 0.16); color: #f38020; }
 .partner-logo-github { background: rgba(255, 255, 255, 0.12); color: #ffffff; }
 .partner-logo-gemini { background: rgba(142, 117, 178, 0.18); color: #a78bfa; }
 .partner-logo-eleven { background: rgba(255, 255, 255, 0.14); color: #ffffff; }
 .partner-logo-yt { background: rgba(255, 0, 0, 0.16); color: #ff2b2b; }
-.partner-logo-pexels { background: rgba(5, 160, 129, 0.18); color: #05a081; }
-.partner-logo-gfonts { background: rgba(66, 133, 244, 0.16); color: #60a5fa; }
 .partner-logo-ffmpeg { background: rgba(0, 120, 8, 0.22); color: #4ade80; }
 .partner-logo-expo { background: rgba(255, 255, 255, 0.14); color: #ffffff; }
 .partner-logo-rn { background: rgba(97, 218, 251, 0.15); color: #61dafb; }
@@ -1553,51 +1559,27 @@ html.is-video-fullscreen body {
 .partner-logo-express { background: rgba(255, 255, 255, 0.12); color: #f8fafc; }
 .partner-logo-sqlite { background: rgba(59, 130, 246, 0.18); color: #60a5fa; }
 .partner-logo-ts { background: rgba(49, 120, 198, 0.2); color: #60a5fa; }
-.partner-logo-npm { background: rgba(203, 56, 55, 0.2); color: #ef4444; }
-.partner-logo-gplay { background: rgba(52, 211, 153, 0.16); color: #34d399; }
-.partner-logo-amazon { background: rgba(255, 153, 0, 0.16); color: #ff9900; }
 
-.partner-cat {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ink-light-muted);
-  margin-right: auto;
+@media (max-width: 680px) {
+  .partner-logo-tile {
+    width: 118px;
+    height: 68px;
+    border-radius: 16px;
+  }
+  .partner-logo {
+    width: 40px;
+    height: 40px;
+  }
+  .partner-logo svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
-.partner-arrow {
-  font-size: 14px;
-  color: var(--ink-light-muted);
-  transition: transform 0.22s ease, color 0.22s ease;
-}
-
-.partner-card:hover .partner-arrow {
-  transform: translate(2px, -2px);
-  color: var(--accent-vermilion);
-}
-
-.partner-card h3 {
-  margin: 0 0 6px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #fffdff;
-}
-
-.partner-card p {
-  margin: 0 0 12px;
-  font-size: 13px;
-  line-height: 1.54;
-  color: var(--ink-light-secondary);
-  flex: 1;
-}
-
-.partner-url {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: #7dd3fc;
+@media (prefers-reduced-motion: reduce) {
+  .partner-track {
+    animation: none;
+  }
 }
 
 /* ── 08 · Install Section & Radiating Download Stage ─────────────────────── */
